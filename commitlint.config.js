@@ -8,8 +8,7 @@ module.exports = {
     'header-match-pattern': [
       2,
       'always',
-      /^#\d+ (feat|fix|refac|test|chore|docs)(\([a-z0-9_-]+\))?: [^\s].+$/
-    ]
-  }
+      /^#\d+ (feat|fix|refac|test|chore|docs)(\([a-z0-9_-]+\))?: [^\s].+$/,
+    ],
+  },
 };
-
