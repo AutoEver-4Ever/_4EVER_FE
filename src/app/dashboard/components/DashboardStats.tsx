@@ -1,10 +1,8 @@
 'use client';
 
-interface DashboardStatsProps {
-  selectedPeriod: string;
-}
+import { DashboardStatsProps } from '../types/DashboardStatsType';
 
-export default function DashboardStats({ selectedPeriod }: DashboardStatsProps) {
+const DashboardStats = ({ selectedPeriod }: DashboardStatsProps) => {
   const stats = [
     {
       title: '총 매출',
@@ -83,4 +81,6 @@ export default function DashboardStats({ selectedPeriod }: DashboardStatsProps) 
       ))}
     </div>
   );
-}
+};
+
+export default DashboardStats;

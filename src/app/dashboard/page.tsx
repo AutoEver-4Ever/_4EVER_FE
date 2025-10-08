@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import DashboardHeader from '@/app/dashboard/components/DashboardHeader';
-import DashboardStats from '@/app/dashboard/components/Dashboardstats';
+import DashboardStats from '@/app/dashboard/components/DashboardStats';
 import QuickActions from '@/app/dashboard/components/QuickActions';
 import WorkflowStatus from '@/app/dashboard/components/WorkflowStatus';
 import ReportDownloadModal from '@/app/dashboard/components/ReportDownloadModal';
@@ -24,7 +24,6 @@ export default function DashboardPage() {
         {/* 주요 지표 */}
         <DashboardStats selectedPeriod={selectedPeriod} />
 
-        {/* 메인 콘텐츠 */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* 빠른 작업 */}
           <div className="lg:col-span-1">

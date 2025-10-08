@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export default function WorkflowStatus() {
+const WorkflowStatus = () => {
   const [activeTab, setActiveTab] = useState('purchase');
 
   const purchaseWorkflows = [
@@ -207,4 +207,6 @@ export default function WorkflowStatus() {
       </div>
     </div>
   );
-}
+};
+
+export default WorkflowStatus;

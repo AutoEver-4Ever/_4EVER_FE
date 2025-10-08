@@ -1,2 +1,6 @@
 @import 'tailwindcss';
 @import 'remixicon/fonts/remixicon.css';
+
+html {
+  font-family: var(--font-geist-sans), var(--font-geist-mono), var(--font-pacifico), sans-serif;
+}

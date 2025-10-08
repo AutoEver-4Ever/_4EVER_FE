@@ -1,14 +1,9 @@
 'use client';
 
 import React from 'react';
+import { ReportDownloadModalProps } from '../types/ReportDownloadModalType';
 
-type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-  selectedPeriod: string;
-};
-
-export default function ReportDownloadModal({ isOpen, onClose, selectedPeriod }: Props) {
+const ReportDownloadModal = ({ isOpen, onClose, selectedPeriod }: ReportDownloadModalProps) => {
   if (!isOpen) return null;
 
   const handleReportDownload = (reportType: string, format: string) => {
@@ -173,4 +168,6 @@ export default function ReportDownloadModal({ isOpen, onClose, selectedPeriod }:
       </div>
     </div>
   );
-}
+};
+
+export default ReportDownloadModal;

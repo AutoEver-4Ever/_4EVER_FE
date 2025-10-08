@@ -1,20 +1,15 @@
 'use client';
 
 import React from 'react';
-
-type Props = {
-  selectedPeriod: string;
-  setSelectedPeriod: (p: string) => void;
-  onOpenDownload: () => void;
-};
+import { DashboardHeaderProps } from '../types/DashboardHeaderType';
 
 const periods = ['이번 주', '이번 달', '이번 분기', '올해'];
 
-export default function DashboardHeader({
+const DashboardHeader = ({
   selectedPeriod,
   setSelectedPeriod,
   onOpenDownload,
-}: Props) {
+}: DashboardHeaderProps) => {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between">
@@ -51,4 +46,6 @@ export default function DashboardHeader({
       </div>
     </div>
   );
-}
+};
+
+export default DashboardHeader;
