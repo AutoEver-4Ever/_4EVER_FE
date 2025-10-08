@@ -24,10 +24,10 @@ export default function Navigation() {
         <Link
           key={item.href}
           href={item.href}
-          className={`px-3.5 py-2 cursor-pointer transition-colors ${
+          className={`px-3.5 py-2 cursor-pointer transition-colors font-normal ${
             isActive(item.href)
-              ? 'text-gray-900 font-medium'
-              : 'text-gray-400 hover:text-gray-800 font-medium'
+              ? 'text-gray-900 font-semibold'
+              : 'text-gray-400 hover:text-gray-800 hover:font-semibold'
           }`}
         >
           {item.label}

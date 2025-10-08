@@ -50,3 +50,7 @@
   --color-purple-800: #2a0d63;
   --color-purple-900: #160935;
 }
+
+html {
+  font-family: var(--font-geist-sans), var(--font-geist-mono), var(--font-pacifico), sans-serif;
+}
