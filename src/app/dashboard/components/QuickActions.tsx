@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-export default function QuickActions() {
+const QuickActions = () => {
   const actions = [
     {
       title: '신규 주문 등록',
@@ -65,4 +65,6 @@ export default function QuickActions() {
       </div>
     </div>
   );
-}
+};
+
+export default QuickActions;
