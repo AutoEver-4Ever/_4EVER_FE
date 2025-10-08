@@ -9,7 +9,11 @@ const nextConfig: NextConfig = {
     domains: ['example.com'], // 외부 이미지 도메인 허용
   },
   webpack(config: Configuration) {
-    (config.resolve!.alias as { [key: string]: string })['@'] = path.resolve(__dirname, 'src');
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      '@': path.resolve(__dirname, 'src'), // tsconfig랑 동일하게 src 기준
+    };
     return config;
   },
 };
