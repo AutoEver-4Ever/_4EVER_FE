@@ -1,22 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Logo from './Logo';
-import Navigation from './Navigation';
-import NotificationDropdown from './NoificationDropdown';
-import ProfileDropdown from './ProfileDropdown';
-
-interface HeaderProps {
-  userRole?: string;
-  userName?: string;
-  userEmail?: string;
-}
+import Logo from '@/app/components/header/Logo';
+import Navigation from '@/app/components/header/Navigation';
+import NotificationDropdown from '@/app/components/header/NoificationDropdown';
+import ProfileDropdown from '@/app/components/header/ProfileDropdown';
+import { UserProps } from '@/app/components/header/types/UserType';
 
 export default function Header({
   userRole = '관리자',
   userName = '홍길동',
   userEmail = 'hong@company.com',
-}: HeaderProps) {
+}: UserProps) {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
