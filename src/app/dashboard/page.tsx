@@ -9,7 +9,7 @@ export default function DashboardPage() {
   const [selectedPeriod, setSelectedPeriod] = useState('이번 달');
 
   return (
-    <div className="min-h-screen bg-red">
+    <div className="min-h-screen">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 주요 지표 */}
         <div className="mb-8">
