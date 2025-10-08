@@ -1,22 +1,31 @@
 'use client';
 
 import { useState } from 'react';
+import DashboardHeader from '@/app/dashboard/components/DashboardHeader';
 import DashboardStats from '@/app/dashboard/components/Dashboardstats';
 import QuickActions from '@/app/dashboard/components/QuickActions';
 import WorkflowStatus from '@/app/dashboard/components/WorkflowStatus';
+import ReportDownloadModal from '@/app/dashboard/components/ReportDownloadModal';
 
 export default function DashboardPage() {
   const [selectedPeriod, setSelectedPeriod] = useState('이번 달');
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const periods = ['이번 주', '이번 달', '이번 분기', '올해'];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 주요 지표 */}
-        <div className="mb-8">
-          <DashboardStats selectedPeriod={selectedPeriod} />
-        </div>
+        {/* 페이지 헤더 */}
+        <DashboardHeader
+          selectedPeriod={selectedPeriod}
+          setSelectedPeriod={setSelectedPeriod}
+          onOpenDownload={() => setIsDownloadModalOpen(true)}
+        />
 
-        {/* 메인 콘텐츠 그리드 */}
+        {/* 주요 지표 */}
+        <DashboardStats selectedPeriod={selectedPeriod} />
+
+        {/* 메인 콘텐츠 */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* 빠른 작업 */}
           <div className="lg:col-span-1">
@@ -29,6 +38,13 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
+
+      {/* 리포트 다운로드 */}
+      <ReportDownloadModal
+        isOpen={isDownloadModalOpen}
+        onClose={() => setIsDownloadModalOpen(false)}
+        selectedPeriod={selectedPeriod}
+      />
     </div>
   );
 }
