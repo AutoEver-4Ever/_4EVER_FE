@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Pacifico } from 'next/font/google';
-import './globals.css';
+import '../styles/globals.css';
+import Header from './components/header/Header';
 
 const geistSans = Geist({
   display: 'swap',
@@ -18,28 +19,17 @@ const pacifico = Pacifico({
   variable: '--font-pacifico',
 });
 
-const navigation = [
-  { name: '대시보드', href: '/dashboard', icon: 'ri-dashboard-line' },
-  { name: '영업관리', href: '/sales', icon: 'ri-line-chart-line' },
-  { name: '구매관리', href: '/purchase', icon: 'ri-shopping-cart-line' },
-  { name: '재고관리', href: '/inventory', icon: 'ri-archive-line' },
-  { name: '재무관리', href: '/finance', icon: 'ri-money-dollar-circle-line' },
-  { name: '인적자원관리', href: '/hrm', icon: 'ri-team-line' },
-  { name: '회사관리', href: '/companies', icon: 'ri-building-line' },
-];
-
 export const metadata: Metadata = {
-  title: 'ERP 시스템',
+  title: 'EvErp',
   description: '기업 자원 관리 통합 시스템',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable} antialiased`}
-      >
-        {children}
+    <html lang="en">
+      <body className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable}`}>
+        <Header />
+        <main className="pt-16 min-h-screen bg-gray-50">{children}</main>
       </body>
     </html>
   );
