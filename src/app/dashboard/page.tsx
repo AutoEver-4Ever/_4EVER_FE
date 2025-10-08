@@ -10,7 +10,6 @@ import ReportDownloadModal from '@/app/dashboard/components/ReportDownloadModal'
 export default function DashboardPage() {
   const [selectedPeriod, setSelectedPeriod] = useState('이번 달');
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
-  const periods = ['이번 주', '이번 달', '이번 분기', '올해'];
 
   return (
     <div className="min-h-screen bg-gray-50">
