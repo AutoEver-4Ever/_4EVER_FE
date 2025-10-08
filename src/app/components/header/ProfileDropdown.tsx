@@ -2,18 +2,13 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-
-interface ProfileDropdownProps {
-  userName?: string;
-  userEmail?: string;
-  userRole?: string;
-}
+import { UserProps } from '@/app/components/header/types/UserType';
 
 export default function ProfileDropdown({
   userName = '홍길동',
   userEmail = 'hong@company.com',
   userRole = '관리자',
-}: ProfileDropdownProps) {
+}: UserProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 

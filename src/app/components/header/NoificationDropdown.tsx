@@ -1,21 +1,15 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { NotificationProps } from '@/app/components/header/types/NotificationType';
 
-interface Notification {
-  id: number;
-  type: 'warning' | 'info' | 'success';
-  message: string;
-  time: string;
-}
-
-const MOCK_NOTIFICATIONS: Notification[] = [
+const MOCK_NOTIFICATIONS: NotificationProps[] = [
   { id: 1, type: 'warning', message: '강판 재고가 부족합니다 (현재: 50EA)', time: '5분 전' },
   { id: 2, type: 'info', message: 'PO-2024-001 발주서가 승인되었습니다', time: '1시간 전' },
   { id: 3, type: 'success', message: 'SO-2024-015 주문이 출하 완료되었습니다', time: '2시간 전' },
 ];
 
-const getNotificationColor = (type: Notification['type']) => {
+const getNotificationColor = (type: NotificationProps['type']) => {
   const colors = {
     warning: 'bg-yellow-500',
     success: 'bg-green-500',
