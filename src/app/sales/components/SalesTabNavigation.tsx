@@ -4,7 +4,7 @@ import { useState } from 'react';
 import SalesOrderList from '@/app/sales/components/SalesOrderList';
 import SalesCustomerList from '@/app/sales/components/SalesCustomerList';
 import SalesChart from '@/app/sales/components/SalesChart';
-import QuoteList from '@/app/sales/components/QuoteList';
+import SalesQuoteList from '@/app/sales/components/SalesQuoteList';
 
 const SalesTabNavigation = () => {
   const [activeTab, setActiveTab] = useState('orders');
@@ -47,7 +47,7 @@ const SalesTabNavigation = () => {
 
       <div className="space-y-6">
         {activeTab === 'orders' && <SalesOrderList />}
-        {activeTab === 'quotes' && <QuoteList />}
+        {activeTab === 'quotes' && <SalesQuoteList />}
         {activeTab === 'customers' && <SalesCustomerList />}
         {activeTab === 'analytics' && <SalesChart />}
       </div>

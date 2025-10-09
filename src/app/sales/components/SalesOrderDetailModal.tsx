@@ -148,14 +148,14 @@ const SalesOrderDetailModal = ({
                 </div>
               </div>
 
-              {$selectedOrder.notes && (
-                <div className="mb-6">
-                  <h4 className="text-md font-semibold text-gray-900 mb-4">특이사항</h4>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-700">{$selectedOrder.notes}</p>
-                  </div>
+              <div className="mb-6">
+                <h4 className="text-md font-semibold text-gray-900 mb-4">특이사항</h4>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-700">
+                    {$selectedOrder.notes ? $selectedOrder.notes : '-'}
+                  </p>
                 </div>
-              )}
+              </div>
 
               <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                 <button

@@ -8,7 +8,7 @@ import {
   QuoteFormItem,
 } from '@/app/sales/types/NewQuoteListType';
 
-const QuoteList = () => {
+const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | QuoteStatus>('all');
   const [showQuoteModal, setShowQuoteModal] = useState(false);
@@ -832,4 +832,4 @@ const QuoteList = () => {
   );
 };
 
-export default QuoteList;
+export default SalesQuoteList;
