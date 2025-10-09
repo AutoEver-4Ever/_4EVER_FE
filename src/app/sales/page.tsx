@@ -1,6 +1,7 @@
 import SalesHeader from '@/app/sales/components/SalesHeader';
 import SalesStats from '@/app/sales/components/SalesStats';
 import SalesTabNavigation from '@/app/sales/components/SalesTabNavigation';
+import { Suspense } from 'react';
 
 export default function SalesPage() {
   return (
@@ -13,7 +14,9 @@ export default function SalesPage() {
         <SalesStats />
 
         {/* 탭 콘텐츠 */}
-        {<SalesTabNavigation />}
+        <Suspense fallback={<div>Loading...</div>}>
+          <SalesTabNavigation />
+        </Suspense>
       </main>
     </div>
   );
