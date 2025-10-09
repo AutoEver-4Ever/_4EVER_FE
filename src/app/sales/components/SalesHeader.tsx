@@ -24,13 +24,6 @@ const SalesHeader = () => {
 
         <div className="flex items-center space-x-3">
           <button
-            onClick={handleNewOrderClick}
-            className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"
-          >
-            <i className="ri-add-line"></i>
-            <span>신규 주문</span>
-          </button>
-          <button
             onClick={handleCustomerRegisterClick}
             className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"
           >
