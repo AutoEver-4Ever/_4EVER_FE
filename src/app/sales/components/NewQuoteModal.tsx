@@ -229,7 +229,7 @@ const NewQuoteModal = ({ $showNewQuoteModal, $setShowNewQuoteModal }: NewQuoteMo
                   <button
                     type="button"
                     onClick={addQuoteItem}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap flex items-center space-x-2"
+                    className="px-4 py-2 bg-[#2563EB] text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer whitespace-nowrap flex items-center space-x-2"
                   >
                     <i className="ri-add-line"></i>
                     <span>품목 추가</span>
@@ -370,7 +370,7 @@ const NewQuoteModal = ({ $showNewQuoteModal, $setShowNewQuoteModal }: NewQuoteMo
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium cursor-pointer whitespace-nowrap"
+                  className="px-6 py-2 bg-[#2563EB] text-white rounded-lg hover:bg-blue-600 transition-colors font-medium cursor-pointer whitespace-nowrap"
                 >
                   견적서 작성
                 </button>

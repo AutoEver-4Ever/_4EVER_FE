@@ -413,7 +413,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium cursor-pointer whitespace-nowrap"
+                  className="px-6 py-2 bg-[#2563EB] text-white rounded-lg hover:bg-blue-600 transition-colors font-medium cursor-pointer whitespace-nowrap"
                 >
                   고객 등록
                 </button>

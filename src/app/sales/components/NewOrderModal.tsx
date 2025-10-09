@@ -378,7 +378,7 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap"
+                  className="px-6 py-2 bg-[#2563EB] text-white font-medium rounded-lg hover:bg-blue-600 transition-colors duration-200 cursor-pointer whitespace-nowrap"
                 >
                   견적 요청 등록
                 </button>
