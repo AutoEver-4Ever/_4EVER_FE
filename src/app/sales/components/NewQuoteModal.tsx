@@ -237,13 +237,23 @@ const NewQuoteModal = ({ $showNewQuoteModal, $setShowNewQuoteModal }: NewQuoteMo
                 </div>
 
                 <div className="overflow-x-auto">
-                  <table className="w-full border border-gray-300 rounded-lg">
+                  <table className="w-full border border-gray-300 rounded-lg table-fixed">
+                    <colgroup>
+                      <col className="w-[25%]" />
+                      <col className="w-[25%]" />
+                      <col className="w-[10%]" />
+                      <col className="w-[15%]" />
+                      <col className="w-[15%]" />
+                      <col className="w-[10%]" />
+                    </colgroup>
                     <thead className="bg-gray-50">
                       <tr>
                         <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
                           제품명
                         </th>
-
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
+                          사양
+                        </th>
                         <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
                           수량
                         </th>
@@ -270,15 +280,25 @@ const NewQuoteModal = ({ $showNewQuoteModal, $setShowNewQuoteModal }: NewQuoteMo
                               placeholder="제품명"
                             />
                           </td>
-
                           <td className="px-4 py-3">
+                            <input
+                              type="text"
+                              value={item.specification}
+                              onChange={(e) =>
+                                updateQuoteItem(item.id, 'specification', e.target.value)
+                              }
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                              placeholder="사양"
+                            />
+                          </td>
+                          <td className="px-0 py-3">
                             <input
                               type="number"
                               value={item.quantity}
                               onChange={(e) =>
                                 updateQuoteItem(item.id, 'quantity', Number(e.target.value))
                               }
-                              className="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center"
+                              className="w-15 px-0 py-1 border border-gray-300 rounded text-sm text-center ml-4"
                               min="1"
                             />
                           </td>
@@ -289,7 +309,7 @@ const NewQuoteModal = ({ $showNewQuoteModal, $setShowNewQuoteModal }: NewQuoteMo
                               onChange={(e) =>
                                 updateQuoteItem(item.id, 'unitPrice', Number(e.target.value))
                               }
-                              className="w-24 px-2 py-1 border border-gray-300 rounded text-sm text-right"
+                              className="w-24 py-1 border border-gray-300 rounded text-sm text-right ml-9"
                               min="0"
                             />
                           </td>
@@ -315,13 +335,12 @@ const NewQuoteModal = ({ $showNewQuoteModal, $setShowNewQuoteModal }: NewQuoteMo
                     </tbody>
                     <tfoot className="bg-gray-50">
                       <tr>
-                        <td colSpan={4} className="px-4 py-3 text-right font-medium text-gray-900">
+                        <td colSpan={5} className="px-4 py-3 text-right font-medium text-gray-900">
                           총 견적금액
                         </td>
                         <td className="px-4 py-3 text-right font-bold text-lg text-blue-600">
                           ₩{newQuoteData.totalAmount.toLocaleString()}
                         </td>
-                        <td></td>
                       </tr>
                     </tfoot>
                   </table>
