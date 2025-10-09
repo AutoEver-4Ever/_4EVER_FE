@@ -176,7 +176,7 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* 대리점 선택 */}
-              <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="text-lg font-semibold text-gray-900 mb-4">대리점 선택</h4>
                 <div className="grid grid-cols-1 gap-4">
                   <div>
@@ -247,7 +247,7 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
               </div>
 
               {/* 주문 품목 */}
-              <div className="bg-green-50 p-4 rounded-lg">
+              <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="text-lg font-semibold text-gray-900">주문 품목</h4>
                 </div>
@@ -343,10 +343,10 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
                   ))}
                 </div>
 
-                <div className="mt-4 p-4 bg-white rounded-lg border-2 border-blue-200">
+                <div className="mt-4 p-4 bg-white rounded-lg border-1 border-gray-200">
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold text-gray-900">총 주문 금액</span>
-                    <span className="text-xl font-bold text-blue-600">
+                    <span className="text-xl font-bold text-gray-600">
                       ₩{getTotalAmount().toLocaleString()}
                     </span>
                   </div>

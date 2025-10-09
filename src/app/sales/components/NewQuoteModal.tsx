@@ -237,7 +237,7 @@ const NewQuoteModal = ({ $showNewQuoteModal, $setShowNewQuoteModal }: NewQuoteMo
                 </div>
 
                 <div className="overflow-x-auto">
-                  <table className="w-full border border-gray-300 rounded-lg table-fixed">
+                  <table className="w-full border border-gray-200 rounded-lg table-fixed">
                     <colgroup>
                       <col className="w-[25%]" />
                       <col className="w-[25%]" />
@@ -248,29 +248,29 @@ const NewQuoteModal = ({ $showNewQuoteModal, $setShowNewQuoteModal }: NewQuoteMo
                     </colgroup>
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b border-gray-200 ">
                           제품명
                         </th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b border-gray-200 ">
                           사양
                         </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
+                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b border-gray-200 ">
                           수량
                         </th>
-                        <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b">
+                        <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b border-gray-200 ">
                           단가
                         </th>
-                        <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b">
+                        <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b border-gray-200 ">
                           금액
                         </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
+                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b border-gray-200 ">
                           작업
                         </th>
                       </tr>
                     </thead>
                     <tbody>
                       {newQuoteData.items.map((item) => (
-                        <tr key={item.id} className="border-b">
+                        <tr key={item.id} className="border-b border-gray-200 ">
                           <td className="px-4 py-3">
                             <input
                               type="text"
