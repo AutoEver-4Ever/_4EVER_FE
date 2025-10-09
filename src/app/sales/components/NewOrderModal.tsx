@@ -6,9 +6,41 @@ interface NewOrderModalProps {
   $showNewOrderModal: boolean;
   $setShowNewOrderModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+interface OrderItem {
+  id: number;
+  productName: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+  deliveryDate: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+}
+
+interface Dealer {
+  id: string;
+  name: string;
+  customerName: string;
+  phone: string;
+  email: string;
+}
+
+interface FormData {
+  dealerId: string;
+  customerName: string;
+  phone: string;
+  email: string;
+  notes: string;
+}
+
 const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderModalProps) => {
   const [selectedDealer, setSelectedDealer] = useState('');
-  const [orderItems, setOrderItems] = useState([
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([
     {
       id: 1,
       productName: '',
@@ -18,7 +50,7 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
       deliveryDate: '',
     },
   ]);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     dealerId: '',
     customerName: '',
     phone: '',
@@ -27,7 +59,7 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
   });
 
   // 제품 목업 데이터
-  const products = [
+  const products: Product[] = [
     { id: 'prod1', name: '도어패널', price: 150000 },
     { id: 'prod2', name: 'Hood Panel', price: 200000 },
     { id: 'prod3', name: 'Fender Panel', price: 180000 },
@@ -36,7 +68,7 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
   ];
 
   // 대리점 목업 데이터
-  const dealers = [
+  const dealers: Dealer[] = [
     {
       id: 'dealer1',
       name: '서울 강남 대리점',
@@ -194,7 +226,9 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
                     <label className="block text-sm font-medium text-gray-700 mb-2">대리점 *</label>
                     <select
                       value={selectedDealer}
-                      onChange={(e) => handleDealerChange(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                        handleDealerChange(e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm pr-8"
                       required
                     >
@@ -218,7 +252,9 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
                     <input
                       type="text"
                       value={formData.customerName}
-                      onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFormData({ ...formData, customerName: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       required
                       readOnly={selectedDealer !== ''}
@@ -229,7 +265,9 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
                     <input
                       type="tel"
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       required
                       readOnly={selectedDealer !== ''}
@@ -240,7 +278,9 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
                     <input
                       type="email"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       required
                       readOnly={selectedDealer !== ''}
@@ -273,7 +313,9 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
                           </label>
                           <select
                             value={products.find((p) => p.name === item.productName)?.id || ''}
-                            onChange={(e) => handleProductChange(index, e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                              handleProductChange(index, e.target.value)
+                            }
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm pr-8"
                             required
                           >
@@ -292,7 +334,7 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
                           <input
                             type="number"
                             value={item.quantity}
-                            onChange={(e) =>
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                               handleQuantityChange(index, parseInt(e.target.value) || 1)
                             }
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -318,7 +360,9 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
                           <input
                             type="date"
                             value={item.deliveryDate}
-                            onChange={(e) => handleDeliveryDateChange(index, e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                              handleDeliveryDateChange(index, e.target.value)
+                            }
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                             required
                           />
@@ -365,7 +409,9 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
                 <label className="block text-sm font-medium text-gray-700 mb-2">비고</label>
                 <textarea
                   value={formData.notes}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    setFormData({ ...formData, notes: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                   rows={3}
                   placeholder="추가 요청사항이나 특이사항을 입력하세요"
