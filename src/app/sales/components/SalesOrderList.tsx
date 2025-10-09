@@ -262,7 +262,7 @@ const SalesOrderList = () => {
                       className="text-blue-600 hover:text-blue-900 cursor-pointer"
                       onClick={() => handleViewOrder(order)}
                     >
-                      보기
+                      <i className="ri-eye-line"></i>
                     </button>
                   </div>
                 </td>
