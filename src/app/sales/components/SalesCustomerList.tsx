@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Customer } from '@/app/sales/types/SalesCustomerList';
 import CustomerDetailModal from '@/app/sales/components/CustomerDetailModal';
 import CustomerEditModal from '@/app/sales/components/CustomerEditModal';
-
+import NewCustomerModal from '@/app/sales/components/NewCustomerModal';
 export default function CustomerList() {
   const [selectedType, setSelectedType] = useState('전체');
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,7 +12,7 @@ export default function CustomerList() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [editFormData, setEditFormData] = useState<Customer | null>(null);
-
+  const [showCustomerModal, setShowCustomerModal] = useState(false);
   const typeOptions = ['전체', '대기업', '중견기업', '중소기업', '개인'];
 
   const [customers, setCustomers] = useState<Customer[]>([
@@ -182,6 +182,9 @@ export default function CustomerList() {
       },
     },
   ]);
+  const handleCustomerRegisterClick = () => {
+    setShowCustomerModal(true);
+  };
 
   const getStatusColor = (status: string) => {
     return status === '활성' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
@@ -231,7 +234,10 @@ export default function CustomerList() {
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-gray-900">고객 관리</h2>
-          <button className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2">
+          <button
+            onClick={handleCustomerRegisterClick}
+            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"
+          >
             <i className="ri-user-add-line"></i>
             <span>고객 등록</span>
           </button>
@@ -418,6 +424,10 @@ export default function CustomerList() {
         $editFormData={editFormData}
         $setEditFormData={setEditFormData}
         $setCustomers={setCustomers}
+      />
+      <NewCustomerModal
+        $showCustomerModal={showCustomerModal}
+        $setShowCustomerModal={setShowCustomerModal}
       />
     </div>
   );
