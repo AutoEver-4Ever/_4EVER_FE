@@ -1,37 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { CustomerData } from '@/app/sales/types/NewCustomerModalType';
 
 interface NewCustomerModalProps {
   $showCustomerModal: boolean;
   $setShowCustomerModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export interface Customer {
-  companyName: string;
-  businessType: string;
-  businessNumber: string;
-  representative: string;
-  contactPerson: string;
-  position: string;
-  phone: string;
-  mobile: string;
-  email: string;
-  fax: string;
-  website: string;
-  address: string;
-  detailAddress: string;
-  zipCode: string;
-  industry: string;
-  customerType: '일반고객' | 'VIP고객' | '대량고객' | '신규고객';
-  creditRating: 'A' | 'B' | 'C' | 'D';
-  paymentTerms: string;
-  taxType: '과세' | '면세' | '영세율';
-  notes: string;
-}
-
 const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCustomerModalProps) => {
-  const [customerData, setCustomerData] = useState<Customer>({
+  const [customerData, setCustomerData] = useState<CustomerData>({
     companyName: '',
     businessType: '',
     businessNumber: '',
@@ -92,8 +70,8 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
     });
   };
 
-  const updateCustomerData = <K extends keyof Customer>(field: K, value: Customer[K]) => {
-    setCustomerData((prev) => ({ ...prev, [field]: value }) as Customer);
+  const updateCustomerData = <K extends keyof CustomerData>(field: K, value: CustomerData[K]) => {
+    setCustomerData((prev) => ({ ...prev, [field]: value }) as CustomerData);
   };
   return (
     <>
@@ -315,7 +293,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                       onChange={(e) =>
                         updateCustomerData(
                           'customerType',
-                          e.target.value as Customer['customerType'],
+                          e.target.value as CustomerData['customerType'],
                         )
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
@@ -333,7 +311,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                       onChange={(e) =>
                         updateCustomerData(
                           'creditRating',
-                          e.target.value as Customer['creditRating'],
+                          e.target.value as CustomerData['creditRating'],
                         )
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
@@ -353,7 +331,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                       onChange={(e) =>
                         updateCustomerData(
                           'paymentTerms',
-                          e.target.value as Customer['paymentTerms'],
+                          e.target.value as CustomerData['paymentTerms'],
                         )
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
@@ -373,7 +351,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <select
                       value={customerData.taxType}
                       onChange={(e) =>
-                        updateCustomerData('taxType', e.target.value as Customer['taxType'])
+                        updateCustomerData('taxType', e.target.value as CustomerData['taxType'])
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
                     >

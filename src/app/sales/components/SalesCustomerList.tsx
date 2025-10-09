@@ -1,9 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Customer } from '@/app/sales/types/Customer';
-import { Manager } from '@/app/sales/types/Manager';
-import { CustomerDetails } from '@/app/sales/types/CustomerDetails';
+import { Customer, CustomerDetails, Manager } from '@/app/sales/types/SalesCustomerList';
 
 export default function CustomerList() {
   const [selectedType, setSelectedType] = useState('전체');
