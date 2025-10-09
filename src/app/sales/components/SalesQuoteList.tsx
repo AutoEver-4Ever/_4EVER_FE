@@ -226,10 +226,10 @@ const SalesQuoteList = () => {
 
         <button
           onClick={() => setShowNewQuoteModal(true)}
-          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"
+          className="px-4 py-2 bg-[#2563EB] text-white font-medium rounded-lg hover:bg-blue-600 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"
         >
           <i className="ri-add-line"></i>
-          <span>견적서 작성</span>
+          <span className="mt-0.5">견적서 작성</span>
         </button>
       </div>
       {/* 견적 목록 */}
