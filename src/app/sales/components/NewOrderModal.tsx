@@ -1,42 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-
-interface NewOrderModalProps {
-  $showNewOrderModal: boolean;
-  $setShowNewOrderModal: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-interface OrderItem {
-  id: number;
-  productName: string;
-  quantity: number;
-  unitPrice: number;
-  totalPrice: number;
-  deliveryDate: string;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-}
-
-interface Dealer {
-  id: string;
-  name: string;
-  customerName: string;
-  phone: string;
-  email: string;
-}
-
-interface FormData {
-  dealerId: string;
-  customerName: string;
-  phone: string;
-  email: string;
-  notes: string;
-}
+import {
+  NewOrderModalProps,
+  OrderItem,
+  FormData,
+  Product,
+  Dealer,
+} from '@/app/sales/types/NewOrderModalType';
 
 const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderModalProps) => {
   const [selectedDealer, setSelectedDealer] = useState('');
