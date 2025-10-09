@@ -198,7 +198,7 @@ const SalesQuoteList = () => {
   return (
     <div className="space-y-6">
       {/* 헤더 및 필터 */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-6">
         <div className="flex items-center space-x-4">
           <div className="relative">
             <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>

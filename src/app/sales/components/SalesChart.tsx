@@ -49,7 +49,7 @@ const SalesChart = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-6">
       {/* 월별 매출 추이 */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-6">
