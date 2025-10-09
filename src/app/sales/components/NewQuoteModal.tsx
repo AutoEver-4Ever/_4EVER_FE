@@ -232,7 +232,7 @@ const NewQuoteModal = ({ $showNewQuoteModal, $setShowNewQuoteModal }: NewQuoteMo
                     className="px-4 py-2 bg-[#2563EB] text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer whitespace-nowrap flex items-center space-x-2"
                   >
                     <i className="ri-add-line"></i>
-                    <span>품목 추가</span>
+                    <span className="mt-0.5">품목 추가</span>
                   </button>
                 </div>
 
