@@ -1,13 +1,5 @@
 'use client';
-import { SalesOrder } from '@/app/sales/types/SalesOrderType';
-
-interface SalesOrderDetailProps {
-  $showDetailModal: boolean;
-  $setShowDetailModal: (show: boolean) => void;
-  $selectedOrder: SalesOrder | null;
-  $getStatusColor: (status: string) => string;
-  $getStatusText: (status: string) => string;
-}
+import { SalesOrderDetailProps } from '@/app/sales/types/SalesOrderDetailType';
 
 const SalesOrderDetailModal = ({
   $showDetailModal,

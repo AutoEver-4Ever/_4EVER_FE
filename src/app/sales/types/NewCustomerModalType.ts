@@ -20,3 +20,8 @@ export interface CustomerData {
   taxType: '과세' | '면세' | '영세율';
   notes: string;
 }
+
+export interface NewCustomerModalProps {
+  $showCustomerModal: boolean;
+  $setShowCustomerModal: React.Dispatch<React.SetStateAction<boolean>>;
+}

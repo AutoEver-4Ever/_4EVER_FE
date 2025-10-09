@@ -1,62 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-
-type QuoteStatus =
-  | 'draft'
-  | 'pending'
-  | 'approved'
-  | 'rejected'
-  | '승인됨'
-  | '검토중'
-  | '임시저장'
-  | '거절됨';
-
-type QuotePriority = '긴급' | '높음' | '보통' | '낮음';
-
-interface QuoteItem {
-  product: string;
-  specification: string;
-  quantity: number;
-  unitPrice: number;
-}
-
-interface Quote {
-  id: string;
-  customer: string;
-  contact: string;
-  email: string;
-  quoteDate: string;
-  validUntil: string;
-  amount: number;
-  status: QuoteStatus;
-  priority: QuotePriority;
-  items: QuoteItem[];
-}
-
-interface QuoteFormItem {
-  id: number;
-  product: string;
-  specification: string;
-  quantity: number;
-  unitPrice: number;
-  totalPrice: number;
-}
-
-interface QuoteFormData {
-  customer: string;
-  customerContact: string;
-  customerEmail: string;
-  quoteDate: string;
-  validUntil: string;
-  priority: QuotePriority;
-  items: QuoteFormItem[];
-  totalAmount: number;
-  notes: string;
-  paymentTerms: string;
-  deliveryTerms: string;
-  warranty: string;
-}
+import {
+  QuoteStatus,
+  Quote,
+  QuoteFormData,
+  QuoteFormItem,
+} from '@/app/sales/types/NewQuoteListType';
 
 const QuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');

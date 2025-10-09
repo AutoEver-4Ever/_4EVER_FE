@@ -1,6 +1,5 @@
 'use client';
 
-import { Customer } from '@/app/sales/types/SalesCustomerList';
 import { CustomerDetailModalProps } from '@/app/sales/types/CustomerDetailModalType';
 
 const CustomerDetailModal = ({

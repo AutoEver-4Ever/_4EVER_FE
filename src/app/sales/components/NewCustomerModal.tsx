@@ -1,12 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CustomerData } from '@/app/sales/types/NewCustomerModalType';
-
-interface NewCustomerModalProps {
-  $showCustomerModal: boolean;
-  $setShowCustomerModal: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import { CustomerData, NewCustomerModalProps } from '@/app/sales/types/NewCustomerModalType';
 
 const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCustomerModalProps) => {
   const [customerData, setCustomerData] = useState<CustomerData>({
