@@ -73,29 +73,29 @@ const QuoteDetailModal = ({
               <div>
                 <h4 className="text-lg font-medium text-gray-900 mb-4">견적 품목</h4>
                 <div className="overflow-x-auto">
-                  <table className="w-full border border-gray-300 rounded-lg">
+                  <table className="w-full border border-gray-200 rounded-lg">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b border-gray-200">
                           제품명
                         </th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b border-gray-200">
                           사양
                         </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
+                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b border-gray-200">
                           수량
                         </th>
-                        <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b">
+                        <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b border-gray-200">
                           단가
                         </th>
-                        <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b">
+                        <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b border-gray-200">
                           금액
                         </th>
                       </tr>
                     </thead>
                     <tbody>
                       {$selectedQuote.items.map((item, index) => (
-                        <tr key={index} className="border-b">
+                        <tr key={index} className="border-b  border-gray-200">
                           <td className="px-4 py-3 text-sm">{item.product}</td>
                           <td className="px-4 py-3 text-sm">{item.specification}</td>
                           <td className="px-4 py-3 text-center text-sm">{item.quantity}</td>
