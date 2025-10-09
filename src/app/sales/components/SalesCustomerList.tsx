@@ -13,7 +13,7 @@ export default function CustomerList() {
 
   const typeOptions = ['전체', '대기업', '중견기업', '중소기업', '개인'];
 
-  const [customers, setCustomers] = useState([
+  const [customers, setCustomers] = useState<Customer[]>([
     {
       id: 'C-001',
       name: '삼성전자',
@@ -300,7 +300,7 @@ export default function CustomerList() {
                 type="text"
                 placeholder="고객명, 담당자명, 고객코드로 검색..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
@@ -724,7 +724,9 @@ export default function CustomerList() {
                     <input
                       type="text"
                       value={editFormData.name}
-                      onChange={(e) => updateEditFormData('name', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateEditFormData('name', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       required
                     />
@@ -733,7 +735,9 @@ export default function CustomerList() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">고객유형</label>
                     <select
                       value={editFormData.type}
-                      onChange={(e) => updateEditFormData('type', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                        updateEditFormData('type', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg pr-8"
                     >
                       <option value="대기업">대기업</option>
@@ -749,7 +753,9 @@ export default function CustomerList() {
                     <input
                       type="text"
                       value={editFormData.details.businessNumber}
-                      onChange={(e) => updateEditFormDetails('businessNumber', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateEditFormDetails('businessNumber', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     />
                   </div>
@@ -758,7 +764,9 @@ export default function CustomerList() {
                     <input
                       type="text"
                       value={editFormData.details.ceo}
-                      onChange={(e) => updateEditFormDetails('ceo', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateEditFormDetails('ceo', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     />
                   </div>
@@ -769,7 +777,9 @@ export default function CustomerList() {
                     <input
                       type="text"
                       value={editFormData.details.industry}
-                      onChange={(e) => updateEditFormDetails('industry', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateEditFormDetails('industry', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     />
                   </div>
@@ -778,7 +788,9 @@ export default function CustomerList() {
                     <input
                       type="number"
                       value={editFormData.details.employees}
-                      onChange={(e) => updateEditFormDetails('employees', Number(e.target.value))}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateEditFormDetails('employees', Number(e.target.value))
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     />
                   </div>
@@ -787,7 +799,9 @@ export default function CustomerList() {
                     <input
                       type="url"
                       value={editFormData.details.website}
-                      onChange={(e) => updateEditFormDetails('website', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateEditFormDetails('website', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     />
                   </div>
@@ -795,7 +809,9 @@ export default function CustomerList() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
                     <select
                       value={editFormData.status}
-                      onChange={(e) => updateEditFormData('status', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                        updateEditFormData('status', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg pr-8"
                     >
                       <option value="활성">활성</option>
@@ -807,7 +823,9 @@ export default function CustomerList() {
                     <input
                       type="date"
                       value={editFormData.details.establishedDate}
-                      onChange={(e) => updateEditFormDetails('establishedDate', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateEditFormDetails('establishedDate', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     />
                   </div>
@@ -826,7 +844,9 @@ export default function CustomerList() {
                       <input
                         type="tel"
                         value={editFormData.phone}
-                        onChange={(e) => updateEditFormData('phone', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateEditFormData('phone', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                         required
                       />
@@ -836,7 +856,9 @@ export default function CustomerList() {
                       <input
                         type="tel"
                         value={editFormData.details.fax}
-                        onChange={(e) => updateEditFormDetails('fax', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateEditFormDetails('fax', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       />
                     </div>
@@ -845,7 +867,9 @@ export default function CustomerList() {
                       <input
                         type="email"
                         value={editFormData.email}
-                        onChange={(e) => updateEditFormData('email', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateEditFormData('email', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                         required
                       />
@@ -856,7 +880,9 @@ export default function CustomerList() {
                       <label className="block text-sm font-medium text-gray-700 mb-1">주소</label>
                       <textarea
                         value={editFormData.address}
-                        onChange={(e) => updateEditFormData('address', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                          updateEditFormData('address', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                         rows={3}
                         required
@@ -878,7 +904,9 @@ export default function CustomerList() {
                       <input
                         type="text"
                         value={editFormData.details.manager.name}
-                        onChange={(e) => updateManagerInfo('name', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateManagerInfo('name', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       />
                     </div>
@@ -887,7 +915,9 @@ export default function CustomerList() {
                       <input
                         type="text"
                         value={editFormData.details.manager.position}
-                        onChange={(e) => updateManagerInfo('position', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateManagerInfo('position', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       />
                     </div>
@@ -896,7 +926,9 @@ export default function CustomerList() {
                       <input
                         type="text"
                         value={editFormData.details.manager.department}
-                        onChange={(e) => updateManagerInfo('department', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateManagerInfo('department', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       />
                     </div>
@@ -907,7 +939,9 @@ export default function CustomerList() {
                       <input
                         type="tel"
                         value={editFormData.details.manager.mobile}
-                        onChange={(e) => updateManagerInfo('mobile', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateManagerInfo('mobile', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       />
                     </div>
@@ -918,7 +952,9 @@ export default function CustomerList() {
                       <input
                         type="tel"
                         value={editFormData.details.manager.directPhone}
-                        onChange={(e) => updateManagerInfo('directPhone', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateManagerInfo('directPhone', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       />
                     </div>
@@ -937,7 +973,9 @@ export default function CustomerList() {
                       </label>
                       <select
                         value={editFormData.details.paymentTerms}
-                        onChange={(e) => updateEditFormDetails('paymentTerms', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                          updateEditFormDetails('paymentTerms', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg pr-8"
                       >
                         <option value="즉시 결제">즉시 결제</option>
@@ -955,7 +993,9 @@ export default function CustomerList() {
                       <input
                         type="text"
                         value={editFormData.details.creditLimit}
-                        onChange={(e) => updateEditFormDetails('creditLimit', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateEditFormDetails('creditLimit', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       />
                     </div>
@@ -967,7 +1007,9 @@ export default function CustomerList() {
                       </label>
                       <select
                         value={editFormData.details.taxType}
-                        onChange={(e) => updateEditFormDetails('taxType', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                          updateEditFormDetails('taxType', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg pr-8"
                       >
                         <option value="일반과세">일반과세</option>
@@ -984,7 +1026,9 @@ export default function CustomerList() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">비고</label>
                 <textarea
                   value={editFormData.details.notes}
-                  onChange={(e) => updateEditFormDetails('notes', e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    updateEditFormDetails('notes', e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                   rows={3}
                 />

@@ -71,7 +71,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
   };
 
   const updateCustomerData = <K extends keyof CustomerData>(field: K, value: CustomerData[K]) => {
-    setCustomerData((prev) => ({ ...prev, [field]: value }) as CustomerData);
+    setCustomerData((prev) => ({ ...prev, [field]: value }));
   };
   return (
     <>
@@ -99,7 +99,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="text"
                       value={customerData.companyName}
-                      onChange={(e) => updateCustomerData('companyName', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('companyName', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="회사명을 입력하세요"
                       required
@@ -112,7 +114,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="text"
                       value={customerData.businessNumber}
-                      onChange={(e) => updateCustomerData('businessNumber', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('businessNumber', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="000-00-00000"
                     />
@@ -122,7 +126,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="text"
                       value={customerData.industry}
-                      onChange={(e) => updateCustomerData('industry', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('industry', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="업종을 입력하세요"
                     />
@@ -133,7 +139,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     </label>
                     <select
                       value={customerData.businessType}
-                      onChange={(e) => updateCustomerData('businessType', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                        updateCustomerData('businessType', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
                     >
                       <option value="">선택하세요</option>
@@ -147,7 +155,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="text"
                       value={customerData.representative}
-                      onChange={(e) => updateCustomerData('representative', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('representative', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="대표자명을 입력하세요"
                     />
@@ -157,7 +167,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="url"
                       value={customerData.website}
-                      onChange={(e) => updateCustomerData('website', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('website', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="https://www.example.com"
                     />
@@ -176,7 +188,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="text"
                       value={customerData.contactPerson}
-                      onChange={(e) => updateCustomerData('contactPerson', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('contactPerson', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="담당자명을 입력하세요"
                       required
@@ -187,7 +201,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="text"
                       value={customerData.position}
-                      onChange={(e) => updateCustomerData('position', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('position', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="직책을 입력하세요"
                     />
@@ -199,7 +215,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="tel"
                       value={customerData.phone}
-                      onChange={(e) => updateCustomerData('phone', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('phone', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="02-0000-0000"
                       required
@@ -210,7 +228,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="tel"
                       value={customerData.mobile}
-                      onChange={(e) => updateCustomerData('mobile', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('mobile', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="010-0000-0000"
                     />
@@ -220,7 +240,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="email"
                       value={customerData.email}
-                      onChange={(e) => updateCustomerData('email', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('email', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="example@company.com"
                       required
@@ -231,7 +253,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="tel"
                       value={customerData.fax}
-                      onChange={(e) => updateCustomerData('fax', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('fax', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="02-0000-0000"
                     />
@@ -251,7 +275,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                       <input
                         type="text"
                         value={customerData.zipCode}
-                        onChange={(e) => updateCustomerData('zipCode', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateCustomerData('zipCode', e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="00000"
                       />
@@ -262,7 +288,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="text"
                       value={customerData.address}
-                      onChange={(e) => updateCustomerData('address', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('address', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="기본 주소를 입력하세요"
                     />
@@ -272,7 +300,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <input
                       type="text"
                       value={customerData.detailAddress}
-                      onChange={(e) => updateCustomerData('detailAddress', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        updateCustomerData('detailAddress', e.target.value)
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="상세 주소를 입력하세요"
                     />
@@ -290,7 +320,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     </label>
                     <select
                       value={customerData.customerType}
-                      onChange={(e) =>
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                         updateCustomerData(
                           'customerType',
                           e.target.value as CustomerData['customerType'],
@@ -308,7 +338,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <label className="block text-sm font-medium text-gray-700 mb-1">신용등급</label>
                     <select
                       value={customerData.creditRating}
-                      onChange={(e) =>
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                         updateCustomerData(
                           'creditRating',
                           e.target.value as CustomerData['creditRating'],
@@ -328,7 +358,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     </label>
                     <select
                       value={customerData.paymentTerms}
-                      onChange={(e) =>
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                         updateCustomerData(
                           'paymentTerms',
                           e.target.value as CustomerData['paymentTerms'],
@@ -350,7 +380,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     </label>
                     <select
                       value={customerData.taxType}
-                      onChange={(e) =>
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                         updateCustomerData('taxType', e.target.value as CustomerData['taxType'])
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
@@ -368,7 +398,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                 <label className="block text-sm font-medium text-gray-700 mb-2">비고</label>
                 <textarea
                   value={customerData.notes}
-                  onChange={(e) => updateCustomerData('notes', e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    updateCustomerData('notes', e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   rows={3}
                   placeholder="고객에 대한 추가 정보나 특이사항을 입력하세요"
