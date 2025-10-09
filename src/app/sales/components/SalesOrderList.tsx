@@ -1,12 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import NewOrderModal from './NewOrderModal';
+import NewOrderModal from '@/app/sales/components/NewOrderModal';
+import SalesOrderDetailModal from '@/app/sales/components/SalesOrderDetailModal';
 import { Order } from '@/app/sales/types/SalesOrderListType';
+import { SalesOrder } from '@/app/sales/types/SalesOrderType';
 
 const SalesOrderList = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [showNewOrderModal, setShowNewOrderModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<SalesOrder | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
   const orders: Order[] = [
     {
       id: 'SO-2024-001',
@@ -107,7 +111,10 @@ const SalesOrderList = () => {
         return status;
     }
   };
-
+  const handleViewOrder = (order: SalesOrder) => {
+    setSelectedOrder(order);
+    setShowDetailModal(true);
+  };
   const filteredOrders =
     selectedStatus === 'all' ? orders : orders.filter((order) => order.status === selectedStatus);
 
@@ -200,12 +207,11 @@ const SalesOrderList = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex items-center space-x-2">
-                    <button className="text-blue-600 hover:text-blue-900 cursor-pointer">
+                    <button
+                      className="text-blue-600 hover:text-blue-900 cursor-pointer"
+                      onClick={() => handleViewOrder(order)}
+                    >
                       보기
-                    </button>
-                    <span className="text-gray-300">|</span>
-                    <button className="text-gray-600 hover:text-gray-900 cursor-pointer">
-                      수정
                     </button>
                   </div>
                 </td>
@@ -217,6 +223,12 @@ const SalesOrderList = () => {
       <NewOrderModal
         $showNewOrderModal={showNewOrderModal}
         $setShowNewOrderModal={setShowNewOrderModal}
+      />
+      <SalesOrderDetailModal
+        $showDetailModal={showDetailModal}
+        $setShowDetailModal={setShowDetailModal}
+        $selectedOrder={selectedOrder}
+        $getStatusColor={getStatusColor}
       />
     </div>
   );

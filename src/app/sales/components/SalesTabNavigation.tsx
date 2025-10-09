@@ -4,6 +4,7 @@ import { useState } from 'react';
 import SalesOrderList from '@/app/sales/components/SalesOrderList';
 import SalesCustomerList from '@/app/sales/components/SalesCustomerList';
 import SalesChart from '@/app/sales/components/SalesChart';
+import QuoteList from '@/app/sales/components/QuoteList';
 
 const SalesTabNavigation = () => {
   const [activeTab, setActiveTab] = useState('orders');
@@ -12,6 +13,7 @@ const SalesTabNavigation = () => {
 
   const tabs = [
     { id: 'orders', name: '주문 관리', icon: 'ri-shopping-cart-line' },
+    { id: 'quotes', name: '견적 관리', icon: 'ri-file-text-line' },
     { id: 'customers', name: '고객 관리', icon: 'ri-user-3-line' },
     { id: 'analytics', name: '매출 분석', icon: 'ri-bar-chart-line' },
   ];
@@ -45,6 +47,7 @@ const SalesTabNavigation = () => {
 
       <div className="space-y-6">
         {activeTab === 'orders' && <SalesOrderList />}
+        {activeTab === 'quotes' && <QuoteList />}
         {activeTab === 'customers' && <SalesCustomerList />}
         {activeTab === 'analytics' && <SalesChart />}
       </div>
