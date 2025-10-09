@@ -7,9 +7,10 @@ import SalesChart from '@/app/sales/components/SalesChart';
 import SalesQuoteList from '@/app/sales/components/SalesQuoteList';
 
 const SalesTabNavigation = () => {
-  const [activeTab, setActiveTab] = useState('orders');
   const router = useRouter();
   const searchParams = useSearchParams();
+  const initialTab = searchParams.get('tab') || 'orders';
+  const [activeTab, setActiveTab] = useState(initialTab);
 
   const tabs = [
     { id: 'orders', name: '주문 관리', icon: 'ri-shopping-cart-line' },
