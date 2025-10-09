@@ -6,6 +6,7 @@ interface SalesOrderDetailProps {
   $setShowDetailModal: (show: boolean) => void;
   $selectedOrder: SalesOrder | null;
   $getStatusColor: (status: string) => string;
+  $getStatusText: (status: string) => string;
 }
 
 const SalesOrderDetailModal = ({
@@ -13,6 +14,7 @@ const SalesOrderDetailModal = ({
   $setShowDetailModal,
   $selectedOrder,
   $getStatusColor,
+  $getStatusText,
 }: SalesOrderDetailProps) => {
   const handleCloseModal = () => {
     $setShowDetailModal(false);
@@ -64,7 +66,7 @@ const SalesOrderDetailModal = ({
                       <span
                         className={`ml-2 inline-flex px-2 py-1 text-xs font-semibold rounded-full ${$getStatusColor($selectedOrder.status)}`}
                       >
-                        {$selectedOrder.status}
+                        {$getStatusText($selectedOrder.status)}
                       </span>
                     </div>
                   </div>

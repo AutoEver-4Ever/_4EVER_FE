@@ -124,20 +124,6 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
     setOrderItems(updatedItems);
   };
 
-  const addOrderItem = () => {
-    setOrderItems([
-      ...orderItems,
-      {
-        id: orderItems.length + 1,
-        productName: '',
-        quantity: 1,
-        unitPrice: 0,
-        totalPrice: 0,
-        deliveryDate: '',
-      },
-    ]);
-  };
-
   const removeOrderItem = (itemIndex: number) => {
     if (orderItems.length > 1) {
       setOrderItems(orderItems.filter((_, index) => index !== itemIndex));
@@ -264,14 +250,6 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
               <div className="bg-green-50 p-4 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="text-lg font-semibold text-gray-900">주문 품목</h4>
-                  <button
-                    type="button"
-                    onClick={addOrderItem}
-                    className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer text-sm flex items-center space-x-1"
-                  >
-                    <i className="ri-add-line"></i>
-                    <span>품목 추가</span>
-                  </button>
                 </div>
 
                 <div className="space-y-4">
