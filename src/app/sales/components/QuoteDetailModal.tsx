@@ -130,12 +130,6 @@ const QuoteDetailModal = ({
                 >
                   닫기
                 </button>
-                <button className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium cursor-pointer whitespace-nowrap">
-                  PDF 다운로드
-                </button>
-                <button className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium cursor-pointer whitespace-nowrap">
-                  주문으로 전환
-                </button>
               </div>
             </div>
           </div>
