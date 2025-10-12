@@ -1,46 +1,11 @@
 'use client';
 
-import { SUPPLIERS } from '@/constants/purchase';
 import React, { useState } from 'react';
+import { PurchaseRequestItem } from '@/app/purchase/types/PurchaseRequestItemType';
+import { PURCHASE_REQUEST_TABLE_HEADERS, SUPPLIERS } from '@/constants/purchase';
+import { PurchaseRequestItemProps } from '@/app/purchase/types/PurchaseRequestModalType';
 
-export interface PurchaseRequestItem {
-  id: string;
-  itemName: string;
-  quantity: string;
-  unit: string;
-  estimatedPrice: string;
-  supplier: string;
-  dueDate: string;
-  purpose: string;
-  notes: string;
-}
-
-interface PurchaseRequestModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const RequiredBadge = () => <span className="text-red-500">*</span>;
-
-interface TableHeader {
-  label: string;
-  required?: boolean;
-}
-
-const TABLE_HEADERS: readonly TableHeader[] = [
-  { label: '품목명', required: true },
-  { label: '수량', required: true },
-  { label: '단위', required: true },
-  { label: '예상 단가', required: true },
-  { label: '예상 총액' },
-  { label: '희망 공급업체', required: true },
-  { label: '희망 납기일', required: true },
-  { label: '사용 목적', required: true },
-  { label: '비고' },
-  { label: '작업' },
-] as const;
-
-export default function PurchaseRequestModal({ isOpen, onClose }: PurchaseRequestModalProps) {
+export default function PurchaseRequestModal({ isOpen, onClose }: PurchaseRequestItemProps) {
   const [requestItems, setRequestItems] = useState<PurchaseRequestItem[]>([
     {
       id: '1',
@@ -181,20 +146,23 @@ export default function PurchaseRequestModal({ isOpen, onClose }: PurchaseReques
               </button>
             </div>
 
+            {/* 구매 요청 작성 입력 테이블 */}
             <div className="overflow-x-auto">
               <table className="w-full border border-gray-200 rounded-lg">
+                {/* 테이블 헤더: 품목명, 수량, 단위, 예상 단가, 예상 총액, 희망 공급업체, 희망 납기일, 사용 목적, 비고, 작업 */}
                 <thead className="bg-gray-50">
                   <tr>
-                    {TABLE_HEADERS.map(({ label, required }) => (
+                    {PURCHASE_REQUEST_TABLE_HEADERS.map((label) => (
                       <th
                         key={label}
                         className="px-4 py-3 text-xs font-medium text-gray-500 uppercase text-center"
                       >
-                        {label} {required && <RequiredBadge />}
+                        {label}
                       </th>
                     ))}
                   </tr>
                 </thead>
+                {/* 테이블 바디 */}
                 <tbody className="bg-white divide-y divide-gray-200">
                   {requestItems.map((item) => (
                     <tr key={item.id}>

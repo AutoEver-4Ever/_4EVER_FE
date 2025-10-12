@@ -4,26 +4,8 @@
 import { useState } from 'react';
 import PurchaseRequestModal from '@/app/purchase/components/modals/PurchaseRequestModal';
 import PurchaseRequestDetailModal from '@/app/purchase/components/modals/PurchaseRequestDetailModal';
+import { PurchaseRequestResult } from '@/app/purchase/types/PurchaseRequestResultType';
 import { PURCHASE_LIST_TABLE_HEADERS } from '@/constants/purchase';
-
-interface PurchaseItem {
-  name: string;
-  quantity: string;
-  unit: string;
-  price: string;
-}
-
-interface PurchaseRequest {
-  id: string;
-  requester: string;
-  department: string;
-  requestDate: string;
-  dueDate: string;
-  totalAmount: string;
-  status: 'approved' | 'pending' | 'waiting' | 'rejected';
-  priority: 'high' | 'medium' | 'low';
-  items: PurchaseItem[];
-}
 
 const getStatusColor = (status: string): string => {
   switch (status) {
@@ -61,9 +43,9 @@ export default function PurchaseRequestList() {
   const [itemsPerPage] = useState(5);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState<PurchaseRequest | null>(null); // 선택된 구매 요청
+  const [selectedRequest, setSelectedRequest] = useState<PurchaseRequestResult | null>(null); // 선택된 구매 요청
 
-  const [requests, setRequests] = useState<PurchaseRequest[]>([
+  const [requests, setRequests] = useState<PurchaseRequestResult[]>([
     {
       id: 'PR-2024-001',
       requester: '김철수',
@@ -163,7 +145,7 @@ export default function PurchaseRequestList() {
     alert('구매 요청이 반려되었습니다.');
   };
 
-  const handleViewDetail = (request: PurchaseRequest): void => {
+  const handleViewDetail = (request: PurchaseRequestResult): void => {
     setSelectedRequest(request);
     setShowDetailModal(true);
   };
