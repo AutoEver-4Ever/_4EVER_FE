@@ -7,7 +7,7 @@ import PurchaseOrderList from '@/app/purchase/components/PurchaseOrderList';
 import SupplierList from '@/app/purchase/components/SupplierList';
 import PeriodFilter from '@/app/purchase/components/PeriodFilter';
 import TabNavigation from '@/app/purchase/components/TabNavigation';
-import { PURCHASE_PERIODS, PURCHASE_TABS } from '@/constants/purchase';
+import { PURCHASE_PERIODS, PURCHASE_TABS } from '@/app/purchase/constants';
 
 export default function PurchasePage() {
   const [activeTab, setActiveTab] = useState('requests');

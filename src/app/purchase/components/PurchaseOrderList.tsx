@@ -2,15 +2,86 @@
 
 import { useState } from 'react';
 
+interface SupplierInfo {
+  name: string;
+  contact: string;
+  email: string;
+  address: string;
+}
+
+interface OrderItem {
+  item: string;
+  specification: string;
+  quantity: number;
+  unit: string;
+  unitPrice: number;
+  amount: number;
+}
+
+interface DeliveryInfo {
+  warehouse: string;
+  requestDate: string;
+  specialInstructions: string;
+}
+
+interface OrderDetails {
+  supplierInfo: SupplierInfo;
+  orderItems: OrderItem[];
+  deliveryInfo: DeliveryInfo;
+  notes: string;
+}
+
+interface PurchaseOrder {
+  id: string;
+  supplier: string;
+  items: string;
+  totalAmount: string;
+  orderDate: string;
+  deliveryDate: string;
+  status: 'pending' | 'approved' | 'rejected';
+  details: OrderDetails;
+}
+
+type SortField = 'orderDate' | 'deliveryDate' | '';
+type SortDirection = 'asc' | 'desc';
+
+const getStatusColor = (status: string): string => {
+  switch (status) {
+    case 'pending':
+      return 'bg-yellow-100 text-yellow-700';
+    case 'approved':
+      return 'bg-green-100 text-green-700';
+    case 'rejected':
+      return 'bg-red-100 text-red-700';
+    default:
+      return 'bg-gray-100 text-gray-700';
+  }
+};
+
+const getStatusText = (status: string): string => {
+  switch (status) {
+    case 'pending':
+      return '대기';
+    case 'approved':
+      return '승인';
+    case 'rejected':
+      return '반려';
+    default:
+      return status;
+  }
+};
+
 export default function PurchaseOrderList() {
-  const [selectedStatus, setSelectedStatus] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
-  const [showDetailModal, setShowDetailModal] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<any>(null);
-  const [sortField, setSortField] = useState<string>('');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [orders, setOrders] = useState([
+  const [selectedStatus, setSelectedStatus] = useState<'all' | 'pending' | 'approved' | 'rejected'>(
+    'all',
+  );
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(5);
+  const [showDetailModal, setShowDetailModal] = useState<boolean>(false);
+  const [selectedOrder, setSelectedOrder] = useState<PurchaseOrder | null>(null);
+  const [sortField, setSortField] = useState<SortField>('');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [orders, setOrders] = useState<PurchaseOrder[]>([
     {
       id: 'PO-2024-001',
       supplier: '대한철강',
@@ -120,48 +191,25 @@ export default function PurchaseOrderList() {
     },
   ]);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'approved':
-        return 'bg-green-100 text-green-700';
-      case 'rejected':
-        return 'bg-red-100 text-red-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return '대기';
-      case 'approved':
-        return '승인';
-      case 'rejected':
-        return '반려';
-      default:
-        return status;
-    }
-  };
-
-  // 승인/반려 처리 함수
-  const handleApprove = (orderId: string) => {
+  const handleApprove = (orderId: string): void => {
     setOrders(
-      orders.map((order) => (order.id === orderId ? { ...order, status: 'approved' } : order)),
+      orders.map((order) =>
+        order.id === orderId ? { ...order, status: 'approved' as const } : order,
+      ),
     );
     alert('발주서가 승인되었습니다.');
   };
 
-  const handleReject = (orderId: string) => {
+  const handleReject = (orderId: string): void => {
     setOrders(
-      orders.map((order) => (order.id === orderId ? { ...order, status: 'rejected' } : order)),
+      orders.map((order) =>
+        order.id === orderId ? { ...order, status: 'rejected' as const } : order,
+      ),
     );
     alert('발주서가 반려되었습니다.');
   };
 
-  const handleSort = (field: string) => {
+  const handleSort = (field: SortField): void => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
@@ -170,7 +218,7 @@ export default function PurchaseOrderList() {
     }
   };
 
-  const sortedOrders = [...orders].sort((a, b) => {
+  const sortedOrders: PurchaseOrder[] = [...orders].sort((a, b) => {
     if (!sortField) return 0;
 
     let aValue = '';
@@ -191,43 +239,42 @@ export default function PurchaseOrderList() {
     }
   });
 
-  const filteredOrders = sortedOrders.filter((order) => {
+  const filteredOrders: PurchaseOrder[] = sortedOrders.filter((order) => {
     return selectedStatus === 'all' || order.status === selectedStatus;
   });
 
-  // 페이지네이션 계산
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentOrders = filteredOrders.slice(startIndex, endIndex);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = (page: number): void => {
     setCurrentPage(page);
   };
 
-  const handlePrevPage = () => {
+  const handlePrevPage = (): void => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
-  const handleNextPage = () => {
+  const handleNextPage = (): void => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
 
-  const handleStatusChange = (status: string) => {
-    setSelectedStatus(status);
+  const handleStatusChange = (status: string): void => {
+    setSelectedStatus(status as 'all' | 'pending' | 'approved' | 'rejected');
     setCurrentPage(1);
   };
 
-  const handleViewDetail = (order: any) => {
+  const handleViewDetail = (order: PurchaseOrder): void => {
     setSelectedOrder(order);
     setShowDetailModal(true);
   };
 
-  const getSortIcon = (field: string) => {
+  const getSortIcon = (field: SortField): string => {
     if (sortField !== field) {
       return 'ri-arrow-up-down-line text-gray-400';
     }
@@ -328,7 +375,7 @@ export default function PurchaseOrderList() {
                     >
                       <i className="ri-eye-line"></i>
                     </button>
-                    {order.status === 'pending' ? (
+                    {order.status === 'pending' && (
                       <>
                         <button
                           onClick={() => handleApprove(order.id)}
@@ -345,7 +392,7 @@ export default function PurchaseOrderList() {
                           <i className="ri-close-line"></i>
                         </button>
                       </>
-                    ) : null}
+                    )}
                   </div>
                 </td>
               </tr>
@@ -402,7 +449,7 @@ export default function PurchaseOrderList() {
 
       {/* 발주서 상세 모달 */}
       {showDetailModal && selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold text-gray-900">발주서 상세 정보</h3>
@@ -491,7 +538,7 @@ export default function PurchaseOrderList() {
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedOrder.details.orderItems.map((item: any, index: number) => (
+                      {selectedOrder.details.orderItems.map((item: OrderItem, index: number) => (
                         <tr key={index} className="border-b">
                           <td className="px-4 py-3 text-sm text-gray-900">{item.item}</td>
                           <td className="px-4 py-3 text-sm text-gray-900">{item.specification}</td>
@@ -516,7 +563,7 @@ export default function PurchaseOrderList() {
                         <td className="px-4 py-3 text-right font-medium text-green-600">
                           ₩
                           {selectedOrder.details.orderItems
-                            .reduce((sum: number, item: any) => sum + item.amount, 0)
+                            .reduce((sum: number, item: OrderItem) => sum + item.amount, 0)
                             .toLocaleString()}
                         </td>
                       </tr>

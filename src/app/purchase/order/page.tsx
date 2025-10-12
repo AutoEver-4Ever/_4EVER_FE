@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ORDER_ITEM_TABLE_HEADERS, SUPPLIERS } from '@/app/purchase/constants';
 
 interface OrderItem {
   id: string;
@@ -41,18 +42,6 @@ export default function NewPurchaseOrderPage() {
       notes: '',
     },
   ]);
-
-  const suppliers = [
-    '대한철강',
-    '알루텍',
-    '스테인리스코리아',
-    '용접재료상사',
-    '패스너코리아',
-    '포스코',
-    '현대제철',
-    '동국제강',
-    '세아제강',
-  ];
 
   const paymentTermsOptions = [
     '즉시 결제',
@@ -217,7 +206,7 @@ export default function NewPurchaseOrderPage() {
                   required
                 >
                   <option value="">공급업체 선택</option>
-                  {suppliers.map((supplier) => (
+                  {SUPPLIERS.map((supplier) => (
                     <option key={supplier} value={supplier}>
                       {supplier}
                     </option>
@@ -283,36 +272,18 @@ export default function NewPurchaseOrderPage() {
             {/* 테이블 */}
             <div className="overflow-x-auto">
               <table className="w-full border border-gray-200 rounded-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
-                      품목명 <span className="text-red-500">*</span>
+                <tr>
+                  {ORDER_ITEM_TABLE_HEADERS.map((header, index) => (
+                    <th
+                      key={index}
+                      className="px-4 py-3 text-xs font-medium text-gray-500 uppercase text-center"
+                    >
+                      {header.label}
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
-                      규격/사양 <span className="text-red-500">*</span>
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
-                      수량 <span className="text-red-500">*</span>
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
-                      단위 <span className="text-red-500">*</span>
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
-                      단가 <span className="text-red-500">*</span>
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
-                      금액
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
-                      비고
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
-                      작업
-                    </th>
-                  </tr>
-                </thead>
+                  ))}
+                </tr>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {items.map((item, index) => (
+                  {items.map((item) => (
                     <tr key={item.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 border-b border-gray-200">
                         <input

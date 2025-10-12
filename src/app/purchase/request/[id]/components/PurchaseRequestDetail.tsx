@@ -304,7 +304,7 @@ export default function PurchaseRequestDetail({ requestId }: PurchaseRequestDeta
         </div>
 
         {/* 승인 정보 (승인된 경우에만 표시) */}
-        {request.status === 'approved' && request.approver && (
+        {/* {request.status === 'approved' && request.approver && (
           <div className="bg-green-50 rounded-lg border border-green-200 mb-6">
             <div className="p-6">
               <h3 className="text-lg font-semibold text-green-900 mb-4">승인 정보</h3>
@@ -326,7 +326,7 @@ export default function PurchaseRequestDetail({ requestId }: PurchaseRequestDeta
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* 하단 버튼 */}
         <div className="flex items-center justify-between">

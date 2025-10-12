@@ -1,6 +1,6 @@
 'use client';
 
-import { PURCHASE_ITEM_TABLE_HEADERS } from '@/constants/purchase';
+import { PURCHASE_ITEM_TABLE_HEADERS } from '@/app/purchase/constants';
 import { PurchaseRequestDetailModalProps } from '@/app/purchase/types/PurchaseRequestDetailModalType';
 
 // 상태별 색상

@@ -1,4 +1,5 @@
 import { Tab } from '@/app/purchase/types/TabNavigationType';
+import { TableHeader } from '@/app/purchase/types/TableHeader';
 
 // 구매 기간 필터링
 export const PURCHASE_PERIODS = ['이번 주', '이번 달', '이번 분기', '올해'] as const;
@@ -59,3 +60,15 @@ export const PURCHASE_REQUEST_TABLE_HEADERS = [
 
 // 구매 상세 정보 모달 테이블 헤더
 export const PURCHASE_ITEM_TABLE_HEADERS = ['품목명', '수량', '단위', '단가'] as const;
+
+// 발주서 상세 정보 주문 품목 테이블 헤더
+export const ORDER_ITEM_TABLE_HEADERS: readonly TableHeader[] = [
+  { label: '품목명' },
+  { label: '규격/사양' },
+  { label: '수량' },
+  { label: '단위' },
+  { label: '단가' },
+  { label: '금액' },
+  { label: '비고' },
+  { label: '작업' },
+] as const;

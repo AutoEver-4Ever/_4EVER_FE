@@ -5,7 +5,7 @@ import { useState } from 'react';
 import PurchaseRequestModal from '@/app/purchase/components/modals/PurchaseRequestModal';
 import PurchaseRequestDetailModal from '@/app/purchase/components/modals/PurchaseRequestDetailModal';
 import { PurchaseRequestResult } from '@/app/purchase/types/PurchaseRequestResultType';
-import { PURCHASE_LIST_TABLE_HEADERS } from '@/constants/purchase';
+import { PURCHASE_LIST_TABLE_HEADERS } from '@/app/purchase/constants';
 
 const getStatusColor = (status: string): string => {
   switch (status) {
@@ -54,7 +54,6 @@ export default function PurchaseRequestList() {
       dueDate: '2024-01-25',
       totalAmount: '₩2,500,000',
       status: 'approved',
-      priority: 'high',
       items: [
         { name: '강판', quantity: '500', unit: 'EA', price: '5,000' },
         { name: '볼트', quantity: '100', unit: 'EA', price: '500' },
@@ -68,7 +67,6 @@ export default function PurchaseRequestList() {
       dueDate: '2024-01-26',
       totalAmount: '₩1,800,000',
       status: 'pending',
-      priority: 'medium',
       items: [{ name: '알루미늄', quantity: '200', unit: 'EA', price: '9,000' }],
     },
     {
@@ -79,7 +77,6 @@ export default function PurchaseRequestList() {
       dueDate: '2024-01-27',
       totalAmount: '₩350,000',
       status: 'waiting',
-      priority: 'low',
       items: [{ name: '볼트', quantity: '1000', unit: 'EA', price: '350' }],
     },
     {
@@ -90,7 +87,6 @@ export default function PurchaseRequestList() {
       dueDate: '2024-01-28',
       totalAmount: '₩750,000',
       status: 'rejected',
-      priority: 'medium',
       items: [{ name: '용접봉', quantity: '50', unit: '박스', price: '15,000' }],
     },
   ]);

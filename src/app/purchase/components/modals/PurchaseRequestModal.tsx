@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { PurchaseRequestItem } from '@/app/purchase/types/PurchaseRequestItemType';
-import { PURCHASE_REQUEST_TABLE_HEADERS, SUPPLIERS } from '@/constants/purchase';
+import { PURCHASE_REQUEST_TABLE_HEADERS, SUPPLIERS } from '@/app/purchase/constants';
 import { PurchaseRequestItemProps } from '@/app/purchase/types/PurchaseRequestModalType';
 
 export default function PurchaseRequestModal({ isOpen, onClose }: PurchaseRequestItemProps) {

@@ -13,11 +13,11 @@ interface Supplier {
   materials: string[];
 }
 
-interface SupplierListProps {
-  onAddSupplier: () => void;
-}
+// interface SupplierListProps {
+//   onAddSupplier: () => void;
+// }
 
-export default function SupplierList({ onAddSupplier }: SupplierListProps) {
+export default function SupplierList() {
   const [suppliers] = useState<Supplier[]>([
     {
       id: 'SUP001',
@@ -131,10 +131,7 @@ export default function SupplierList({ onAddSupplier }: SupplierListProps) {
         <div className="p-6 border-b border-gray-200">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold text-gray-900">공급업체 목록</h3>
-            <button
-              onClick={onAddSupplier}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap cursor-pointer"
-            >
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap cursor-pointer">
               <i className="ri-add-line mr-2"></i>
               신규 등록
             </button>
@@ -214,7 +211,7 @@ export default function SupplierList({ onAddSupplier }: SupplierListProps) {
 
       {/* 상세보기/수정 모달 */}
       {isDetailModalOpen && selectedSupplier && editForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center">
