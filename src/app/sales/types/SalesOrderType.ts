@@ -1,23 +1,22 @@
 export interface SalesOrder {
   id: string;
-  orderNumber: string;
   customer: string;
-  date: string;
-  amount: number;
+  contact: string;
+  phone: string;
+  email: string;
+  address: string;
+  orderDate: string;
+  deliveryDate: string;
+  amount: string | number;
   status: string;
-  items: Array<{
+  priority: string;
+  items: {
     name: string;
     quantity: number;
     unitPrice: number;
-    total: number;
-  }>;
-  customerInfo: {
-    name: string;
-    contact: string;
-    address: string;
-    email: string;
-  };
-  deliveryDate: string;
-  paymentTerms: string;
-  notes: string;
+    totalPrice: number;
+  }[];
+  notes?: string;
+  paymentMethod?: string;
+  deliveryAddress?: string;
 }
