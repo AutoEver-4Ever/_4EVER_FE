@@ -8,6 +8,7 @@ import { SalesCustomerListType } from '@/app/sales/types/SalesCustomerListType';
 import CustomerEditModal from './CustomerEditModal';
 const CustomerList = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState<'전체' | '활성' | '비활성'>('전체');
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState('');
   const [showCustomerModal, setShowCustomerModal] = useState(false);
@@ -101,7 +102,10 @@ const CustomerList = () => {
       customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.manager.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.id.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSearch;
+
+    const matchesStatus = selectedStatus === '전체' ? true : customer.status === selectedStatus;
+
+    return matchesSearch && matchesStatus;
   });
 
   const handleViewClick = (id: string) => {
@@ -143,6 +147,17 @@ const CustomerList = () => {
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value as '전체' | '활성' | '비활성')}
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="전체">전체</option>
+              <option value="활성">활성</option>
+              <option value="비활성">비활성</option>
+            </select>
           </div>
         </div>
       </div>
@@ -211,7 +226,7 @@ const CustomerList = () => {
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => handleViewClick(customer.id)}
-                      className="text-gray-600 hover:text-gray-500 cursor-pointer"
+                      className="text-blue-600 hover:text-blue-800 cursor-pointer"
                       title="상세보기"
                     >
                       <i className="ri-eye-line"></i>
