@@ -3,6 +3,7 @@ export type QuoteStatus =
   | 'pending'
   | 'draft'
   | 'rejected'
+  | '승인'
   | '검토'
   | '대기'
   | '반려';
