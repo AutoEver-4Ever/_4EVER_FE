@@ -1,12 +1,11 @@
 export type QuoteStatus =
-  | 'draft'
-  | 'pending'
   | 'approved'
+  | 'pending'
+  | 'draft'
   | 'rejected'
-  | '승인됨'
-  | '검토중'
-  | '임시저장'
-  | '거절됨';
+  | '검토'
+  | '대기'
+  | '반려';
 
 export type QuotePriority = '긴급' | '높음' | '보통' | '낮음';
 
@@ -21,13 +20,10 @@ export interface Quote {
   id: string;
   customer: string;
   contact: string;
-  email: string;
-  quoteDate: string;
-  validUntil: string;
+  date: string;
+  deliveryDate: string;
   amount: number;
   status: QuoteStatus;
-  priority: QuotePriority;
-  items: QuoteItem[];
 }
 
 export interface QuoteFormItem {
