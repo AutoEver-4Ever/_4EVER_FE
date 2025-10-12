@@ -11,7 +11,7 @@ export default async function SalesPage({
 }) {
   const params = await searchParams; // 여기서 resolve
   if (!params.tab) {
-    redirect('/sales?tab=orders');
+    redirect('/sales?tab=quotes');
   }
 
   return (

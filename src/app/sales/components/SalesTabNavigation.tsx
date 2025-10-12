@@ -9,12 +9,12 @@ import SalesQuoteList from '@/app/sales/components/SalesQuoteList';
 const SalesTabNavigation = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialTab = searchParams.get('tab') || 'orders';
+  const initialTab = searchParams.get('tab') || 'quotes';
   const [activeTab, setActiveTab] = useState(initialTab);
 
   const tabs = [
-    { id: 'orders', name: '주문 관리', icon: 'ri-shopping-cart-line' },
     { id: 'quotes', name: '견적 관리', icon: 'ri-file-text-line' },
+    { id: 'orders', name: '주문 관리', icon: 'ri-shopping-cart-line' },
     { id: 'customers', name: '고객 관리', icon: 'ri-user-3-line' },
     { id: 'analytics', name: '매출 분석', icon: 'ri-bar-chart-line' },
   ];
@@ -47,8 +47,8 @@ const SalesTabNavigation = () => {
       </div>
 
       <div className="space-y-6">
-        {activeTab === 'orders' && <SalesOrderList />}
         {activeTab === 'quotes' && <SalesQuoteList />}
+        {activeTab === 'orders' && <SalesOrderList />}
         {activeTab === 'customers' && <SalesCustomerList />}
         {activeTab === 'analytics' && <SalesChart />}
       </div>
