@@ -35,11 +35,46 @@ const SalesChart = () => {
   ];
 
   const customerData = [
-    { name: '삼성전자', orders: 45, amount: 1250000000 },
-    { name: 'LG화학', orders: 32, amount: 890000000 },
-    { name: '현대자동차', orders: 28, amount: 720000000 },
-    { name: 'SK하이닉스', orders: 24, amount: 650000000 },
-    { name: 'POSCO', orders: 20, amount: 580000000 },
+    {
+      id: 'C-001',
+      name: '삼성전자',
+      manager: '김철수',
+      orders: 45,
+      amount: 1250000000,
+      status: '활성',
+    },
+    {
+      id: 'C-002',
+      name: 'LG화학',
+      manager: '박영희',
+      orders: 32,
+      amount: 890000000,
+      status: '활성',
+    },
+    {
+      id: 'C-003',
+      name: '현대자동차',
+      manager: '이민수',
+      orders: 28,
+      amount: 720000000,
+      status: '활성',
+    },
+    {
+      id: 'C-004',
+      name: 'SK하이닉스',
+      manager: '정유진',
+      orders: 24,
+      amount: 650000000,
+      status: '활성',
+    },
+    {
+      id: 'C-005',
+      name: 'POSCO',
+      manager: '최정호',
+      orders: 20,
+      amount: 580000000,
+      status: '비활성',
+    },
   ];
 
   const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
@@ -146,62 +181,41 @@ const SalesChart = () => {
           <h3 className="text-lg font-semibold text-gray-900 mb-6">주요 고객별 매출</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={customerData} layout="horizontal">
+              <BarChart data={customerData} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" tickFormatter={formatCurrency} />
                 <YAxis dataKey="name" type="category" width={80} />
-                <Tooltip formatter={(value) => [formatCurrency(Number(value)), '매출액']} />
-                <Bar dataKey="amount" fill="#3B82F6" />
+                <Tooltip
+                  formatter={(value, name, props) => {
+                    const customer = customerData.find((c) => c.name === props.payload.name);
+                    return [
+                      `₩${(Number(value) / 100000000).toFixed(1)}억 (${customer?.orders ?? 0}건)`,
+                      '매출액',
+                    ];
+                  }}
+                />
+                <defs>
+                  <linearGradient id="barActive" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#60A5FA" />
+                    <stop offset="100%" stopColor="#2563EB" />
+                  </linearGradient>
+                  <linearGradient id="barInactive" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#D1D5DB" />
+                    <stop offset="100%" stopColor="#9CA3AF" />
+                  </linearGradient>
+                </defs>
+
+                <Bar dataKey="amount">
+                  {customerData.map((c, i) => (
+                    <Cell
+                      key={i}
+                      fill={c.status === '활성' ? 'url(#barActive)' : 'url(#barInactive)'}
+                    />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
-      </div>
-
-      {/* 매출 성과 지표 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <i className="ri-line-chart-line text-blue-600 text-lg"></i>
-            </div>
-            <h3 className="font-semibold text-gray-900">매출 성장률</h3>
-          </div>
-          <div className="text-2xl font-bold text-gray-900 mb-1">+12.5%</div>
-          <div className="text-sm text-gray-500">전월 대비</div>
-        </div>
-
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <i className="ri-shopping-cart-line text-green-600 text-lg"></i>
-            </div>
-            <h3 className="font-semibold text-gray-900">평균 주문액</h3>
-          </div>
-          <div className="text-2xl font-bold text-gray-900 mb-1">₩3.8M</div>
-          <div className="text-sm text-gray-500">건당 평균</div>
-        </div>
-
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-              <i className="ri-user-3-line text-purple-600 text-lg"></i>
-            </div>
-            <h3 className="font-semibold text-gray-900">고객 유지율</h3>
-          </div>
-          <div className="text-2xl font-bold text-gray-900 mb-1">94.2%</div>
-          <div className="text-sm text-gray-500">재주문 고객</div>
-        </div>
-
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-              <i className="ri-time-line text-orange-600 text-lg"></i>
-            </div>
-            <h3 className="font-semibold text-gray-900">평균 납기</h3>
-          </div>
-          <div className="text-2xl font-bold text-gray-900 mb-1">8.5일</div>
-          <div className="text-sm text-gray-500">주문-출하</div>
         </div>
       </div>
     </div>
