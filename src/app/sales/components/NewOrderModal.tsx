@@ -176,7 +176,7 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* 대리점 선택 */}
-              <div className="bg-gray-50 p-4 rounded-lg">
+              {/* <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="text-lg font-semibold text-gray-900 mb-4">대리점 선택</h4>
                 <div className="grid grid-cols-1 gap-4">
                   <div>
@@ -198,10 +198,10 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
                     </select>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               {/* 고객 정보 */}
-              <div className="bg-gray-50 p-4 rounded-lg">
+              {/* <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="text-lg font-semibold text-gray-900 mb-4">고객 정보</h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
@@ -244,7 +244,7 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
                     />
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               {/* 주문 품목 */}
               <div className="bg-gray-50 p-4 rounded-lg">

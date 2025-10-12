@@ -1,17 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import NewOrderModal from '@/app/sales/components/NewOrderModal';
 import SalesOrderDetailModal from '@/app/sales/components/SalesOrderDetailModal';
 import { Order } from '@/app/sales/types/SalesOrderListType';
-import { SalesOrder } from '@/app/sales/types/SalesOrderType';
 
 const SalesOrderList = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [showNewOrderModal, setShowNewOrderModal] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState('');
   const [showOrderDetailModal, setShowOrderDetailModal] = useState(false);
-
+  const [selectedOrderId, setSelectedOrderId] = useState('');
   const [selectedDealer, setSelectedDealer] = useState('');
 
   const [startDate, setStartDate] = useState('');
