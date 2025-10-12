@@ -6,7 +6,6 @@ import { CustomerData, NewCustomerModalProps } from '@/app/sales/types/NewCustom
 const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCustomerModalProps) => {
   const [customerData, setCustomerData] = useState<CustomerData>({
     companyName: '',
-    businessType: '',
     businessNumber: '',
     representative: '',
     contactPerson: '',
@@ -14,22 +13,14 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
     phone: '',
     mobile: '',
     email: '',
-    fax: '',
-    website: '',
     address: '',
     detailAddress: '',
     zipCode: '',
-    industry: '',
-    customerType: '일반고객',
-    creditRating: 'A',
-    paymentTerms: '30일 후 결제',
-    taxType: '과세',
     notes: '',
   });
 
   const handleCustomerSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     // 고객번호 생성
     const customerNumber = `CUS-${new Date().getFullYear()}-${String(
       Math.floor(Math.random() * 1000) + 1,
@@ -43,7 +34,6 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
     // 폼 초기화
     setCustomerData({
       companyName: '',
-      businessType: '',
       businessNumber: '',
       representative: '',
       contactPerson: '',
@@ -51,16 +41,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
       phone: '',
       mobile: '',
       email: '',
-      fax: '',
-      website: '',
       address: '',
       detailAddress: '',
       zipCode: '',
-      industry: '',
-      customerType: '일반고객',
-      creditRating: 'A',
-      paymentTerms: '30일 후 결제',
-      taxType: '과세',
       notes: '',
     });
   };
@@ -116,35 +99,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                       placeholder="000-00-00000"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">업종</label>
-                    <input
-                      type="text"
-                      value={customerData.industry}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateCustomerData('industry', e.target.value)
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="업종을 입력하세요"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      사업자 유형
-                    </label>
-                    <select
-                      value={customerData.businessType}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        updateCustomerData('businessType', e.target.value)
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
-                    >
-                      <option value="">선택하세요</option>
-                      <option value="법인">법인</option>
-                      <option value="개인사업자">개인사업자</option>
-                      <option value="개인">개인</option>
-                    </select>
-                  </div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">대표자명</label>
                     <input
@@ -158,15 +113,18 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">웹사이트</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      전화번호 *
+                    </label>
                     <input
-                      type="url"
-                      value={customerData.website}
+                      type="tel"
+                      value={customerData.phone}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateCustomerData('website', e.target.value)
+                        updateCustomerData('phone', e.target.value)
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="https://www.example.com"
+                      placeholder="02-0000-0000"
+                      required
                     />
                   </div>
                 </div>
@@ -191,33 +149,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                       required
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">직책</label>
-                    <input
-                      type="text"
-                      value={customerData.position}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateCustomerData('position', e.target.value)
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="직책을 입력하세요"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      전화번호 *
-                    </label>
-                    <input
-                      type="tel"
-                      value={customerData.phone}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateCustomerData('phone', e.target.value)
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="02-0000-0000"
-                      required
-                    />
-                  </div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">휴대폰</label>
                     <input
@@ -241,18 +173,6 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="example@company.com"
                       required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">팩스</label>
-                    <input
-                      type="tel"
-                      value={customerData.fax}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateCustomerData('fax', e.target.value)
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="02-0000-0000"
                     />
                   </div>
                 </div>
@@ -301,89 +221,6 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="상세 주소를 입력하세요"
                     />
-                  </div>
-                </div>
-              </div>
-
-              {/* 거래 조건 */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="text-lg font-medium text-gray-900 mb-4">거래 조건</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      고객 유형
-                    </label>
-                    <select
-                      value={customerData.customerType}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        updateCustomerData(
-                          'customerType',
-                          e.target.value as CustomerData['customerType'],
-                        )
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
-                    >
-                      <option value="일반고객">일반고객</option>
-                      <option value="VIP고객">VIP고객</option>
-                      <option value="대량고객">대량고객</option>
-                      <option value="신규고객">신규고객</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">신용등급</label>
-                    <select
-                      value={customerData.creditRating}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        updateCustomerData(
-                          'creditRating',
-                          e.target.value as CustomerData['creditRating'],
-                        )
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
-                    >
-                      <option value="A">A등급 (우수)</option>
-                      <option value="B">B등급 (양호)</option>
-                      <option value="C">C등급 (보통)</option>
-                      <option value="D">D등급 (주의)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      결제 조건
-                    </label>
-                    <select
-                      value={customerData.paymentTerms}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        updateCustomerData(
-                          'paymentTerms',
-                          e.target.value as CustomerData['paymentTerms'],
-                        )
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
-                    >
-                      <option value="즉시 결제">즉시 결제</option>
-                      <option value="15일 후 결제">15일 후 결제</option>
-                      <option value="30일 후 결제">30일 후 결제</option>
-                      <option value="45일 후 결제">45일 후 결제</option>
-                      <option value="60일 후 결제">60일 후 결제</option>
-                      <option value="월말 결제">월말 결제</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      세금 유형
-                    </label>
-                    <select
-                      value={customerData.taxType}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        updateCustomerData('taxType', e.target.value as CustomerData['taxType'])
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
-                    >
-                      <option value="과세">과세</option>
-                      <option value="면세">면세</option>
-                      <option value="영세율">영세율</option>
-                    </select>
                   </div>
                 </div>
               </div>

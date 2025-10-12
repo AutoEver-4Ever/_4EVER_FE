@@ -1,10 +1,10 @@
-import { Customer } from '@/app/sales/types/SalesCustomerList';
+import { SalesCustomerDetailType } from '@/app/sales/types/SalesCustomerDetailType';
 
 export interface CustomerDetailModalProps {
   $showDetailModal: boolean;
   $setShowDetailModal: React.Dispatch<React.SetStateAction<boolean>>;
-  $selectedCustomer: Customer | null;
+  $selectedCustomerId: string;
   $getStatusColor: (status: string) => string;
-  $handlePhoneClick: (phoneNumber: string) => void;
-  $handleEditClick: (customer: Customer) => void;
+  $setShowEditModal: (show: boolean) => void;
+  $setEditFormData: React.Dispatch<React.SetStateAction<SalesCustomerDetailType | null>>;
 }
