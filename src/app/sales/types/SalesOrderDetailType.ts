@@ -1,9 +1,7 @@
-import { SalesOrder } from '@/app/sales/types/SalesOrderType';
-
 export interface SalesOrderDetailProps {
-  $showDetailModal: boolean;
-  $setShowDetailModal: (show: boolean) => void;
-  $selectedOrder: SalesOrder | null;
+  $showOrderDetailModal: boolean;
+  $setShowOrderDetailModal: (show: boolean) => void;
+  $selectedOrderId: string;
   $getStatusColor: (status: string) => string;
   $getStatusText: (status: string) => string;
 }

@@ -1,185 +1,92 @@
 'use client';
 
 import { useState } from 'react';
-import { Customer } from '@/app/sales/types/SalesCustomerList';
 import CustomerDetailModal from '@/app/sales/components/CustomerDetailModal';
-import CustomerEditModal from '@/app/sales/components/CustomerEditModal';
 import NewCustomerModal from '@/app/sales/components/NewCustomerModal';
-export default function CustomerList() {
-  const [selectedType, setSelectedType] = useState('전체');
+import { SalesCustomerDetailType } from '@/app/sales/types/SalesCustomerDetailType';
+import { SalesCustomerListType } from '@/app/sales/types/SalesCustomerListType';
+import CustomerEditModal from './CustomerEditModal';
+const CustomerList = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState<'전체' | '활성' | '비활성'>('전체');
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
-  const [editFormData, setEditFormData] = useState<Customer | null>(null);
+  const [selectedCustomerId, setSelectedCustomerId] = useState('');
   const [showCustomerModal, setShowCustomerModal] = useState(false);
-  const typeOptions = ['전체', '대기업', '중견기업', '중소기업', '개인'];
-
-  const [customers, setCustomers] = useState<Customer[]>([
+  const [customers, setCustomers] = useState<SalesCustomerListType[]>([
     {
       id: 'C-001',
       name: '삼성전자',
-      type: '대기업',
-      contact: '김철수',
-      phone: '02-1234-5678',
-      email: 'kim@samsung.com',
-      address: '서울시 강남구 테헤란로 123',
-      totalOrders: 45,
-      totalAmount: '₩1,250,000,000',
-      lastOrder: '2024-01-15',
-      status: '활성',
-      details: {
-        businessNumber: '123-45-67890',
-        ceo: '이재용',
-        establishedDate: '1969-01-13',
-        employees: 267937,
-        industry: '전자/반도체',
-        website: 'www.samsung.com',
-        fax: '02-1234-5679',
-        manager: {
-          name: '김철수',
-          position: '구매팀장',
-          department: '구매부',
-          mobile: '010-1234-5678',
-          directPhone: '02-1234-5680',
-        },
-        paymentTerms: '30일 후 결제',
-        creditLimit: '₩5,000,000,000',
-        taxType: '일반과세',
-        notes: '주요 고객사, 정기 거래처',
+      manager: {
+        name: '김철수',
+        email: 'kim@samsung.com',
+        mobile: '010-1234-5678',
       },
+      address: '서울시 강남구 테헤란로 123',
+      dealInfo: {
+        totalOrders: 45,
+        totalAmount: '₩1,250,000,000',
+      },
+      status: '활성',
     },
     {
       id: 'C-002',
       name: 'LG화학',
-      type: '대기업',
-      contact: '박영희',
-      phone: '02-2345-6789',
-      email: 'park@lgchem.com',
-      address: '서울시 영등포구 여의도동 456',
-      totalOrders: 32,
-      totalAmount: '₩890,000,000',
-      lastOrder: '2024-01-14',
-      status: '활성',
-      details: {
-        businessNumber: '234-56-78901',
-        ceo: '신학철',
-        establishedDate: '1947-02-20',
-        employees: 45000,
-        industry: '화학/소재',
-        website: 'www.lgchem.com',
-        fax: '02-2345-6790',
-        manager: {
-          name: '박영희',
-          position: '영업부장',
-          department: '영업부',
-          mobile: '010-2345-6789',
-          directPhone: '02-2345-6791',
-        },
-        paymentTerms: '45일 후 결제',
-        creditLimit: '₩3,000,000,000',
-        taxType: '일반과세',
-        notes: '화학소재 전문 거래처',
+      manager: {
+        name: '박영희',
+        email: 'park@lgchem.com',
+        mobile: '010-2345-6789',
       },
+      address: '서울시 영등포구 여의도동 456',
+      dealInfo: {
+        totalOrders: 32,
+        totalAmount: '₩890,000,000',
+      },
+      status: '활성',
     },
     {
       id: 'C-003',
       name: '현대자동차',
-      type: '대기업',
-      contact: '이민수',
-      phone: '02-3456-7890',
-      email: 'lee@hyundai.com',
-      address: '서울시 서초구 양재동 789',
-      totalOrders: 28,
-      totalAmount: '₩720,000,000',
-      lastOrder: '2024-01-13',
-      status: '활성',
-      details: {
-        businessNumber: '345-67-89012',
-        ceo: '장재훈',
-        establishedDate: '1967-12-29',
-        employees: 120000,
-        industry: '자동차',
-        website: 'www.hyundai.com',
-        fax: '02-3456-7891',
-        manager: {
-          name: '이민수',
-          position: '구매담당자',
-          department: '구매팀',
-          mobile: '010-3456-7890',
-          directPhone: '02-3456-7892',
-        },
-        paymentTerms: '월말 결제',
-        creditLimit: '₩4,000,000,000',
-        taxType: '일반과세',
-        notes: '자동차 부품 전문 거래처',
+      manager: {
+        name: '이민수',
+        email: 'lee@hyundai.com',
+        mobile: '010-3456-7890',
       },
+      address: '서울시 서초구 양재동 789',
+      dealInfo: {
+        totalOrders: 28,
+        totalAmount: '₩720,000,000',
+      },
+      status: '활성',
     },
     {
       id: 'C-004',
       name: '대한철강',
-      type: '중견기업',
-      contact: '최정호',
-      phone: '031-1234-5678',
-      email: 'choi@dksteel.com',
-      address: '경기도 안산시 단원구 123',
-      totalOrders: 18,
-      totalAmount: '₩420,000,000',
-      lastOrder: '2024-01-10',
-      status: '활성',
-      details: {
-        businessNumber: '456-78-90123',
-        ceo: '최대한',
-        establishedDate: '1985-03-15',
-        employees: 850,
-        industry: '철강/금속',
-        website: 'www.dksteel.com',
-        fax: '031-1234-5679',
-        manager: {
-          name: '최정호',
-          position: '영업과장',
-          department: '영업팀',
-          mobile: '010-4567-8901',
-          directPhone: '031-1234-5680',
-        },
-        paymentTerms: '60일 후 결제',
-        creditLimit: '₩1,000,000,000',
-        taxType: '일반과세',
-        notes: '철강 전문 중견기업',
+      manager: {
+        name: '최정호',
+        email: 'choi@dksteel.com',
+        mobile: '010-4567-8901',
       },
+      address: '경기도 안산시 단원구 123',
+      dealInfo: {
+        totalOrders: 18,
+        totalAmount: '₩420,000,000',
+      },
+      status: '활성',
     },
     {
       id: 'C-005',
       name: '한국금속',
-      type: '중소기업',
-      contact: '김수진',
-      phone: '032-2345-6789',
-      email: 'kim@kmetal.com',
-      address: '인천시 남동구 구월동 456',
-      totalOrders: 12,
-      totalAmount: '₩180,000,000',
-      lastOrder: '2024-01-08',
-      status: '비활성',
-      details: {
-        businessNumber: '567-89-01234',
-        ceo: '김대표',
-        establishedDate: '1995-07-10',
-        employees: 120,
-        industry: '금속가공',
-        website: 'www.kmetal.com',
-        fax: '032-2345-6790',
-        manager: {
-          name: '김수진',
-          position: '영업담당',
-          department: '영업부',
-          mobile: '010-5678-9012',
-          directPhone: '032-2345-6791',
-        },
-        paymentTerms: '30일 후 결제',
-        creditLimit: '₩500,000,000',
-        taxType: '간이과세',
-        notes: '소규모 금속가공업체',
+      manager: {
+        name: '김수진',
+        email: 'kim@kmetal.com',
+        mobile: '010-5678-9012',
       },
+      address: '인천시 남동구 구월동 456',
+      dealInfo: {
+        totalOrders: 12,
+        totalAmount: '₩180,000,000',
+      },
+      status: '비활성',
     },
   ]);
   const handleCustomerRegisterClick = () => {
@@ -190,44 +97,28 @@ export default function CustomerList() {
     return status === '활성' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
   };
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case '대기업':
-        return 'bg-blue-100 text-blue-800';
-      case '중견기업':
-        return 'bg-purple-100 text-purple-800';
-      case '중소기업':
-        return 'bg-orange-100 text-orange-800';
-      case '개인':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
   const filteredCustomers = customers.filter((customer) => {
-    const matchesType = selectedType === '전체' || customer.type === selectedType;
     const matchesSearch =
       customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.contact.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.manager.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.id.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesType && matchesSearch;
+
+    const matchesStatus = selectedStatus === '전체' ? true : customer.status === selectedStatus;
+
+    return matchesSearch && matchesStatus;
   });
 
-  const handleViewClick = (customer: Customer) => {
-    setSelectedCustomer(customer);
+  const handleViewClick = (id: string) => {
+    setSelectedCustomerId(id);
     setShowDetailModal(true);
   };
 
-  const handleEditClick = (customer: Customer) => {
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editFormData, setEditFormData] = useState<SalesCustomerDetailType | null>(null);
+  const handleEditClick = (customer: SalesCustomerDetailType) => {
     setEditFormData({ ...customer });
     setShowEditModal(true);
   };
-
-  const handlePhoneClick = (phone: string) => {
-    window.open(`tel:${phone}`);
-  };
-
   return (
     <div className="bg-white rounded-lg border border-gray-200 mt-6">
       {/* 헤더 */}
@@ -245,25 +136,6 @@ export default function CustomerList() {
 
         {/* 필터 및 검색 */}
         <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-          <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium text-gray-700">유형:</span>
-            <div className="flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
-              {typeOptions.map((type) => (
-                <button
-                  key={type}
-                  onClick={() => setSelectedType(type)}
-                  className={`px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200 cursor-pointer whitespace-nowrap ${
-                    selectedType === type
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
-          </div>
-
           <div className="flex-1 max-w-md">
             <div className="relative">
               <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -276,6 +148,17 @@ export default function CustomerList() {
               />
             </div>
           </div>
+          <div className="flex items-center space-x-2">
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value as '전체' | '활성' | '비활성')}
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="전체">전체</option>
+              <option value="활성">활성</option>
+              <option value="비활성">비활성</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -287,9 +170,7 @@ export default function CustomerList() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 고객정보
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                유형
-              </th>
+
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 연락처
               </th>
@@ -298,9 +179,6 @@ export default function CustomerList() {
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 거래실적
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                최근주문
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 상태
@@ -315,37 +193,28 @@ export default function CustomerList() {
               <tr key={customer.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                      <i className="ri-building-line text-blue-600"></i>
-                    </div>
                     <div>
                       <div className="text-sm font-medium text-gray-900">{customer.name}</div>
                       <div className="text-xs text-gray-500">{customer.id}</div>
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeColor(customer.type)}`}
-                  >
-                    {customer.type}
-                  </span>
-                </td>
+
                 <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900">{customer.contact}</div>
-                  <div className="text-xs text-gray-500">{customer.phone}</div>
-                  <div className="text-xs text-gray-500">{customer.email}</div>
+                  <div className="text-sm text-gray-900">{customer.manager.name}</div>
+                  <div className="text-xs text-gray-500">{customer.manager.mobile}</div>
+                  <div className="text-xs text-gray-500">{customer.manager.email}</div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="text-sm text-gray-900 max-w-xs truncate">{customer.address}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{customer.totalAmount}</div>
-                  <div className="text-xs text-gray-500">{customer.totalOrders}건</div>
+                  <div className="text-sm font-medium text-gray-900">
+                    {customer.dealInfo.totalAmount}
+                  </div>
+                  <div className="text-xs text-gray-500">{customer.dealInfo.totalOrders}건</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{customer.lastOrder}</div>
-                </td>
+
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(customer.status)}`}
@@ -356,25 +225,11 @@ export default function CustomerList() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex items-center space-x-2">
                     <button
-                      onClick={() => handleEditClick(customer)}
-                      className="text-blue-600 hover:text-blue-500 cursor-pointer"
-                      title="수정"
-                    >
-                      <i className="ri-edit-line"></i>
-                    </button>
-                    <button
-                      onClick={() => handleViewClick(customer)}
-                      className="text-gray-600 hover:text-gray-500 cursor-pointer"
+                      onClick={() => handleViewClick(customer.id)}
+                      className="text-blue-600 hover:text-blue-800 cursor-pointer"
                       title="상세보기"
                     >
                       <i className="ri-eye-line"></i>
-                    </button>
-                    <button
-                      onClick={() => handlePhoneClick(customer.phone)}
-                      className="text-green-600 hover:text-green-500 cursor-pointer"
-                      title="전화걸기"
-                    >
-                      <i className="ri-phone-line"></i>
                     </button>
                   </div>
                 </td>
@@ -411,10 +266,10 @@ export default function CustomerList() {
       <CustomerDetailModal
         $showDetailModal={showDetailModal}
         $setShowDetailModal={setShowDetailModal}
-        $selectedCustomer={selectedCustomer}
+        $selectedCustomerId={selectedCustomerId}
         $getStatusColor={getStatusColor}
-        $handlePhoneClick={handlePhoneClick}
-        $handleEditClick={handleEditClick}
+        $setShowEditModal={setShowEditModal}
+        $setEditFormData={setEditFormData}
       />
 
       {/* 고객 수정 모달 */}
@@ -423,12 +278,15 @@ export default function CustomerList() {
         $setShowEditModal={setShowEditModal}
         $editFormData={editFormData}
         $setEditFormData={setEditFormData}
-        $setCustomers={setCustomers}
+        $setShowDetailModal={setShowDetailModal}
       />
+      {/* 신규 고객 추가 모달 */}
       <NewCustomerModal
         $showCustomerModal={showCustomerModal}
         $setShowCustomerModal={setShowCustomerModal}
       />
     </div>
   );
-}
+};
+
+export default CustomerList;
