@@ -1,46 +1,25 @@
-// app/purchase/components/modals/PurchaseRequestDetailModal.tsx
 'use client';
 
-interface PurchaseItem {
-  name: string;
-  quantity: string;
-  unit: string;
-  price: string;
-}
+import { PURCHASE_ITEM_TABLE_HEADERS } from '@/constants/purchase';
+import { PurchaseRequestDetailModalProps } from '@/app/purchase/types/PurchaseRequestDetailModalType';
 
-interface PurchaseRequest {
-  id: string;
-  requester: string;
-  department: string;
-  requestDate: string;
-  dueDate: string;
-  totalAmount: string;
-  status: 'approved' | 'pending' | 'waiting' | 'rejected';
-  priority: 'high' | 'medium' | 'low';
-  items: PurchaseItem[];
-}
-
-interface PurchaseRequestDetailModalProps {
-  isOpen: boolean;
-  request: PurchaseRequest | null;
-  onClose: () => void;
-}
-
+// 상태별 색상
 const getStatusColor = (status: string): string => {
   switch (status) {
-    case 'approved':
+    case 'approved': // 승인
       return 'bg-green-100 text-green-700';
     case 'pending':
       return 'bg-yellow-100 text-yellow-700';
-    case 'waiting':
+    case 'waiting': // 대기중
       return 'bg-blue-100 text-blue-700';
-    case 'rejected':
+    case 'rejected': // 반려
       return 'bg-red-100 text-red-700';
     default:
       return 'bg-gray-100 text-gray-700';
   }
 };
 
+// 상태: 영어 > 한글로 매핑
 const getStatusText = (status: string): string => {
   switch (status) {
     case 'approved':
@@ -64,7 +43,7 @@ export default function PurchaseRequestDetailModal({
   if (!isOpen || !request) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white">
           <h3 className="text-xl font-semibold text-gray-900">구매 요청 상세 정보</h3>
@@ -110,36 +89,32 @@ export default function PurchaseRequestDetailModal({
             </div>
           </div>
 
-          {/* 주문 자재 목록 */}
+          {/* 주문 자재 목록 테이블 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-3">주문 자재 목록</label>
             <div className="overflow-x-auto">
               <table className="w-full border border-gray-300 rounded-lg">
+                {/* 테이블 헤더: 품목명, 수량, 단위, 단가 */}
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
-                      품목명
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b">
-                      수량
-                    </th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
-                      단위
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b">
-                      단가
-                    </th>
+                    {PURCHASE_ITEM_TABLE_HEADERS.map((header) => (
+                      <th
+                        key={header}
+                        className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b border-gray-300"
+                      >
+                        {header}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
+                {/* 테이블 바디 */}
                 <tbody>
                   {request.items.map((item, index) => (
-                    <tr key={index} className="border-b hover:bg-gray-50">
+                    <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
                       <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900 text-right">
-                        {item.quantity}
-                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-900">{item.quantity}</td>
                       <td className="px-4 py-3 text-sm text-gray-900">{item.unit}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900 text-right">₩{item.price}</td>
+                      <td className="px-4 py-3 text-sm text-gray-900">₩{item.price}</td>
                     </tr>
                   ))}
                 </tbody>

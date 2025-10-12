@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import PurchaseRequestModal from '@/app/purchase/components/modals/PurchaseRequestModal';
 import PurchaseRequestDetailModal from '@/app/purchase/components/modals/PurchaseRequestDetailModal';
-import { PurchaseRequestListProps } from '@/app/purchase/types/PurchaseRequestListType';
+import { PURCHASE_LIST_TABLE_HEADERS } from '@/constants/purchase';
 
 interface PurchaseItem {
   name: string;
@@ -55,15 +55,13 @@ const getStatusText = (status: string): string => {
   }
 };
 
-export default function PurchaseRequestList({
-  showRequestModal,
-  setShowRequestModal,
-}: PurchaseRequestListProps) {
+export default function PurchaseRequestList() {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
+  const [showRequestModal, setShowRequestModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState<PurchaseRequest | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<PurchaseRequest | null>(null); // 선택된 구매 요청
 
   const [requests, setRequests] = useState<PurchaseRequest[]>([
     {
@@ -201,31 +199,23 @@ export default function PurchaseRequestList({
           </div>
         </div>
 
-        {/* 테이블 */}
+        {/* 구매 품목 목록 테이블 */}
         <div className="overflow-x-auto">
           <table className="w-full">
+            {/* 테이블 헤더: 요청번호, 요청자, 요청일, 총금액, 상태, 작업 */}
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  요청번호
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  요청자
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  요청일
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  총 금액
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  상태
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  작업
-                </th>
+                {PURCHASE_LIST_TABLE_HEADERS.map((header) => (
+                  <th
+                    key={header}
+                    className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center"
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
             </thead>
+            {/* 테이블 바디 */}
             <tbody className="bg-white divide-y divide-gray-200">
               {currentRequests.map((request) => (
                 <tr key={request.id} className="hover:bg-gray-50 transition-colors duration-200">
@@ -252,6 +242,7 @@ export default function PurchaseRequestList({
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center space-x-2">
+                      {/* 상세보기(눈 아이콘) */}
                       <button
                         onClick={() => handleViewDetail(request)}
                         className="text-blue-600 hover:text-blue-900 cursor-pointer"
@@ -261,6 +252,7 @@ export default function PurchaseRequestList({
                       </button>
                       {request.status === 'pending' || request.status === 'waiting' ? (
                         <>
+                          {/* 승인(체크 아이콘) */}
                           <button
                             onClick={() => handleApprove(request.id)}
                             className="text-green-600 hover:text-green-900 cursor-pointer"
@@ -268,6 +260,7 @@ export default function PurchaseRequestList({
                           >
                             <i className="ri-check-line"></i>
                           </button>
+                          {/* 반려(x 아이콘) */}
                           <button
                             onClick={() => handleReject(request.id)}
                             className="text-red-600 hover:text-red-900 cursor-pointer"
@@ -335,8 +328,15 @@ export default function PurchaseRequestList({
         </div>
       </div>
 
-      {/* 모달들 */}
+      {/* 구매 요청 작성 모달 */}
       <PurchaseRequestModal isOpen={showRequestModal} onClose={() => setShowRequestModal(false)} />
+
+      {/* 구매 요청 상세 정보 모달 */}
+      <PurchaseRequestDetailModal
+        isOpen={showDetailModal}
+        request={selectedRequest}
+        onClose={() => setShowDetailModal(false)}
+      />
     </>
   );
 }

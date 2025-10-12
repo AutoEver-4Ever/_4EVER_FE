@@ -12,29 +12,18 @@ import { PURCHASE_PERIODS, PURCHASE_TABS } from '@/constants/purchase';
 export default function PurchasePage() {
   const [activeTab, setActiveTab] = useState('requests');
   const [selectedPeriod, setSelectedPeriod] = useState('이번 달');
-  const [showRequestModal, setShowRequestModal] = useState(false);
 
   // 탭 컨텐츠 렌더링
   const renderTabContent = () => {
     switch (activeTab) {
       case 'requests':
-        return (
-          <PurchaseRequestList
-            showRequestModal={showRequestModal}
-            setShowRequestModal={setShowRequestModal}
-          />
-        );
+        return <PurchaseRequestList />; // 구매 요청 탭
       case 'orders':
-        return <PurchaseOrderList />;
+        return <PurchaseOrderList />; // 발주서 탭
       case 'suppliers':
-        return <SupplierList />;
+        return <SupplierList />; // 공급업체 관리 탭
       default:
-        return (
-          <PurchaseRequestList
-            showRequestModal={showRequestModal}
-            setShowRequestModal={setShowRequestModal}
-          />
-        );
+        return <PurchaseRequestList />; // 기본은 구매 요청 탭
     }
   };
 

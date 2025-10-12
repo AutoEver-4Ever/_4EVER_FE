@@ -32,3 +32,16 @@ export const SUPPLIERS = [
   '케미칼솔루션',
   '구리산업',
 ] as const;
+
+// 구매 품목 목록 테이블 헤더(구매 요청 작성 모달)
+export const PURCHASE_LIST_TABLE_HEADERS = [
+  '요청번호',
+  '요청자',
+  '요청일',
+  '총 금액',
+  '상태',
+  '작업',
+] as const;
+
+// 상세 정보 모달 테이블 헤더(구매 요청 상세 정보 모달)
+export const PURCHASE_ITEM_TABLE_HEADERS = ['품목명', '수량', '단위', '단가'] as const;
