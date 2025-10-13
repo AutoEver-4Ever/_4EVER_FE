@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Pacifico } from 'next/font/google';
 import '../styles/globals.css';
 import Header from './components/header/Header';
+import Providers from '@/app/providers';
 
 const geistSans = Geist({
   display: 'swap',
@@ -29,7 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable}`}>
         <Header />
-        <main className="pt-16 min-h-screen bg-gray-50">{children}</main>
+        <Providers>
+          <main className="pt-16 min-h-screen bg-gray-50">{children}</main>
+        </Providers>
       </body>
     </html>
   );
