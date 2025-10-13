@@ -14,7 +14,7 @@ const statuses = [
   { value: 'inactive', label: '비활성' },
 ];
 
-export default function EditSupplierForm({
+export default function EditSupplierFormSection({
   supplier,
   setEditForm,
   onCancel,

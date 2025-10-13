@@ -270,8 +270,8 @@ export default function AddSupplierModal({
                 {/* 자재 테이블 형식 입력 */}
                 <thead className="bg-gray-100 border-b border-gray-200">
                   <tr>
-                    <th className="px-4 py-3 text-sm font-semibold text-gray-900">제품명</th>
-                    <th className="px-4 py-3 text-sm font-semibold text-gray-900">사양</th>
+                    <th className="px-4 py-3 text-sm font-semibold text-gray-900">자재명</th>
+                    <th className="px-4 py-3 text-sm font-semibold text-gray-900">단위</th>
                     <th className="px-4 py-3 text-sm font-semibold text-gray-900">단가</th>
                     <th className="px-4 py-3 text-sm font-semibold text-gray-900"></th>
                   </tr>

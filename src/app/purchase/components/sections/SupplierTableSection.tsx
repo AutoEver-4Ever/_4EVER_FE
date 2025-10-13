@@ -6,7 +6,7 @@ interface ReadSupplierProps {
   onEdit: () => void;
 }
 
-export default function SupplierTable({ supplier, onClose, onEdit }: ReadSupplierProps) {
+export default function SupplierTableSection({ supplier, onClose, onEdit }: ReadSupplierProps) {
   const getStatusText = (status: string) => (status === 'active' ? '활성' : '비활성');
   const getStatusBadge = (status: string) => {
     const baseClasses = 'px-3 py-1 rounded-full text-sm font-medium';

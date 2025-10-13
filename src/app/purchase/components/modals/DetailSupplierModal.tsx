@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { SupplierResponse } from '@/app/purchase/types/SupplierType';
-import ReadSupplierForm from '@/app/purchase/components/forms/SupplierTable';
-import EditSupplierForm from '@/app/purchase/components/forms/EditSupplierForm';
+import ReadSupplierFormSection from '@/app/purchase/components/sections/SupplierTableSection';
+import EditSupplierFormSection from '@/app/purchase/components/sections/EditSupplierFormSection';
 
 interface DetailSupplierModalProps {
   isOpen: boolean;
@@ -29,14 +29,14 @@ export default function DetailSupplierModal({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-8 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         {isEditMode ? (
-          <EditSupplierForm
+          <EditSupplierFormSection
             supplier={editForm!}
             setEditForm={setEditForm}
             onCancel={() => setIsEditMode(false)}
             onSave={() => setIsEditMode(false)}
           />
         ) : (
-          <ReadSupplierForm
+          <ReadSupplierFormSection
             supplier={supplier}
             onEdit={() => setIsEditMode(true)}
             onClose={onClose}

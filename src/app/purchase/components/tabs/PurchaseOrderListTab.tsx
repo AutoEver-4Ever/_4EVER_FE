@@ -71,7 +71,7 @@ const getStatusText = (status: string): string => {
   }
 };
 
-export default function PurchaseOrderList() {
+export default function PurchaseOrderListTab() {
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'pending' | 'approved' | 'rejected'>(
     'all',
   );

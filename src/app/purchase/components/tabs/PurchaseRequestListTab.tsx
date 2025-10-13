@@ -37,7 +37,7 @@ const getStatusText = (status: string): string => {
   }
 };
 
-export default function PurchaseRequestList() {
+export default function PurchaseRequestListTab() {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
@@ -196,17 +196,22 @@ export default function PurchaseRequestList() {
             {/* 테이블 바디 */}
             <tbody className="bg-white divide-y divide-gray-200">
               {currentRequests.map((request) => (
-                <tr key={request.id} className="hover:bg-gray-50 transition-colors duration-200">
+                <tr
+                  key={request.id}
+                  className="hover:bg-gray-50 transition-colors duration-200 text-center"
+                >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{request.id}</div>
                     <div className="text-sm text-gray-500">{request.department}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{request.requester}</div>
-                    <div className="text-sm text-gray-500">납기: {request.dueDate}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {request.requestDate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {request.dueDate}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {request.totalAmount}
@@ -219,7 +224,7 @@ export default function PurchaseRequestList() {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex justify-center items-center space-x-2">
                       {/* 상세보기(눈 아이콘) */}
                       <button
                         onClick={() => handleViewDetail(request)}

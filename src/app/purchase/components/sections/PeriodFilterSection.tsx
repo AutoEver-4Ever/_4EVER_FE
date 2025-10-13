@@ -1,6 +1,6 @@
 import { PeriodFilterProps } from '@/app/purchase/types/PeriodFilterType';
 
-export default function PeriodFilter({
+export default function PeriodFilterSection({
   periods,
   selectedPeriod,
   onPeriodChange,

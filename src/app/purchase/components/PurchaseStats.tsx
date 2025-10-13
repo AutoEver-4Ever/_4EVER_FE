@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { PURCHASE_PERIODS } from '@/app/purchase/constants';
-import PeriodFilter from '@/app/purchase/components/PeriodFilter';
+import PeriodFilterSection from '@/app/purchase/components/sections/PeriodFilterSection';
 
 export default function PurchaseStats() {
   const [selectedPeriod, setSelectedPeriod] = useState('이번 달');
@@ -48,7 +48,7 @@ export default function PurchaseStats() {
 
   return (
     <div className="space-y-4">
-      <PeriodFilter
+      <PeriodFilterSection
         periods={PURCHASE_PERIODS}
         selectedPeriod={selectedPeriod}
         onPeriodChange={setSelectedPeriod}

@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import PurchaseOrderList from './PurchaseOrderList';
-import PurchaseRequestList from './PurchaseRequestList';
-import SupplierList from './SupplierList';
+import PurchaseOrderListTab from './tabs/PurchaseOrderListTab';
+import PurchaseRequestListTab from './tabs/PurchaseRequestListTab';
+import SupplierListTab from './tabs/SupplierListTab';
 import { PURCHASE_TABS } from '@/app/purchase/constants';
 
 export default function PurchaseTabNavigation() {
@@ -18,7 +18,7 @@ export default function PurchaseTabNavigation() {
   };
 
   return (
-    <div className="m-4 border-b border-gray-200">
+    <div className="my-4 border-b border-gray-200">
       <nav className="-mb-px flex space-x-8">
         {PURCHASE_TABS.map((tab) => (
           <button
@@ -38,9 +38,9 @@ export default function PurchaseTabNavigation() {
 
       {/* 탭 콘텐츠 */}
       <div className="mt-6">
-        {currentTab === 'requests' && <PurchaseRequestList />}
-        {currentTab === 'orders' && <PurchaseOrderList />}
-        {currentTab === 'suppliers' && <SupplierList />}
+        {currentTab === 'requests' && <PurchaseRequestListTab />}
+        {currentTab === 'orders' && <PurchaseOrderListTab />}
+        {currentTab === 'suppliers' && <SupplierListTab />}
       </div>
     </div>
   );

@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import AddSupplierModal from './modals/AddSupplierModal';
-import DetailSupplierModal from './modals/DetailSupplierModal';
-import { SupplierResponse } from '../types/SupplierType';
+import AddSupplierModal from '../modals/AddSupplierModal';
+import DetailSupplierModal from '../modals/DetailSupplierModal';
+import { SupplierResponse } from '../../types/SupplierType';
 
 // 업체명
 // 카테고리
@@ -13,7 +13,7 @@ import { SupplierResponse } from '../types/SupplierType';
 // 배송기간(일) - 0을 입력하면 당일 배송 가능
 // 주소
 // 제공가능한 자재목록 - 리스트로 자재추가 버튼 누르면 추가되도록
-// 입력 요소: 제품명 | 사양 | 단가 | 작업 리스트로
+// 입력 요소: 자재명 | 단위 | 단가 | 작업 리스트로
 
 interface Supplier {
   id: string;
@@ -29,7 +29,7 @@ interface Supplier {
   status: 'active' | 'inactive';
 }
 
-export default function SupplierList() {
+export default function SupplierListTab() {
   const [showAddSupplierModal, setShowAddSupplierModal] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<SupplierResponse | null>(null);
