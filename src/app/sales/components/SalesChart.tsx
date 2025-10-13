@@ -26,6 +26,21 @@ const SalesChart = () => {
     { month: '7월', sales: 485000000, orders: 127, customers: 58 },
   ];
 
+  const weeklyData = [
+    { week: '12월 1주차', sales: 120000000, orders: 22, customers: 12 },
+    { week: '12월 2주차', sales: 145000000, orders: 27, customers: 15 },
+    { week: '12월 3주차', sales: 132000000, orders: 25, customers: 13 },
+    { week: '12월 4주차', sales: 155000000, orders: 31, customers: 17 },
+    { week: '1월 1주차', sales: 120000000, orders: 31, customers: 17 },
+    { week: '1월 2주차', sales: 145000000, orders: 31, customers: 17 },
+    { week: '1월 3주차', sales: 132000000, orders: 31, customers: 17 },
+    { week: '1월 4주차', sales: 155000000, orders: 31, customers: 17 },
+    { week: '2월 1주차', sales: 120000000, orders: 31, customers: 17 },
+    { week: '2월 2주차', sales: 145000000, orders: 31, customers: 17 },
+    { week: '2월 3주차', sales: 132000000, orders: 31, customers: 17 },
+    { week: '2월 4주차', sales: 155000000, orders: 31, customers: 17 },
+  ];
+
   const productData = [
     { name: '스테인리스 강판', value: 35, amount: 180000000 },
     { name: '알루미늄 합금', value: 25, amount: 125000000 },
@@ -87,8 +102,40 @@ const SalesChart = () => {
     <div className="space-y-6 mt-6">
       {/* 월별 매출 추이 */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <div className="flex items-center justify-between mb-6">
+        <div className=" flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-gray-900">월별 매출 추이</h3>
+          {/* 기간 선택 셀렉트 박스 */}
+          <div className="flex items-center space-x-2 pl-120">
+            {/* 시작 연도 */}
+            <select className="min-w-[90px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white">
+              <option>2024</option>
+              <option>2025</option>
+              <option>2026</option>
+            </select>
+
+            {/* 시작 월 */}
+            <select className="min-w-[90px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white">
+              {[...Array(12)].map((_, i) => (
+                <option key={i}>{i + 1}월</option>
+              ))}
+            </select>
+
+            <span className="text-sm text-gray-500">~</span>
+
+            {/* 종료 연도 */}
+            <select className="min-w-[90px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white">
+              <option>2024</option>
+              <option>2025</option>
+              <option>2026</option>
+            </select>
+
+            {/* 종료 월 */}
+            <select className="min-w-[90px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white">
+              {[...Array(12)].map((_, i) => (
+                <option key={i}>{i + 1}월</option>
+              ))}
+            </select>
+          </div>
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
@@ -101,10 +148,40 @@ const SalesChart = () => {
           </div>
         </div>
         <div className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
+          {/* <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
+              <YAxis yAxisId="left" tickFormatter={formatCurrency} />
+              <YAxis yAxisId="right" orientation="right" />
+              <Tooltip
+                formatter={(value, name) => [
+                  name === 'sales' ? formatCurrency(Number(value)) : `${value}건`,
+                  name === 'sales' ? '매출액' : '주문건수',
+                ]}
+              />
+              <Area
+                yAxisId="left"
+                type="monotone"
+                dataKey="sales"
+                stroke="#3B82F6"
+                fill="#3B82F6"
+                fillOpacity={0.1}
+              />
+              <Area
+                yAxisId="right"
+                type="monotone"
+                dataKey="orders"
+                stroke="#10B981"
+                fill="#10B981"
+                fillOpacity={0.1}
+              />
+            </AreaChart>
+          </ResponsiveContainer> */}
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={weeklyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="week" /> {/* ✅ month → week 로 변경 */}
               <YAxis yAxisId="left" tickFormatter={formatCurrency} />
               <YAxis yAxisId="right" orientation="right" />
               <Tooltip
@@ -135,9 +212,25 @@ const SalesChart = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 제품별 매출 비중 */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">제품별 매출 비중</h3>
+          <div className="flex flex-row items-center  justify-between mb-6">
+            <h3 className="flex items-center text-lg font-semibold text-gray-900 mb-0">
+              제품별 매출 비중
+            </h3>
+            <div className="flex  w-48 justify-between">
+              <select className="min-w-[90px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white">
+                <option>2024</option>
+                <option>2025</option>
+                <option>2026</option>
+              </select>
+              <select className="min-w-[90px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white">
+                {[...Array(12)].map((_, i) => (
+                  <option key={i}>{i + 1}월</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -176,10 +269,26 @@ const SalesChart = () => {
           </div>
         </div>
 
-        {/* 주요 고객별 매출 */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">주요 고객별 매출</h3>
-          <div className="h-64">
+          <div className="flex flex-row items-center  justify-between mb-6">
+            <h3 className="flex items-center text-lg font-semibold text-gray-900 mb-0">
+              주요 고객별 매출
+            </h3>
+            <div className="flex  w-48 justify-between">
+              <select className="min-w-[90px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white">
+                <option>2024</option>
+                <option>2025</option>
+                <option>2026</option>
+              </select>
+
+              <select className="min-w-[90px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white">
+                {[...Array(12)].map((_, i) => (
+                  <option key={i}>{i + 1}월</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="h-74 mt-15">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={customerData} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" />
