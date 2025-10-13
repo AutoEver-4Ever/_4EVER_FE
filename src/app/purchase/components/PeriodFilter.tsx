@@ -6,7 +6,7 @@ export default function PeriodFilter({
   onPeriodChange,
 }: PeriodFilterProps) {
   return (
-    <div className="flex items-center space-x-1 bg-white rounded-lg border border-gray-300 p-1">
+    <div className="inline-flex gap-1 items-center bg-white rounded-lg border border-gray-300 p-1">
       {periods.map((period) => (
         <button
           key={period}

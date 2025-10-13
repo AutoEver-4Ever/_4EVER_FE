@@ -1,10 +1,12 @@
 'use client';
 
-interface PurchaseStatsProps {
-  selectedPeriod: string;
-}
+import { useState } from 'react';
+import { PURCHASE_PERIODS } from '@/app/purchase/constants';
+import PeriodFilter from '@/app/purchase/components/PeriodFilter';
 
-export default function PurchaseStats({ selectedPeriod }: PurchaseStatsProps) {
+export default function PurchaseStats() {
+  const [selectedPeriod, setSelectedPeriod] = useState('이번 달');
+
   const stats = [
     {
       title: '구매 요청',
@@ -45,30 +47,39 @@ export default function PurchaseStats({ selectedPeriod }: PurchaseStatsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {stats.map((stat, index) => (
-        <div key={index} className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{stat.value}</p>
-              <div className="flex items-center mt-2">
-                <span
-                  className={`text-sm font-medium ${
-                    stat.changeType === 'increase' ? 'text-green-600' : 'text-red-600'
-                  }`}
-                >
-                  {stat.change}
-                </span>
-                <span className="text-sm text-gray-500 ml-2">{selectedPeriod} 대비</span>
+    <div className="space-y-4">
+      <PeriodFilter
+        periods={PURCHASE_PERIODS}
+        selectedPeriod={selectedPeriod}
+        onPeriodChange={setSelectedPeriod}
+      />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, index) => (
+          <div key={index} className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+                <p className="text-2xl font-bold text-gray-900 mt-2">{stat.value}</p>
+                <div className="flex items-center mt-2">
+                  <span
+                    className={`text-sm font-medium ${
+                      stat.changeType === 'increase' ? 'text-green-600' : 'text-red-600'
+                    }`}
+                  >
+                    {stat.change}
+                  </span>
+                  <span className="text-sm text-gray-500 ml-2">{selectedPeriod} 대비</span>
+                </div>
+              </div>
+              <div
+                className={`w-12 h-12 ${stat.iconBg} rounded-lg flex items-center justify-center`}
+              >
+                <i className={`${stat.icon} ${stat.iconColor} text-xl`}></i>
               </div>
             </div>
-            <div className={`w-12 h-12 ${stat.iconBg} rounded-lg flex items-center justify-center`}>
-              <i className={`${stat.icon} ${stat.iconColor} text-xl`}></i>
-            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
