@@ -1,111 +1,317 @@
 'use client';
 
 import { useState } from 'react';
+import AddSupplierModal from './modals/AddSupplierModal';
+import DetailSupplierModal from './modals/DetailSupplierModal';
+import { SupplierResponse } from '../types/SupplierType';
+
+// 업체명
+// 카테고리
+// 담당자명
+// 전화번호
+// 이메일
+// 배송기간(일) - 0을 입력하면 당일 배송 가능
+// 주소
+// 제공가능한 자재목록 - 리스트로 자재추가 버튼 누르면 추가되도록
+// 입력 요소: 제품명 | 사양 | 단가 | 작업 리스트로
 
 interface Supplier {
   id: string;
-  name: string;
+  name: string; // 업체명
+  category: string; // 카테고리
+  manager: string; // 담당자명
+  managerPhone: string; // 전화번호
+  email: string; // 이메일
+  deliveryTime: string;
+  address: string; // 주소
+
   contact: string;
-  email: string;
-  category: string;
-  deliveryDays: number;
   status: 'active' | 'inactive';
-  materials: string[];
 }
 
-// interface SupplierListProps {
-//   onAddSupplier: () => void;
-// }
-
 export default function SupplierList() {
-  const [suppliers] = useState<Supplier[]>([
+  const [showAddSupplierModal, setShowAddSupplierModal] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState<SupplierResponse | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
+
+  const categories = ['전체', '철강/금속', '화학/소재', '전자부품', '기계부품', '포장재', '소모품'];
+
+  const [suppliers, setSuppliers] = useState<Supplier[]>([
     {
-      id: 'SUP001',
-      name: '한국철강',
+      id: 'SUP-001',
+      name: '대한철강',
+      category: '철강/금속',
       contact: '02-1234-5678',
-      email: 'contact@koreasteel.com',
-      category: '원자재',
-      deliveryDays: 3,
+      email: 'order@steel.co.kr',
+      address: '서울시 강남구 테헤란로 123',
+      manager: '김철수',
+      managerPhone: '010-1234-5678',
+      deliveryTime: '7',
       status: 'active',
-      materials: ['철강재', '스테인리스', '알루미늄'],
     },
     {
-      id: 'SUP002',
-      name: '대한전자부품',
+      id: 'SUP-002',
+      name: '한국알루미늄',
+      category: '철강/금속',
       contact: '031-987-6543',
-      email: 'sales@dahanelec.com',
+      email: 'sales@aluminum.co.kr',
+      address: '경기도 수원시 영통구 산업로 789',
+      manager: '이영희',
+      managerPhone: '010-2345-6789',
+      deliveryTime: '5',
+      status: 'active',
+    },
+    {
+      id: 'SUP-003',
+      name: '포스코',
+      category: '철강/금속',
+      contact: '054-220-0114',
+      email: 'order@posco.co.kr',
+      address: '경북 포항시 남구 동해안로 6261',
+      manager: '박민수',
+      managerPhone: '010-3456-7890',
+      deliveryTime: '3',
+      status: 'active',
+    },
+    {
+      id: 'SUP-004',
+      name: '케미칼솔루션',
+      category: '화학/소재',
+      contact: '032-456-7890',
+      email: 'info@chemical.co.kr',
+      address: '인천시 남동구 논현로 456',
+      manager: '최지영',
+      managerPhone: '010-4567-8901',
+      deliveryTime: '10',
+      status: 'active',
+    },
+    {
+      id: 'SUP-005',
+      name: '일렉트로닉스코리아',
       category: '전자부품',
-      deliveryDays: 1,
+      contact: '031-123-4567',
+      email: 'sales@electronics.co.kr',
+      address: '경기도 성남시 분당구 판교로 123',
+      manager: '정수진',
+      managerPhone: '010-5678-9012',
+      deliveryTime: '7',
       status: 'active',
-      materials: ['반도체', '저항', '콘덴서', 'IC칩'],
     },
     {
-      id: 'SUP003',
-      name: '글로벌화학',
-      contact: '051-555-0123',
-      email: 'info@globalchem.co.kr',
-      category: '화학',
-      deliveryDays: 5,
+      id: 'SUP-006',
+      name: '패스너코리아',
+      category: '기계부품',
+      contact: '055-234-5678',
+      email: 'order@fastener.co.kr',
+      address: '경남 창원시 의창구 공단로 789',
+      manager: '김영수',
+      managerPhone: '010-6789-0123',
+      deliveryTime: '5',
+      status: 'active',
+    },
+    {
+      id: 'SUP-007',
+      name: '글로벌패키징',
+      category: '포장재',
+      contact: '02-345-6789',
+      email: 'info@packaging.co.kr',
+      address: '서울시 금천구 가산디지털로 456',
+      manager: '이하늘',
+      managerPhone: '010-7890-1234',
+      deliveryTime: '3',
+      status: 'active',
+    },
+    {
+      id: 'SUP-008',
+      name: '오피스서플라이',
+      category: '소모품',
+      contact: '02-456-7890',
+      email: 'sales@office.co.kr',
+      address: '서울시 마포구 월드컵로 123',
+      manager: '박지영',
+      managerPhone: '010-8901-2345',
+      deliveryTime: '1',
+      status: 'active',
+    },
+    {
+      id: 'SUP-009',
+      name: '테크솔루션',
+      category: '전자부품',
+      contact: '031-567-8901',
+      email: 'tech@solution.co.kr',
+      address: '경기도 안양시 동안구 시민대로 789',
+      manager: '최민석',
+      managerPhone: '010-9012-3456',
+      deliveryTime: '14',
       status: 'inactive',
-      materials: ['용매', '접착제', '코팅제'],
-    },
-    {
-      id: 'SUP004',
-      name: '프리미엄플라스틱',
-      contact: '032-777-8888',
-      email: 'order@premiumplastic.com',
-      category: '플라스틱',
-      deliveryDays: 2,
-      status: 'active',
-      materials: ['ABS', 'PC', 'PVC', 'PE'],
-    },
-    {
-      id: 'SUP005',
-      name: '스마트로지스틱스',
-      contact: '02-9999-1111',
-      email: 'service@smartlogistics.kr',
-      category: '기타',
-      deliveryDays: 0,
-      status: 'active',
-      materials: ['포장재', '운송서비스', '창고관리'],
     },
   ]);
 
-  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [editForm, setEditForm] = useState<Supplier | null>(null);
+  const supplierResponse: SupplierResponse[] = [
+    {
+      id: 'SUP-001',
+      name: '대한철강',
+      category: '철강/금속',
+      status: 'active',
+      managerName: '김철수',
+      managerPhone: '010-1234-5678',
+      managerEmail: 'order@steel.co.kr',
+      address: '서울시 강남구 테헤란로 123',
+      deliveryDays: '7',
+      materials: [
+        { id: 'MAT-001', productName: '철근', spec: 'D16', unitPrice: '₩1,200' },
+        { id: 'MAT-002', productName: '형강', spec: 'H-100', unitPrice: '₩15,000' },
+      ],
+    },
+    {
+      id: 'SUP-002',
+      name: '한국알루미늄',
+      category: '철강/금속',
+      status: 'active',
+      managerName: '이영희',
+      managerPhone: '010-2345-6789',
+      managerEmail: 'sales@aluminum.co.kr',
+      address: '경기도 수원시 영통구 산업로 789',
+      deliveryDays: '5',
+      materials: [
+        { id: 'MAT-003', productName: '알루미늄 판재', spec: '5T', unitPrice: '₩25,000' },
+        { id: 'MAT-004', productName: '알루미늄 봉', spec: 'Φ20', unitPrice: '₩8,000' },
+      ],
+    },
+    {
+      id: 'SUP-003',
+      name: '포스코',
+      category: '철강/금속',
+      status: 'active',
+      managerName: '박민수',
+      managerPhone: '010-3456-7890',
+      managerEmail: 'order@posco.co.kr',
+      address: '경북 포항시 남구 동해안로 6261',
+      deliveryDays: '3',
+      materials: [
+        { id: 'MAT-005', productName: '후판', spec: '10T', unitPrice: '₩30,000' },
+        { id: 'MAT-006', productName: '강판', spec: '3T', unitPrice: '₩12,000' },
+      ],
+    },
+    {
+      id: 'SUP-004',
+      name: '케미칼솔루션',
+      category: '화학/소재',
+      status: 'active',
+      managerName: '최지영',
+      managerPhone: '010-4567-8901',
+      managerEmail: 'info@chemical.co.kr',
+      address: '인천시 남동구 논현로 456',
+      deliveryDays: '10',
+      materials: [
+        { id: 'MAT-007', productName: '폴리에틸렌', spec: 'PE100', unitPrice: '₩2,500' },
+        { id: 'MAT-008', productName: '폴리프로필렌', spec: 'PP50', unitPrice: '₩3,000' },
+      ],
+    },
+    {
+      id: 'SUP-005',
+      name: '일렉트로닉스코리아',
+      category: '전자부품',
+      status: 'active',
+      managerName: '정수진',
+      managerPhone: '010-5678-9012',
+      managerEmail: 'sales@electronics.co.kr',
+      address: '경기도 성남시 분당구 판교로 123',
+      deliveryDays: '7',
+      materials: [
+        { id: 'MAT-009', productName: '저항', spec: '10Ω', unitPrice: '₩50' },
+        { id: 'MAT-010', productName: '콘덴서', spec: '100μF', unitPrice: '₩120' },
+      ],
+    },
+    {
+      id: 'SUP-006',
+      name: '패스너코리아',
+      category: '기계부품',
+      status: 'active',
+      managerName: '김영수',
+      managerPhone: '010-6789-0123',
+      managerEmail: 'order@fastener.co.kr',
+      address: '경남 창원시 의창구 공단로 789',
+      deliveryDays: '5',
+      materials: [
+        { id: 'MAT-011', productName: '볼트', spec: 'M10', unitPrice: '₩200' },
+        { id: 'MAT-012', productName: '너트', spec: 'M10', unitPrice: '₩100' },
+      ],
+    },
+    {
+      id: 'SUP-007',
+      name: '글로벌패키징',
+      category: '포장재',
+      status: 'active',
+      managerName: '이하늘',
+      managerPhone: '010-7890-1234',
+      managerEmail: 'info@packaging.co.kr',
+      address: '서울시 금천구 가산디지털로 456',
+      deliveryDays: '3',
+      materials: [
+        { id: 'MAT-013', productName: '골판지', spec: 'A4', unitPrice: '₩500' },
+        { id: 'MAT-014', productName: '포장용 테이프', spec: '48mm', unitPrice: '₩300' },
+      ],
+    },
+    {
+      id: 'SUP-008',
+      name: '오피스서플라이',
+      category: '소모품',
+      status: 'active',
+      managerName: '박지영',
+      managerPhone: '010-8901-2345',
+      managerEmail: 'sales@office.co.kr',
+      address: '서울시 마포구 월드컵로 123',
+      deliveryDays: '1',
+      materials: [
+        { id: 'MAT-015', productName: 'A4 용지', spec: '80g', unitPrice: '₩4,000' },
+        { id: 'MAT-016', productName: '잉크 카트리지', spec: 'BK', unitPrice: '₩25,000' },
+      ],
+    },
+    {
+      id: 'SUP-009',
+      name: '테크솔루션',
+      category: '전자부품',
+      status: 'inactive',
+      managerName: '최민석',
+      managerPhone: '010-9012-3456',
+      managerEmail: 'tech@solution.co.kr',
+      address: '경기도 안양시 동안구 시민대로 789',
+      deliveryDays: '14',
+      materials: [
+        { id: 'MAT-017', productName: '마이크로컨트롤러', spec: 'STM32F103', unitPrice: '₩3,500' },
+        { id: 'MAT-018', productName: '센서 모듈', spec: '온도/습도', unitPrice: '₩8,000' },
+      ],
+    },
+  ];
 
-  const handleViewDetail = (supplier: Supplier) => {
+  const handleViewDetail = (supplier: SupplierResponse) => {
     setSelectedSupplier(supplier);
-    setEditForm(supplier);
-    setIsEditMode(false);
     setIsDetailModalOpen(true);
   };
 
-  const handleEdit = () => {
-    setIsEditMode(true);
-  };
-
-  const handleSaveEdit = () => {
-    if (editForm) {
-      // 여기서 실제 저장 로직 구현
-      console.log('공급업체 정보 수정:', editForm);
-      setSelectedSupplier(editForm);
-      setIsEditMode(false);
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setEditForm(selectedSupplier);
-    setIsEditMode(false);
-  };
-
-  const closeModal = () => {
+  const handleCloseDetail = () => {
     setIsDetailModalOpen(false);
     setSelectedSupplier(null);
-    setEditForm(null);
-    setIsEditMode(false);
+  };
+
+  // const handleSaveSupplier = (updatedSupplier: Supplier) => {
+  //   setSuppliers(suppliers.map((s) => (s.id === updatedSupplier.id ? updatedSupplier : s)));
+  //   setSelectedSupplier(updatedSupplier);
+  //   handleCloseDetail();
+  // };
+
+  const handleAddSupplier = (newSupplier: Partial<Supplier>) => {
+    const id = `SUP-${String(suppliers.length + 1).padStart(3, '0')}`;
+    const supplier: Supplier = {
+      ...(newSupplier as Supplier),
+      id,
+    };
+    setSuppliers([...suppliers, supplier]);
+    setShowAddSupplierModal(false);
+    alert('공급업체가 성공적으로 등록되었습니다.');
   };
 
   const getStatusBadge = (status: string) => {
@@ -120,18 +326,16 @@ export default function SupplierList() {
     return status === 'active' ? '활성' : '비활성';
   };
 
-  const getDeliveryText = (days: number) => {
-    if (days === 0) return '당일 배송';
-    return `${days}일`;
-  };
-
   return (
     <>
       <div className="bg-white rounded-lg shadow">
         <div className="p-6 border-b border-gray-200">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold text-gray-900">공급업체 목록</h3>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap cursor-pointer">
+            <button
+              onClick={() => setShowAddSupplierModal(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap cursor-pointer"
+            >
               <i className="ri-add-line mr-2"></i>
               신규 등록
             </button>
@@ -166,7 +370,7 @@ export default function SupplierList() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {suppliers.map((supplier) => (
+              {supplierResponse.map((supplier) => (
                 <tr key={supplier.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {supplier.id}
@@ -176,15 +380,15 @@ export default function SupplierList() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div>
-                      <div>{supplier.contact}</div>
-                      <div className="text-xs text-gray-400">{supplier.email}</div>
+                      <div>{supplier.managerPhone}</div>
+                      <div className="text-xs text-gray-400">{supplier.managerEmail}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {supplier.category}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {getDeliveryText(supplier.deliveryDays)}
+                    {supplier.deliveryDays}일
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={getStatusBadge(supplier.status)}>
@@ -195,7 +399,7 @@ export default function SupplierList() {
                     <div className="flex space-x-2">
                       <button
                         onClick={() => handleViewDetail(supplier)}
-                        className="w-8 h-8 flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded cursor-pointer"
+                        className="w-8 h-8 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded cursor-pointer"
                         title="상세보기"
                       >
                         <i className="ri-eye-line"></i>
@@ -209,239 +413,20 @@ export default function SupplierList() {
         </div>
       </div>
 
-      {/* 상세보기/수정 모달 */}
-      {isDetailModalOpen && selectedSupplier && editForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {isEditMode ? '공급업체 수정' : '공급업체 상세정보'}
-                </h3>
-                <button
-                  onClick={closeModal}
-                  className="text-gray-400 hover:text-gray-600 cursor-pointer"
-                >
-                  <i className="ri-close-line text-xl"></i>
-                </button>
-              </div>
-            </div>
+      {/* 공급업체 신규 등록 모달 */}
+      <AddSupplierModal
+        isOpen={showAddSupplierModal}
+        onClose={() => setShowAddSupplierModal(false)}
+        onAddSupplier={handleAddSupplier}
+        categories={categories}
+      />
 
-            <div className="p-6 space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    공급업체 ID
-                  </label>
-                  <input
-                    type="text"
-                    value={editForm.id}
-                    disabled
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">업체명</label>
-                  <input
-                    type="text"
-                    value={editForm.name}
-                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                    disabled={!isEditMode}
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${
-                      isEditMode ? 'bg-white' : 'bg-gray-50 text-gray-500'
-                    }`}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">연락처</label>
-                  <input
-                    type="text"
-                    value={editForm.contact}
-                    onChange={(e) => setEditForm({ ...editForm, contact: e.target.value })}
-                    disabled={!isEditMode}
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${
-                      isEditMode ? 'bg-white' : 'bg-gray-50 text-gray-500'
-                    }`}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-                  <input
-                    type="email"
-                    value={editForm.email}
-                    onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                    disabled={!isEditMode}
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${
-                      isEditMode ? 'bg-white' : 'bg-gray-50 text-gray-500'
-                    }`}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">카테고리</label>
-                  {isEditMode ? (
-                    <select
-                      value={editForm.category}
-                      onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white pr-8"
-                    >
-                      <option value="원자재">원자재</option>
-                      <option value="전자부품">전자부품</option>
-                      <option value="화학">화학</option>
-                      <option value="플라스틱">플라스틱</option>
-                      <option value="기타">기타</option>
-                    </select>
-                  ) : (
-                    <input
-                      type="text"
-                      value={editForm.category}
-                      disabled
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
-                    />
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    배송 기간 (일)
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={editForm.deliveryDays}
-                    onChange={(e) =>
-                      setEditForm({ ...editForm, deliveryDays: parseInt(e.target.value) || 0 })
-                    }
-                    disabled={!isEditMode}
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${
-                      isEditMode ? 'bg-white' : 'bg-gray-50 text-gray-500'
-                    }`}
-                  />
-                  {!isEditMode && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      {editForm.deliveryDays === 0
-                        ? '당일 배송 가능'
-                        : `${editForm.deliveryDays}일 소요`}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
-                {isEditMode ? (
-                  <select
-                    value={editForm.status}
-                    onChange={(e) =>
-                      setEditForm({ ...editForm, status: e.target.value as 'active' | 'inactive' })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white pr-8"
-                  >
-                    <option value="active">활성</option>
-                    <option value="inactive">비활성</option>
-                  </select>
-                ) : (
-                  <span className={getStatusBadge(editForm.status)}>
-                    {getStatusText(editForm.status)}
-                  </span>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  제공 가능한 자재 목록
-                </label>
-                {isEditMode ? (
-                  <div className="space-y-2">
-                    {editForm.materials.map((material, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <input
-                          type="text"
-                          value={material}
-                          onChange={(e) => {
-                            const newMaterials = [...editForm.materials];
-                            newMaterials[index] = e.target.value;
-                            setEditForm({ ...editForm, materials: newMaterials });
-                          }}
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
-                        />
-                        <button
-                          onClick={() => {
-                            const newMaterials = editForm.materials.filter((_, i) => i !== index);
-                            setEditForm({ ...editForm, materials: newMaterials });
-                          }}
-                          className="w-8 h-8 flex items-center justify-center text-red-600 hover:bg-red-50 rounded cursor-pointer"
-                        >
-                          <i className="ri-delete-bin-line"></i>
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      onClick={() => {
-                        setEditForm({ ...editForm, materials: [...editForm.materials, ''] });
-                      }}
-                      className="w-full px-3 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600 cursor-pointer"
-                    >
-                      <i className="ri-add-line mr-2"></i>
-                      자재 추가
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex flex-wrap gap-2">
-                    {editForm.materials.map((material, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                      >
-                        {material}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="p-6 border-t border-gray-200 flex justify-end space-x-3">
-              {isEditMode ? (
-                <>
-                  <button
-                    onClick={handleCancelEdit}
-                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer whitespace-nowrap"
-                  >
-                    취소
-                  </button>
-                  <button
-                    onClick={handleSaveEdit}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer whitespace-nowrap"
-                  >
-                    저장
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={closeModal}
-                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer whitespace-nowrap"
-                  >
-                    닫기
-                  </button>
-                  <button
-                    onClick={handleEdit}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer whitespace-nowrap"
-                  >
-                    <i className="ri-edit-line mr-2"></i>
-                    수정
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 공급업체 상세 정보 모달 */}
+      <DetailSupplierModal
+        isOpen={isDetailModalOpen}
+        supplier={selectedSupplier}
+        onClose={handleCloseDetail}
+      />
     </>
   );
 }
