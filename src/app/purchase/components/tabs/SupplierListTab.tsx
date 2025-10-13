@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import AddSupplierModal from '../modals/AddSupplierModal';
-import DetailSupplierModal from '../modals/DetailSupplierModal';
-import { SupplierResponse } from '../../types/SupplierType';
+import SupplierAddModal from '@/app/purchase/components/modals/SupplierAddModal';
+import SupplierDetailModal from '@/app/purchase/components/modals/SupplierDetailModal';
+import { SupplierResponse } from '@/app/purchase/types/SupplierType';
 
 // 업체명
 // 카테고리
@@ -414,7 +414,7 @@ export default function SupplierListTab() {
       </div>
 
       {/* 공급업체 신규 등록 모달 */}
-      <AddSupplierModal
+      <SupplierAddModal
         isOpen={showAddSupplierModal}
         onClose={() => setShowAddSupplierModal(false)}
         onAddSupplier={handleAddSupplier}
@@ -422,7 +422,7 @@ export default function SupplierListTab() {
       />
 
       {/* 공급업체 상세 정보 모달 */}
-      <DetailSupplierModal
+      <SupplierDetailModal
         isOpen={isDetailModalOpen}
         supplier={selectedSupplier}
         onClose={handleCloseDetail}

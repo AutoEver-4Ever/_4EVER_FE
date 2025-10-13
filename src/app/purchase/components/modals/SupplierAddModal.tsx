@@ -10,7 +10,7 @@ interface AddSupplierModalProps {
   categories: string[];
 }
 
-export default function AddSupplierModal({
+export default function SupplierAddModal({
   isOpen,
   onClose,
   onAddSupplier,

@@ -11,7 +11,7 @@ interface DetailSupplierModalProps {
   onClose: () => void;
 }
 
-export default function DetailSupplierModal({
+export default function SupplierDetailModal({
   isOpen,
   supplier,
   onClose,

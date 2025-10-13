@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import PurchaseOrderListTab from './tabs/PurchaseOrderListTab';
-import PurchaseRequestListTab from './tabs/PurchaseRequestListTab';
-import SupplierListTab from './tabs/SupplierListTab';
+import PurchaseOrderListTab from '@/app/purchase/components/tabs/PurchaseOrderListTab';
+import PurchaseRequestListTab from '@/app/purchase/components/tabs/PurchaseRequestListTab';
+import SupplierListTab from '@/app/purchase/components/tabs/SupplierListTab';
 import { PURCHASE_TABS } from '@/app/purchase/constants';
 
 export default function PurchaseTabNavigation() {
