@@ -2,7 +2,14 @@ import axios from 'axios';
 import { SalesData, SalesStatCard } from '@/app/sales/types/SalesStatsType';
 import { Quote, QuoteQueryParams } from '@/app/sales/types/SalesQuoteListType';
 import { QuoteDetail } from '@/app/sales/types/QuoteDetailModalType';
+import { CustomerDetail } from '@/app/sales/types/SalesCustomerDetailType';
+import {
+  SalesCustomerListType,
+  CustomerQueryParams,
+  PageType,
+} from '@/app/sales/types/SalesCustomerListType';
 
+// 통계 지표
 export const getSalesStats = async (): Promise<Record<string, SalesStatCard[]>> => {
   const res = await axios.get('https://api.everp.co.kr/api/business/sd/statistics');
   const datas: SalesData = res.data.data;
@@ -35,6 +42,7 @@ export const getSalesStats = async (): Promise<Record<string, SalesStatCard[]>> 
   return data;
 };
 
+// ----------------------- 견적 관리 -----------------------
 export const getQuoteList = async (params?: QuoteQueryParams): Promise<Quote[]> => {
   const query = new URLSearchParams({
     ...(params?.startDate ? { startDate: params.startDate } : {}),
@@ -55,3 +63,30 @@ export const getQuoteDetail = async (quotationId: number): Promise<QuoteDetail> 
   const data: QuoteDetail = res.data.data;
   return data;
 };
+
+// ----------------------- 주문 관리 -----------------------
+
+// ----------------------- 고객 관리 -----------------------
+export const getCustomerList = async (
+  params?: CustomerQueryParams,
+): Promise<{ data: SalesCustomerListType[]; pageData: PageType }> => {
+  const query = new URLSearchParams({
+    ...(params?.status ? { status: params.status } : {}),
+    ...(params?.keyword ? { keyword: params.keyword } : {}),
+    ...(params?.page ? { page: String(params.page) } : {}),
+    ...(params?.size ? { size: String(params.size) } : {}),
+  }).toString();
+
+  const res = await axios.get(`https://api.everp.co.kr/api/business/sd/customers?${query}`);
+  const data: SalesCustomerListType[] = res.data.data.customers;
+  const pageData: PageType = res.data.data.page;
+  return { data, pageData };
+};
+
+export const getCustomerDetail = async (customerId: number): Promise<CustomerDetail> => {
+  const res = await axios.get(`https://api.everp.co.kr/api/business/sd/customers/${customerId}`);
+  const data: CustomerDetail = res.data.data;
+  return data;
+};
+
+// ----------------------- 매출 분석 -----------------------
