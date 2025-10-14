@@ -1,35 +1,46 @@
 'use client';
 
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { Period, SalesStatCard } from '@/app/sales/types/SalesStatsType';
+import { getSalesStats } from '@/app/sales/service';
 
 const SalesStats = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState('month');
-
-  const stats = [
-    {
-      title: '이번 달 매출',
-      value: '₩485,200,000',
-      change: '+12.5%',
-      changeType: 'increase',
-      icon: 'ri-money-dollar-circle-line',
-      color: 'blue',
-    },
-    {
-      title: '신규 주문',
-      value: '127건',
-      change: '+8.2%',
-      changeType: 'increase',
-      icon: 'ri-shopping-cart-line',
-      color: 'green',
-    },
-  ];
-
-  const periods = [
+  const [selectedPeriod, setSelectedPeriod] = useState<Period>('week');
+  const periods: { id: Period; name: string }[] = [
     { id: 'week', name: '이번 주' },
     { id: 'month', name: '이번 달' },
     { id: 'quarter', name: '이번 분기' },
     { id: 'year', name: '연도별' },
   ];
+
+  const { data, isLoading, isError } = useQuery<Record<Period, SalesStatCard[]>>({
+    queryKey: ['stats'],
+    queryFn: getSalesStats,
+  });
+  if (isLoading) return <p>불러오는 중...</p>;
+  if (isError || !data) return <p>데이터를 불러오지 못했습니다.</p>;
+
+  const stats = data[selectedPeriod];
+
+  // const mockStats = [
+  //   {
+  //     title: '이번 달 매출',
+  //     value: '₩485,200,000',
+  //     change: '+12.5%',
+  //     changeType: 'increase',
+  //     icon: 'ri-money-dollar-circle-line',
+  //     color: 'blue',
+  //   },
+  //   {
+  //     title: '신규 주문',
+  //     value: '₩485,200,000',
+  //     change: '+12.5%',
+  //     changeType: 'increase',
+  //     icon: 'ri-shopping-cart-line',
+  //     color: 'green',
+  //   },
+  // ];
 
   return (
     <div className="space-y-4">
