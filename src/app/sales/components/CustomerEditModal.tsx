@@ -43,12 +43,41 @@ const CustomerEditModal = ({
     field: K,
     value: CustomerDetail[K],
   ) => {
-    $setEditFormData((prev: CustomerDetail) => (prev ? { ...prev, [field]: value } : prev));
+    $setEditFormData((prev: CustomerDetail) => {
+      if (!prev) return null;
+      return { ...prev, [field]: value };
+    });
+  };
+
+  const updateContactInfo = <K extends keyof Contact>(field: K, value: Contact[K]) => {
+    $setEditFormData((prev: CustomerDetail) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        contact: {
+          ...prev.contact,
+          [field]: value,
+        },
+      };
+    });
+  };
+
+  const updateManagerInfo = <K extends keyof Manager>(field: K, value: Manager[K]) => {
+    $setEditFormData((prev: CustomerDetail) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        manager: {
+          ...prev.manager,
+          [field]: value,
+        },
+      };
+    });
   };
 
   const updateTransactionInfo = <K extends keyof Transaction>(field: K, value: Transaction[K]) => {
     $setEditFormData((prev: CustomerDetail) => {
-      if (!prev) return prev;
+      if (!prev) return null;
       return {
         ...prev,
         transaction: {
@@ -57,34 +86,6 @@ const CustomerEditModal = ({
         },
       };
     });
-  };
-
-  const updateContactInfo = <K extends keyof Contact>(field: K, value: Contact[K]) => {
-    $setEditFormData((prev: CustomerDetail) =>
-      prev
-        ? {
-            ...prev,
-            contact: {
-              ...prev.contact,
-              [field]: value,
-            },
-          }
-        : prev,
-    );
-  };
-
-  const updateManagerInfo = <K extends keyof Manager>(field: K, value: Manager[K]) => {
-    $setEditFormData((prev: CustomerDetail) =>
-      prev
-        ? {
-            ...prev,
-            manager: {
-              ...prev.manager,
-              [field]: value,
-            },
-          }
-        : prev,
-    );
   };
   return (
     <>
