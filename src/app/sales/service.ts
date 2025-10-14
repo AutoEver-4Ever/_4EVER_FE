@@ -32,7 +32,6 @@ export const getSalesStats = async (): Promise<Record<string, SalesStatCard[]>> 
     },
     {} as Record<string, SalesStatCard[]>,
   );
-
   return data;
 };
 
@@ -43,10 +42,9 @@ export const getQuoteList = async (params?: QuoteQueryParams): Promise<Quote[]> 
     ...(params?.status ? { status: params.status } : {}),
     ...(params?.search ? { search: params.search } : {}),
     ...(params?.sort ? { sort: params.sort } : {}),
-    ...(params?.page ? { page: String(params.page) } : { page: '1' }),
-    ...(params?.size ? { size: String(params.size) } : { size: '20' }),
+    ...(params?.page ? { page: String(params.page) } : {}),
+    ...(params?.size ? { size: String(params.size) } : {}),
   }).toString();
-
   const res = await axios.get(`https://api.everp.co.kr/api/business/sd/quotations?${query}`);
   const data: Quote[] = res.data.data.items;
   return data;

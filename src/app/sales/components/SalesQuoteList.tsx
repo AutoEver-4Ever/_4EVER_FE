@@ -1,16 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { QuoteStatus, Quote, QuoteQueryParams } from '@/app/sales/types/SalesQuoteListType';
 import QuoteDetailModal from './QuoteDetailModal';
 import { useQuery } from '@tanstack/react-query';
 import { getQuoteList } from '@/app/sales/service';
+import { useDebounce } from 'use-debounce';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<QuoteStatus>('ALL');
   const [showQuoteModal, setShowQuoteModal] = useState(false);
-  const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
   const [showNewQuoteModal, setShowNewQuoteModal] = useState(false);
   const [selectedQuotes, setSelectedQuotes] = useState<number[]>([]);
 
@@ -19,25 +19,60 @@ const SalesQuoteList = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 200);
+
+  const queryParams = useMemo(
+    () => ({
+      page: 0,
+      size: 50,
+      startDate: startDate || '',
+      endDate: endDate || '',
+      status: statusFilter || 'ALL',
+      search: debouncedSearchTerm || '',
+    }),
+    [startDate, endDate, statusFilter, debouncedSearchTerm],
+  );
+
   const {
     data: quotes = [],
     isLoading,
     isError,
-    refetch,
+    isFetching,
+    isRefetching,
   } = useQuery({
-    queryKey: [
-      'quoteList',
-      {
-        page: 1,
-        size: 5,
-        startDate: startDate,
-        endDate: endDate,
-        status: statusFilter,
-        search: searchTerm,
-      },
-    ],
+    queryKey: ['quoteList', queryParams],
     queryFn: ({ queryKey }) => getQuoteList(queryKey[1] as QuoteQueryParams),
+    staleTime: 1000,
   });
+
+  useEffect(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'auto';
+    }
+
+    window.addEventListener('load', () => {
+      const savedY = sessionStorage.getItem('scrollY');
+      if (savedY) window.scrollTo(0, parseInt(savedY));
+    });
+
+    window.addEventListener('scroll', () => {
+      sessionStorage.setItem('scrollY', String(window.scrollY));
+    });
+
+    return () => {
+      window.removeEventListener('scroll', () => {});
+      window.removeEventListener('load', () => {});
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(
+  //     `%c[Query 상태]%c isFetching=${isFetching}, isRefetching=${isRefetching}, isLoading=${isLoading}`,
+  //     'color: orange; font-weight: bold;',
+  //     'color: white; background: #222; padding: 2px 4px; border-radius: 3px;',
+  //   );
+  // }, [isFetching, isRefetching, isLoading]);
+
   const getStatusColor = (status: QuoteStatus) => {
     switch (status) {
       case 'PENDING':
@@ -85,7 +120,6 @@ const SalesQuoteList = () => {
   };
 
   const handleViewQuote = (quote: Quote) => {
-    // setSelectedQuote(quote);
     setSelectedQuoteId(quote.quotationId);
     setShowQuoteModal(true);
   };

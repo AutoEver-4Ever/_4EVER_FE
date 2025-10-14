@@ -17,6 +17,7 @@ const SalesStats = () => {
   const { data, isLoading, isError } = useQuery<Record<Period, SalesStatCard[]>>({
     queryKey: ['stats'],
     queryFn: getSalesStats,
+    staleTime: 1000,
   });
   if (isLoading) return <p>불러오는 중...</p>;
   if (isError || !data) return <p>데이터를 불러오지 못했습니다.</p>;
