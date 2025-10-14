@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Period, SalesStatCard } from '@/app/sales/types/SalesStatsType';
-import { fetchSalesStats } from '@/app/sales/service';
+import { getSalesStats } from '@/app/sales/service';
 
 const SalesStats = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<Period>('week');
@@ -16,7 +16,7 @@ const SalesStats = () => {
 
   const { data, isLoading, isError } = useQuery<Record<Period, SalesStatCard[]>>({
     queryKey: ['stats'],
-    queryFn: fetchSalesStats,
+    queryFn: getSalesStats,
   });
   if (isLoading) return <p>불러오는 중...</p>;
   if (isError || !data) return <p>데이터를 불러오지 못했습니다.</p>;

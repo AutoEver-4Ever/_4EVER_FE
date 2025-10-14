@@ -1,14 +1,14 @@
 export type QuoteStatus =
-  | 'approved'
-  | 'pending'
-  | 'draft'
-  | 'rejected'
+  | 'ALL'
+  | 'APPROVED'
+  | 'REVIEW'
+  | 'PENDING'
+  | 'REJECTED'
+  | '전체'
   | '승인'
   | '검토'
   | '대기'
   | '반려';
-
-export type QuotePriority = '긴급' | '높음' | '보통' | '낮음';
 
 export interface QuoteItem {
   product: string;
@@ -18,13 +18,14 @@ export interface QuoteItem {
 }
 
 export interface Quote {
-  id: string;
-  customer: string;
-  contact: string;
-  date: string;
-  deliveryDate: string;
-  amount: number;
-  status: QuoteStatus;
+  quotationId: number;
+  quotationCode: string;
+  customerName: string;
+  ownerName: string;
+  quotationDate: string;
+  dueDate: string;
+  totalAmount: number;
+  statusLabel: QuoteStatus;
 }
 
 export interface QuoteFormItem {
@@ -42,11 +43,20 @@ export interface QuoteFormData {
   customerEmail: string;
   quoteDate: string;
   validUntil: string;
-  priority: QuotePriority;
   items: QuoteFormItem[];
   totalAmount: number;
   notes: string;
   paymentTerms: string;
   deliveryTerms: string;
   warranty: string;
+}
+
+export interface QuoteQueryParams {
+  startDate?: string;
+  endDate?: string;
+  status?: string;
+  search?: string;
+  sort?: string;
+  page?: number;
+  size?: number;
 }

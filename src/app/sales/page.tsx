@@ -3,21 +3,23 @@ import SalesStats from '@/app/sales/components/SalesStats';
 import SalesTabNavigation from '@/app/sales/components/SalesTabNavigation';
 import { getQueryClient } from '@/lib/queryClient';
 import { dehydrate } from '@tanstack/react-query';
-import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import Providers from '@/app/providers';
-import { fetchSalesStats } from '@/app/sales/service';
+import { getQuoteList, getSalesStats } from '@/app/sales/service';
+import { QuoteQueryParams } from '@/app/sales/types/SalesQuoteListType';
 
-export default async function SalesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ tab?: string }>;
-}) {
+export default async function SalesPage() {
   const queryClient = getQueryClient();
+
   await queryClient.prefetchQuery({
     queryKey: ['stats'],
-    queryFn: fetchSalesStats,
+    queryFn: getSalesStats,
   });
+  await queryClient.prefetchQuery({
+    queryKey: ['quoteList', { page: 1, size: 5, status: 'ALL' }],
+    queryFn: ({ queryKey }) => getQuoteList(queryKey[1] as QuoteQueryParams),
+  });
+
   const dehydratedState = dehydrate(queryClient);
 
   return (

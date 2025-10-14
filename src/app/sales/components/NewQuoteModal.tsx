@@ -5,7 +5,7 @@ import {
   Quote,
   QuoteFormData,
   QuoteFormItem,
-} from '@/app/sales/types/NewQuoteListType';
+} from '@/app/sales/types/SalesQuoteListType';
 import { useState } from 'react';
 import { NewQuoteModalProps } from '@/app/sales/types/NewQuoteModalType';
 

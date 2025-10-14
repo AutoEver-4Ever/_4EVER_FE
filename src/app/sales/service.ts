@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { SalesData, SalesStatCard } from '@/app/sales/types/SalesStatsType';
+import { Quote, QuoteQueryParams } from '@/app/sales/types/SalesQuoteListType';
 
-export const fetchSalesStats = async (): Promise<Record<string, SalesStatCard[]>> => {
+export const getSalesStats = async (): Promise<Record<string, SalesStatCard[]>> => {
   const res = await axios.get('https://api.everp.co.kr/api/business/sd/statistics');
   const datas: SalesData = res.data.data;
 
@@ -31,5 +32,21 @@ export const fetchSalesStats = async (): Promise<Record<string, SalesStatCard[]>
     {} as Record<string, SalesStatCard[]>,
   );
 
+  return data;
+};
+
+export const getQuoteList = async (params?: QuoteQueryParams): Promise<Quote[]> => {
+  const query = new URLSearchParams({
+    ...(params?.startDate ? { startDate: params.startDate } : {}),
+    ...(params?.endDate ? { endDate: params.endDate } : {}),
+    ...(params?.status ? { status: params.status } : {}),
+    ...(params?.search ? { search: params.search } : {}),
+    ...(params?.sort ? { sort: params.sort } : {}),
+    ...(params?.page ? { page: String(params.page) } : { page: '1' }),
+    ...(params?.size ? { size: String(params.size) } : { size: '20' }),
+  }).toString();
+
+  const res = await axios.get(`https://api.everp.co.kr/api/business/sd/quotations?${query}`);
+  const data: Quote[] = res.data.data.items;
   return data;
 };

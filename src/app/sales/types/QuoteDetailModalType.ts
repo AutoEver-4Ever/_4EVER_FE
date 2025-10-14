@@ -1,4 +1,4 @@
-import { Quote, QuoteStatus } from '@/app/sales/types/NewQuoteListType';
+import { Quote, QuoteStatus } from '@/app/sales/types/SalesQuoteListType';
 
 export interface QuoteDetailModalProps {
   $showQuoteModal: boolean;

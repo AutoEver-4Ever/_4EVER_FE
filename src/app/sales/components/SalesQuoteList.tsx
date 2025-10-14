@@ -1,82 +1,100 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  QuoteStatus,
-  Quote,
-  QuoteFormData,
-  QuoteFormItem,
-} from '@/app/sales/types/NewQuoteListType';
-import NewQuoteModal from './NewQuoteModal';
+import { QuoteStatus, Quote, QuoteQueryParams } from '@/app/sales/types/SalesQuoteListType';
 import QuoteDetailModal from './QuoteDetailModal';
+import { useQuery } from '@tanstack/react-query';
+import { getQuoteList } from '@/app/sales/service';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | QuoteStatus>('all');
+  const [statusFilter, setStatusFilter] = useState<QuoteStatus>('ALL');
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
   const [showNewQuoteModal, setShowNewQuoteModal] = useState(false);
-  const [selectedQuotes, setSelectedQuotes] = useState<string[]>([]);
+  const [selectedQuotes, setSelectedQuotes] = useState<number[]>([]);
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  const [quotes, setQuotes] = useState<Quote[]>([
-    {
-      id: 'Q2024001',
-      customer: '삼성전자',
-      contact: '김철수',
-      date: '2024-01-15',
-      deliveryDate: '2024-02-15',
-      amount: 15000000,
-      status: '대기',
-    },
-    {
-      id: 'Q2024002',
-      customer: 'LG전자',
-      contact: '이영희',
-      date: '2024-01-16',
-      deliveryDate: '2024-02-20',
-      amount: 8500000,
-      status: '검토',
-    },
-    {
-      id: 'Q2024003',
-      customer: '현대자동차',
-      contact: '박민수',
-      date: '2024-01-17',
-      deliveryDate: '2024-03-01',
-      amount: 25000000,
-      status: '승인',
-    },
-    {
-      id: 'Q2024004',
-      customer: 'SK하이닉스',
-      contact: '정수진',
-      date: '2024-01-18',
-      deliveryDate: '2024-02-28',
-      amount: 12000000,
-      status: '반려',
-    },
-    {
-      id: 'Q2024005',
-      customer: '네이버',
-      contact: '최동훈',
-      date: '2024-01-19',
-      deliveryDate: '2024-03-15',
-      amount: 6800000,
-      status: '대기',
-    },
-  ]);
+  const {
+    data: quotes = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: [
+      'quoteList',
+      {
+        page: 1,
+        size: 5,
+        startDate: startDate,
+        endDate: endDate,
+        status: statusFilter,
+        search: searchTerm,
+      },
+    ],
+    queryFn: ({ queryKey }) => getQuoteList(queryKey[1] as QuoteQueryParams),
+  });
+
+  // if (isLoading) return <div>견적서를 불러오는 중입니다...</div>;
+  // if (isError) return <div>견적서 목록을 불러오는 중 오류가 발생했습니다.</div>;
+
+  //   {
+  //     id: 'Q2024001',
+  //     customer: '삼성전자',
+  //     contact: '김철수',
+  //     date: '2024-01-15',
+  //     deliveryDate: '2024-02-15',
+  //     amount: 15000000,
+  //     status: '대기',
+  //   },
+  //   {
+  //     id: 'Q2024002',
+  //     customer: 'LG전자',
+  //     contact: '이영희',
+  //     date: '2024-01-16',
+  //     deliveryDate: '2024-02-20',
+  //     amount: 8500000,
+  //     status: '검토',
+  //   },
+  //   {
+  //     id: 'Q2024003',
+  //     customer: '현대자동차',
+  //     contact: '박민수',
+  //     date: '2024-01-17',
+  //     deliveryDate: '2024-03-01',
+  //     amount: 25000000,
+  //     status: '승인',
+  //   },
+  //   {
+  //     id: 'Q2024004',
+  //     customer: 'SK하이닉스',
+  //     contact: '정수진',
+  //     date: '2024-01-18',
+  //     deliveryDate: '2024-02-28',
+  //     amount: 12000000,
+  //     status: '반려',
+  //   },
+  //   {
+  //     id: 'Q2024005',
+  //     customer: '네이버',
+  //     contact: '최동훈',
+  //     date: '2024-01-19',
+  //     deliveryDate: '2024-03-15',
+  //     amount: 6800000,
+  //     status: '대기',
+  //   },
+  // ]);
   const getStatusColor = (status: QuoteStatus) => {
     switch (status) {
-      case 'draft':
+      case 'PENDING':
         return 'bg-gray-100 text-gray-800';
-      case 'pending':
+      case 'REVIEW':
         return 'bg-yellow-100 text-yellow-800';
-      case 'approved':
+      case 'APPROVED':
         return 'bg-green-100 text-green-800';
-      case 'rejected':
+      case 'ALL':
         return 'bg-red-100 text-red-800';
       case '승인':
         return 'bg-green-100 text-green-800';
@@ -93,13 +111,13 @@ const SalesQuoteList = () => {
 
   const getStatusText = (status: QuoteStatus) => {
     switch (status) {
-      case 'draft':
+      case 'PENDING':
         return '대기';
-      case 'pending':
+      case 'REVIEW':
         return '검토';
-      case 'approved':
+      case 'APPROVED':
         return '승인';
-      case 'rejected':
+      case 'REJECTED':
         return '반려';
       case '승인':
         return '승인';
@@ -114,51 +132,29 @@ const SalesQuoteList = () => {
     }
   };
 
-  const filteredQuotes = quotes.filter((quote) => {
-    const matchesSearch =
-      quote.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      quote.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      quote.contact.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || quote.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
-
   const handleViewQuote = (quote: Quote) => {
     setSelectedQuote(quote);
     setShowQuoteModal(true);
   };
 
   const handleSelectAll = () => {
-    if (selectedQuotes.length === filteredQuotes.length) {
+    if (selectedQuotes.length === quotes.length && quotes.length > 0) {
       setSelectedQuotes([]);
     } else {
-      setSelectedQuotes(filteredQuotes.map((quote) => quote.id));
+      setSelectedQuotes(quotes.map((quote) => quote.quotationId));
     }
   };
-
-  const handleCheckboxChange = (quoteId: string) => {
+  const handleCheckboxChange = (quoteId: number) => {
     setSelectedQuotes((prev) =>
       prev.includes(quoteId) ? prev.filter((id) => id !== quoteId) : [...prev, quoteId],
     );
   };
 
-  const handleDownloadPDF = (quote: Quote) => {
-    const element = document.createElement('a');
-    const content = `견적서 ${quote.id}\n고객: ${quote.customer}\n금액: ₩${quote.amount.toLocaleString()}`;
-    const file = new Blob([content], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = `견적서_${quote.id}.txt`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-
-    alert(`견적서 ${quote.id}가 다운로드되었습니다.`);
-  };
-
   const handleDeleteQuote = (quote: Quote) => {
-    if (confirm(`견적서 ${quote.id}를 정말 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) {
-      setQuotes((prevQuotes) => prevQuotes.filter((q) => q.id !== quote.id));
-      alert(`견적서 ${quote.id}가 삭제되었습니다.`);
+    if (
+      confirm(`견적서 ${quote.quotationId}를 정말 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)
+    ) {
+      alert(`견적서 ${quote.quotationId}가 삭제되었습니다.`);
     }
   };
 
@@ -205,7 +201,7 @@ const SalesQuoteList = () => {
             <select
               value={statusFilter}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                setStatusFilter(e.target.value as 'all' | QuoteStatus)
+                setStatusFilter(e.target.value as QuoteStatus)
               }
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
             >
@@ -236,9 +232,7 @@ const SalesQuoteList = () => {
                 <th className="px-6 py-3 text-left">
                   <input
                     type="checkbox"
-                    checked={
-                      selectedQuotes.length === filteredQuotes.length && filteredQuotes.length > 0
-                    }
+                    checked={selectedQuotes.length === quotes.length && quotes.length > 0}
                     onChange={handleSelectAll}
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
@@ -270,39 +264,39 @@ const SalesQuoteList = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredQuotes.map((quote) => (
-                <tr key={quote.id} className="hover:bg-gray-50">
+              {quotes.map((quote) => (
+                <tr key={quote.quotationId} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <input
                       type="checkbox"
-                      checked={selectedQuotes.includes(quote.id)}
-                      onChange={() => handleCheckboxChange(quote.id)}
+                      checked={selectedQuotes.includes(quote.quotationId)}
+                      onChange={() => handleCheckboxChange(quote.quotationId)}
                       className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {quote.id}
+                    {quote.quotationCode}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {quote.customer}
+                    {quote.customerName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {quote.contact}
+                    {quote.ownerName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {quote.date}
+                    {quote.quotationDate}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {quote.deliveryDate}
+                    {quote.dueDate}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {quote.amount.toLocaleString()}원
+                    {quote.totalAmount.toLocaleString()}원
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <span
-                      className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(quote.status)}`}
+                      className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(quote.statusLabel)}`}
                     >
-                      {getStatusText(quote.status)}
+                      {getStatusText(quote.statusLabel)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
