@@ -5,8 +5,8 @@ import PurchaseRequestModal from '@/app/purchase/components/modals/PurchaseReque
 import PurchaseRequestDetailModal from '@/app/purchase/components/modals/PurchaseRequestDetailModal';
 import { PurchaseRequestResult } from '@/app/purchase/types/PurchaseRequestResultType';
 import { PURCHASE_LIST_TABLE_HEADERS } from '@/app/purchase/constants';
-import Button from '@/app/components/common/Button';
 import IconButton from '@/app/components/common/IconButton';
+import Dropdown from '@/app/components/common/Dropdown';
 
 const getStatusColor = (status: string): string => {
   switch (status) {
@@ -147,6 +147,18 @@ export default function PurchaseRequestListTab() {
     setShowDetailModal(true);
   };
 
+  const statusItems = [
+    { label: '전체 상태', value: 'all' },
+    { label: '대기', value: 'waiting' },
+    { label: '승인', value: 'approved' },
+    { label: '반려', value: 'rejected' },
+  ];
+
+  const getStatusLabel = (): string => {
+    const item = statusItems.find((s) => s.value === selectedStatus);
+    return item?.label || '전체 상태';
+  };
+
   return (
     <>
       <div className="bg-white rounded-lg border border-gray-200">
@@ -155,7 +167,7 @@ export default function PurchaseRequestListTab() {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">구매 요청 목록</h3>
             <div className="flex items-center space-x-4">
-              <select
+              {/* <select
                 value={selectedStatus}
                 onChange={(e) => handleStatusChange(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-8"
@@ -164,7 +176,16 @@ export default function PurchaseRequestListTab() {
                 <option value="waiting">대기</option>
                 <option value="approved">승인</option>
                 <option value="rejected">반려</option>
-              </select>
+              </select> */}
+
+              <Dropdown
+                label={getStatusLabel()}
+                items={statusItems}
+                onChange={(value) => {
+                  setSelectedStatus(value);
+                  setCurrentPage(1);
+                }}
+              />
 
               {/* 구매 요청 작성 버튼 */}
               <IconButton icon="ri-add-line" onClick={() => setShowRequestModal(true)}>
