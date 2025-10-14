@@ -1,5 +1,7 @@
+import { Period } from '@/app/purchase/types/PurchaseStatsType';
+
 export interface PeriodFilterProps {
-  periods: readonly string[];
+  // periods: KeyValueItem<Period>[];
   selectedPeriod: string;
-  onPeriodChange: (period: string) => void;
+  onPeriodChange: (period: Period) => void;
 }

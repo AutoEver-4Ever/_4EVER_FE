@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Period, SalesStatCard } from '@/app/sales/types/SalesStatsType';
 import { getSalesStats } from '@/app/sales/service';
 

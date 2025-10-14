@@ -1,57 +1,39 @@
 'use client';
 
 import { useState } from 'react';
-import { PURCHASE_PERIODS } from '@/app/purchase/constants';
+import { useQuery } from '@tanstack/react-query';
+
+import { fetchPurchaseStats } from '@/app/purchase/api/purchase.api';
+import { mapPurchaseStatsToCards } from '@/app/purchase/services/purchase.service';
 import PeriodFilterSection from '@/app/purchase/components/sections/PeriodFilterSection';
+import { Period } from '../types/PurchaseStatsType';
+import { PURCHASE_STAT_PERIODS } from '../constants';
 
 export default function PurchaseStats() {
-  const [selectedPeriod, setSelectedPeriod] = useState('이번 달');
+  const [selectedPeriod, setSelectedPeriod] = useState<Period>('week');
 
-  const stats = [
-    {
-      title: '구매 요청',
-      value: '24건',
-      change: '+12%',
-      changeType: 'increase',
-      icon: 'ri-file-add-line',
-      iconColor: 'text-blue-600',
-      iconBg: 'bg-blue-100',
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['purchase-stats'],
+    queryFn: async () => {
+      const data = await fetchPurchaseStats();
+      return mapPurchaseStatsToCards(data);
     },
-    {
-      title: '구매 승인 대기',
-      value: '8건',
-      change: '+5%',
-      changeType: 'increase',
-      icon: 'ri-time-line',
-      iconColor: 'text-orange-600',
-      iconBg: 'bg-orange-100',
-    },
-    {
-      title: '발주 금액',
-      value: '₩1,250만',
-      change: '+8%',
-      changeType: 'increase',
-      icon: 'ri-money-dollar-circle-line',
-      iconColor: 'text-green-600',
-      iconBg: 'bg-green-100',
-    },
-    {
-      title: '발주 승인 대기',
-      value: '6건',
-      change: '-5%',
-      changeType: 'decrease',
-      icon: 'ri-shopping-bag-3-line',
-      iconColor: 'text-purple-600',
-      iconBg: 'bg-purple-100',
-    },
-  ];
+  });
+
+  if (isLoading) return <p>불러오는 중...</p>;
+  if (isError || !data) return <p>데이터를 불러오지 못했습니다.</p>;
+
+  const stats = data[selectedPeriod];
+
+  // 선택된 기간의 레이블을 조회합니다.
+  const currentPeriodLabel =
+    PURCHASE_STAT_PERIODS.find((p) => p.key === selectedPeriod)?.value || selectedPeriod; // '이번 주', '이번 달' 등
 
   return (
     <div className="space-y-4">
       <PeriodFilterSection
-        periods={PURCHASE_PERIODS}
-        selectedPeriod={selectedPeriod}
-        onPeriodChange={setSelectedPeriod}
+        selectedPeriod={selectedPeriod} // 'week' | 'month' | 'quarter' | 'year'
+        onPeriodChange={setSelectedPeriod} // key를 받아서 바로 상태 업데이트
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
@@ -68,7 +50,7 @@ export default function PurchaseStats() {
                   >
                     {stat.change}
                   </span>
-                  <span className="text-sm text-gray-500 ml-2">{selectedPeriod} 대비</span>
+                  <span className="text-sm text-gray-500 ml-2">{currentPeriodLabel} 대비</span>
                 </div>
               </div>
               <div

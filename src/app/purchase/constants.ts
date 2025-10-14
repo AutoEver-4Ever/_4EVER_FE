@@ -1,8 +1,15 @@
 import { Tab } from '@/app/purchase/types/TabNavigationType';
 import { TableHeader } from '@/app/purchase/types/TableHeader';
+import { KeyValueItem } from '@/app/purchase/types/CommonType';
+import { Period } from '@/app/purchase/types/PurchaseStatsType';
 
 // 구매 기간 필터링
-export const PURCHASE_PERIODS = ['이번 주', '이번 달', '이번 분기', '올해'] as const;
+export const PURCHASE_STAT_PERIODS: KeyValueItem<Period>[] = [
+  { key: 'week', value: '이번 주' },
+  { key: 'month', value: '이번 달' },
+  { key: 'quarter', value: '이번 분기' },
+  { key: 'year', value: '연도별' },
+];
 
 // 탭 전환
 export const PURCHASE_TABS: Tab[] = [
@@ -52,7 +59,6 @@ export const PURCHASE_REQUEST_TABLE_HEADERS = [
   '단위',
   '예상 단가',
   '예상 총액',
-  '희망 공급업체',
   '희망 납기일',
   '사용 목적',
   '비고',
