@@ -1,32 +1,9 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
-
-interface Metric {
-  value: number;
-  delta_rate: number;
-}
-
-interface PeriodData {
-  sales_amount: Metric;
-  new_orders_count: Metric;
-}
-
-interface SalesData {
-  week: PeriodData;
-  month: PeriodData;
-  quarter: PeriodData;
-  year: PeriodData;
-}
-
-type Period = 'week' | 'month' | 'quarter' | 'year';
-
-const fetchSalesStats = async (): Promise<SalesData> => {
-  const res = await axios.get('https://api.everp.co.kr/api/business/sd/statistics');
-  return res.data.data;
-};
+import { Period, SalesStatCard } from '@/app/sales/types/SalesStatsType';
+import { fetchSalesStats } from '@/app/sales/service';
 
 const SalesStats = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<Period>('week');
@@ -37,32 +14,14 @@ const SalesStats = () => {
     { id: 'year', name: '연도별' },
   ];
 
-  const { data, isLoading, isError } = useQuery<SalesData>({
+  const { data, isLoading, isError } = useQuery<Record<Period, SalesStatCard[]>>({
     queryKey: ['stats'],
     queryFn: fetchSalesStats,
   });
   if (isLoading) return <p>불러오는 중...</p>;
   if (isError || !data) return <p>데이터를 불러오지 못했습니다.</p>;
-  const current = data[selectedPeriod];
 
-  const stats = [
-    {
-      title: '이번 달 매출',
-      value: `₩${current.sales_amount.value.toLocaleString()}`,
-      change: `${current.sales_amount.delta_rate > 0 ? '+' : ''}${(current.sales_amount.delta_rate * 100).toFixed(1)}%`,
-      changeType: current.sales_amount.delta_rate >= 0 ? 'increase' : 'decrease',
-      icon: 'ri-money-dollar-circle-line',
-      color: 'blue',
-    },
-    {
-      title: '신규 주문',
-      value: `${current.new_orders_count.value.toLocaleString()}건`,
-      change: `${current.new_orders_count.delta_rate > 0 ? '+' : ''}${(current.new_orders_count.delta_rate * 100).toFixed(1)}%`,
-      changeType: current.new_orders_count.delta_rate >= 0 ? 'increase' : 'decrease',
-      icon: 'ri-shopping-cart-line',
-      color: 'green',
-    },
-  ];
+  const stats = data[selectedPeriod];
 
   // const mockStats = [
   //   {
