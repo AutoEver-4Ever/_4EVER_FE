@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { SalesData, SalesStatCard } from '@/app/sales/types/SalesStatsType';
 import { Quote, QuoteQueryParams } from '@/app/sales/types/SalesQuoteListType';
+import { QuoteDetail } from '@/app/sales/types/QuoteDetailModalType';
 
 export const getSalesStats = async (): Promise<Record<string, SalesStatCard[]>> => {
   const res = await axios.get('https://api.everp.co.kr/api/business/sd/statistics');
@@ -48,5 +49,11 @@ export const getQuoteList = async (params?: QuoteQueryParams): Promise<Quote[]> 
 
   const res = await axios.get(`https://api.everp.co.kr/api/business/sd/quotations?${query}`);
   const data: Quote[] = res.data.data.items;
+  return data;
+};
+
+export const getQuoteDetail = async (quotationId: number): Promise<QuoteDetail> => {
+  const res = await axios.get(`https://api.everp.co.kr/api/business/sd/quotations/${quotationId}`);
+  const data: QuoteDetail = res.data.data;
   return data;
 };

@@ -14,6 +14,8 @@ const SalesQuoteList = () => {
   const [showNewQuoteModal, setShowNewQuoteModal] = useState(false);
   const [selectedQuotes, setSelectedQuotes] = useState<number[]>([]);
 
+  const [selectedQuoteId, setSelectedQuoteId] = useState<number>(0);
+
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
@@ -83,7 +85,8 @@ const SalesQuoteList = () => {
   };
 
   const handleViewQuote = (quote: Quote) => {
-    setSelectedQuote(quote);
+    // setSelectedQuote(quote);
+    setSelectedQuoteId(quote.quotationId);
     setShowQuoteModal(true);
   };
 
@@ -286,7 +289,7 @@ const SalesQuoteList = () => {
         <QuoteDetailModal
           $showQuoteModal={showQuoteModal}
           $setShowQuoteModal={setShowQuoteModal}
-          $selectedQuote={selectedQuote}
+          $selectedQuoteId={selectedQuoteId}
           $getStatusColor={getStatusColor}
           $getStatusText={getStatusText}
         />
