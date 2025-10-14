@@ -1,18 +1,26 @@
 import SalesHeader from '@/app/sales/components/SalesHeader';
 import SalesStats from '@/app/sales/components/SalesStats';
 import SalesTabNavigation from '@/app/sales/components/SalesTabNavigation';
-import { redirect } from 'next/navigation';
+import { getQueryClient } from '@/lib/queryClient';
+import { dehydrate } from '@tanstack/react-query';
 import { Suspense } from 'react';
+import Providers from '@/app/providers';
+import { getQuoteList, getSalesStats } from '@/app/sales/service';
+import { QuoteQueryParams } from '@/app/sales/types/SalesQuoteListType';
 
-export default async function SalesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ tab?: string }>;
-}) {
-  const params = await searchParams; // 여기서 resolve
-  if (!params.tab) {
-    redirect('/sales?tab=quotes');
-  }
+export default async function SalesPage() {
+  const queryClient = getQueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['stats'],
+    queryFn: getSalesStats,
+  });
+  await queryClient.prefetchQuery({
+    queryKey: ['quoteList', { page: 1, size: 5, status: 'ALL' }],
+    queryFn: ({ queryKey }) => getQuoteList(queryKey[1] as QuoteQueryParams),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -20,8 +28,10 @@ export default async function SalesPage({
         {/* 페이지 헤더 */}
         <SalesHeader />
 
-        {/* 주요 지표 */}
-        <SalesStats />
+        <Providers dehydratedState={dehydratedState}>
+          {/* 주요 지표 */}
+          <SalesStats />
+        </Providers>
 
         {/* 탭 콘텐츠 */}
         <Suspense fallback={<div>Loading...</div>}>
