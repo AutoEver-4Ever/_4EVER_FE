@@ -1,23 +1,24 @@
+import { KeyValueItem } from '@/app/purchase/types/CommonType';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 
-interface DropdownItem {
-  label: string;
-  value: string;
-}
-
-interface DropdownProps {
+interface DropdownProps<T extends string = string> {
   label: string | ReactNode;
-  items: DropdownItem[];
-  onChange?: (value: string) => void;
+  items: KeyValueItem[];
+  onChange?: (key: T) => void;
   className?: string;
 }
 
-export default function Dropdown({ label, items, onChange, className = '' }: DropdownProps) {
+export default function Dropdown<T extends string = string>({
+  label,
+  items,
+  onChange,
+  className = '',
+}: DropdownProps<T>) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleSelect = (value: string) => {
-    onChange?.(value);
+  const handleSelect = (key: string) => {
+    onChange?.(key as T);
     setOpen(false); // 닫기
   };
 
@@ -54,13 +55,13 @@ export default function Dropdown({ label, items, onChange, className = '' }: Dro
         <ul className="absolute left-0 top-full mt-1 min-w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10">
           {items.map((item) => (
             <li
-              key={item.value}
+              key={item.key}
               onClick={() => {
-                handleSelect(item.value);
+                handleSelect(item.key);
               }}
               className="px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 cursor-pointer truncate"
             >
-              {item.label}
+              {item.value}
             </li>
           ))}
         </ul>

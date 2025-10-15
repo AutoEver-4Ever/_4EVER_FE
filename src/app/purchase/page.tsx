@@ -11,28 +11,13 @@ import { mapPurchaseStatsToCards } from '@/app/purchase/services/purchase.servic
 export default async function PurchasePage() {
   const queryClient = getQueryClient();
 
-  // await queryClient.prefetchQuery({
-  //   queryKey: ['purchase-stats'],
-  //   queryFn: async () => {
-  //     const data = await fetchPurchaseStats();
-  //     return mapPurchaseStatsToCards(data);
-  //   },
-  // });
-
-  try {
-    console.log('Server: Prefetching data...');
-    await queryClient.prefetchQuery({
-      queryKey: ['purchase-stats'],
-      queryFn: async () => {
-        const data = await fetchPurchaseStats();
-        return mapPurchaseStatsToCards(data);
-      },
-    });
-    console.log('Server: Data prefetched successfully.');
-  } catch (error) {
-    console.error('Server Prefetch Error:', error);
-    // 서버 prefetch가 실패하면, 클라이언트는 다시 시도합니다.
-  }
+  await queryClient.prefetchQuery({
+    queryKey: ['purchase-stats'],
+    queryFn: async () => {
+      const data = await fetchPurchaseStats();
+      return mapPurchaseStatsToCards(data);
+    },
+  });
 
   const dehydratedState = dehydrate(queryClient);
 

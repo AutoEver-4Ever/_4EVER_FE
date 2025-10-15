@@ -12,8 +12,6 @@ interface PurchasePeriodData {
   purchase_order_approval_pending_count: PurchaseMetric;
 }
 
-export type Period = 'week' | 'month' | 'quarter' | 'year';
-
 // 전체 데이터 구조
 export interface PurchaseData {
   week: PurchasePeriodData;

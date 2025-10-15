@@ -1,217 +1,79 @@
 'use client';
 
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import SupplierAddModal from '@/app/purchase/components/modals/SupplierAddModal';
 import SupplierDetailModal from '@/app/purchase/components/modals/SupplierDetailModal';
-import { SupplierResponse } from '@/app/purchase/types/SupplierType';
+import { SupplierListResponse, SupplierResponse } from '@/app/purchase/types/SupplierType';
+import IconButton from '@/app/components/common/IconButton';
+import { fetchSupplierList } from '@/app/purchase/api/purchase.api';
+import Dropdown from '@/app/components/common/Dropdown';
+import {
+  SupplierStatus,
+  SUPPLIER_CATEGORY_ITEMS,
+  SUPPLIER_STATUS_ITEMS,
+  SupplierCategory,
+} from '@/app/purchase/constants';
 
 export default function SupplierListTab() {
   const [showAddSupplierModal, setShowAddSupplierModal] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<SupplierResponse | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
-  const [selectedCategory, setSelectedCategory] = useState<'전체' | string>('전체');
+  const [currentPage, setCurrentPage] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedSupplierStatus, setSelectedSupplierStatus] = useState<string>('');
+  const [pageSize] = useState(10);
 
   const categories = ['전체', '철강/금속', '화학/소재', '전자부품', '기계부품', '포장재', '소모품'];
 
-  const initialSuppliers: SupplierResponse[] = [
-    {
-      id: 'SUP-001',
-      name: '대한철강',
-      category: '철강/금속',
-      status: 'active',
-      managerName: '김철수',
-      managerPhone: '010-1234-5678',
-      managerEmail: 'order@steel.co.kr',
-      address: '서울시 강남구 테헤란로 123',
-      deliveryDays: '7',
-      materials: [
-        { id: 'MAT-001', productName: '철근', spec: 'D16', unitPrice: '₩1,200' },
-        { id: 'MAT-002', productName: '형강', spec: 'H-100', unitPrice: '₩15,000' },
-      ],
-    },
-    {
-      id: 'SUP-002',
-      name: '한국알루미늄',
-      category: '철강/금속',
-      status: 'active',
-      managerName: '이영희',
-      managerPhone: '010-2345-6789',
-      managerEmail: 'sales@aluminum.co.kr',
-      address: '경기도 수원시 영통구 산업로 789',
-      deliveryDays: '5',
-      materials: [
-        { id: 'MAT-003', productName: '알루미늄 판재', spec: '5T', unitPrice: '₩25,000' },
-        { id: 'MAT-004', productName: '알루미늄 봉', spec: 'Φ20', unitPrice: '₩8,000' },
-      ],
-    },
-    {
-      id: 'SUP-003',
-      name: '포스코',
-      category: '철강/금속',
-      status: 'active',
-      managerName: '박민수',
-      managerPhone: '010-3456-7890',
-      managerEmail: 'order@posco.co.kr',
-      address: '경북 포항시 남구 동해안로 6261',
-      deliveryDays: '3',
-      materials: [
-        { id: 'MAT-005', productName: '후판', spec: '10T', unitPrice: '₩30,000' },
-        { id: 'MAT-006', productName: '강판', spec: '3T', unitPrice: '₩12,000' },
-      ],
-    },
-    {
-      id: 'SUP-004',
-      name: '케미칼솔루션',
-      category: '화학/소재',
-      status: 'active',
-      managerName: '최지영',
-      managerPhone: '010-4567-8901',
-      managerEmail: 'info@chemical.co.kr',
-      address: '인천시 남동구 논현로 456',
-      deliveryDays: '10',
-      materials: [
-        { id: 'MAT-007', productName: '폴리에틸렌', spec: 'PE100', unitPrice: '₩2,500' },
-        { id: 'MAT-008', productName: '폴리프로필렌', spec: 'PP50', unitPrice: '₩3,000' },
-      ],
-    },
-    {
-      id: 'SUP-005',
-      name: '일렉트로닉스코리아',
-      category: '전자부품',
-      status: 'active',
-      managerName: '정수진',
-      managerPhone: '010-5678-9012',
-      managerEmail: 'sales@electronics.co.kr',
-      address: '경기도 성남시 분당구 판교로 123',
-      deliveryDays: '7',
-      materials: [
-        { id: 'MAT-009', productName: '저항', spec: '10Ω', unitPrice: '₩50' },
-        { id: 'MAT-010', productName: '콘덴서', spec: '100μF', unitPrice: '₩120' },
-      ],
-    },
-    {
-      id: 'SUP-006',
-      name: '패스너코리아',
-      category: '기계부품',
-      status: 'active',
-      managerName: '김영수',
-      managerPhone: '010-6789-0123',
-      managerEmail: 'order@fastener.co.kr',
-      address: '경남 창원시 의창구 공단로 789',
-      deliveryDays: '5',
-      materials: [
-        { id: 'MAT-011', productName: '볼트', spec: 'M10', unitPrice: '₩200' },
-        { id: 'MAT-012', productName: '너트', spec: 'M10', unitPrice: '₩100' },
-      ],
-    },
-    {
-      id: 'SUP-007',
-      name: '글로벌패키징',
-      category: '포장재',
-      status: 'active',
-      managerName: '이하늘',
-      managerPhone: '010-7890-1234',
-      managerEmail: 'info@packaging.co.kr',
-      address: '서울시 금천구 가산디지털로 456',
-      deliveryDays: '3',
-      materials: [
-        { id: 'MAT-013', productName: '골판지', spec: 'A4', unitPrice: '₩500' },
-        { id: 'MAT-014', productName: '포장용 테이프', spec: '48mm', unitPrice: '₩300' },
-      ],
-    },
-    {
-      id: 'SUP-008',
-      name: '오피스서플라이',
-      category: '소모품',
-      status: 'active',
-      managerName: '박지영',
-      managerPhone: '010-8901-2345',
-      managerEmail: 'sales@office.co.kr',
-      address: '서울시 마포구 월드컵로 123',
-      deliveryDays: '1',
-      materials: [
-        { id: 'MAT-015', productName: 'A4 용지', spec: '80g', unitPrice: '₩4,000' },
-        { id: 'MAT-016', productName: '잉크 카트리지', spec: 'BK', unitPrice: '₩25,000' },
-      ],
-    },
-    {
-      id: 'SUP-009',
-      name: '테크솔루션',
-      category: '전자부품',
-      status: 'inactive',
-      managerName: '최민석',
-      managerPhone: '010-9012-3456',
-      managerEmail: 'tech@solution.co.kr',
-      address: '경기도 안양시 동안구 시민대로 789',
-      deliveryDays: '14',
-      materials: [
-        { id: 'MAT-017', productName: '마이크로컨트롤러', spec: 'STM32F103', unitPrice: '₩3,500' },
-        { id: 'MAT-018', productName: '센서 모듈', spec: '온도/습도', unitPrice: '₩8,000' },
-      ],
-    },
-    {
-      id: 'SUP-010',
-      name: '미래화학',
-      category: '화학/소재',
-      status: 'active',
-      managerName: '김미래',
-      managerPhone: '010-9876-5432',
-      managerEmail: 'info@futurechem.co.kr',
-      address: '경기도 화성시 동탄대로 100',
-      deliveryDays: '5',
-      materials: [{ id: 'MAT-019', productName: '레진', spec: 'Epoxy', unitPrice: '₩15,000' }],
-    },
-    {
-      id: 'SUP-011',
-      name: '정밀기계',
-      category: '기계부품',
-      status: 'active',
-      managerName: '이정밀',
-      managerPhone: '010-8765-4321',
-      managerEmail: 'sales@precision.co.kr',
-      address: '울산광역시 남구 산업로 200',
-      deliveryDays: '1',
-      materials: [{ id: 'MAT-020', productName: '베어링', spec: '608ZZ', unitPrice: '₩500' }],
-    },
-  ];
-
-  const [allSuppliers, setAllSuppliers] = useState<SupplierResponse[]>(initialSuppliers);
-
-  // **필터링 로직**
-  const filteredSuppliers = allSuppliers.filter((supplier) => {
-    return selectedCategory === '전체' || supplier.category === selectedCategory;
+  // React Query로 데이터 가져오기 - 쿼리 파라미터 전달
+  const {
+    data: supplierData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery<SupplierListResponse>({
+    queryKey: ['suppliers', currentPage, pageSize, selectedCategory, selectedSupplierStatus],
+    queryFn: () =>
+      fetchSupplierList({
+        page: currentPage,
+        size: pageSize,
+        category: selectedCategory || undefined,
+        status: selectedSupplierStatus || undefined,
+      }),
   });
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setCurrentPage(1); // 카테고리 변경 시 1페이지로 리셋
+  const suppliers = supplierData?.content || [];
+  const pageInfo = supplierData?.page;
+  const isFirstPage = currentPage === 0; // 0부터 시작이면
+  const isLastPage = pageInfo ? currentPage === pageInfo.totalPages - 1 : true;
+
+  const handelSupplierStatusChange = (status: SupplierStatus) => {
+    setSelectedSupplierStatus(status);
+    setCurrentPage(0);
   };
 
-  // **페이지네이션 로직**
-  const totalPages = Math.ceil(filteredSuppliers.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentSuppliers = filteredSuppliers.slice(startIndex, endIndex);
+  const handleSupplierCategoryChange = (category: SupplierCategory) => {
+    setSelectedCategory(category);
+    setCurrentPage(0); // 첫 페이지로
+  };
 
   const handlePageChange = (page: number): void => {
     setCurrentPage(page);
   };
 
   const handlePrevPage = (): void => {
-    if (currentPage > 1) {
+    if (pageInfo && currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
   };
 
   const handleNextPage = (): void => {
-    if (currentPage < totalPages) {
+    if (pageInfo && currentPage < pageInfo.totalPages - 1) {
       setCurrentPage(currentPage + 1);
     }
   };
-
-  // **이하 기존 로직 유지 및 수정**
 
   const handleViewDetail = (supplier: SupplierResponse) => {
     setSelectedSupplier(supplier);
@@ -223,38 +85,63 @@ export default function SupplierListTab() {
     setSelectedSupplier(null);
   };
 
-  const handleAddSupplier = (newSupplierData: Partial<SupplierResponse>) => {
-    const id = `SUP-${String(allSuppliers.length + 1).padStart(3, '0')}`;
-    const supplier: SupplierResponse = {
-      id,
-      // newSupplierData의 속성을 사용하고, 없는 경우 기본값을 설정하여 타입 불일치 방지
-      name: newSupplierData.name || '미정',
-      category: newSupplierData.category || '기타',
-      managerName: newSupplierData.managerName || '미정',
-      managerPhone: newSupplierData.managerPhone || '미정',
-      managerEmail: newSupplierData.managerEmail || '미정',
-      address: newSupplierData.address || '미정',
-      deliveryDays: newSupplierData.deliveryDays || '0',
-      // 필수 필드는 기본값 설정
-      status: 'active',
-      materials: [],
-    };
-    setAllSuppliers([...allSuppliers, supplier]);
+  const handleAddSupplier = async (newSupplierData: Partial<SupplierResponse>) => {
+    // TODO: 실제 API 호출로 공급업체 등록
+    // await createSupplier(newSupplierData);
+
     setShowAddSupplierModal(false);
+    refetch();
     alert('공급업체가 성공적으로 등록되었습니다.');
   };
 
   const getStatusBadge = (status: string) => {
     const baseClasses = 'px-2 py-1 rounded-full text-xs font-medium';
-    if (status === 'active') {
+    if (status === 'ACTIVE') {
       return `${baseClasses} bg-green-100 text-green-800`;
     }
     return `${baseClasses} bg-red-100 text-red-800`;
   };
 
-  const getStatusText = (status: string) => {
-    return status === 'active' ? '활성' : '비활성';
+  const getSatusValue = (): string => {
+    const item = SUPPLIER_STATUS_ITEMS.find((s) => s.key === selectedSupplierStatus);
+    return item?.value || '전체';
   };
+
+  const getCategoryValue = (): string => {
+    const item = SUPPLIER_CATEGORY_ITEMS.find((s) => s.key === selectedCategory);
+    return item?.value || '전체';
+  };
+
+  // 로딩 상태
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-lg shadow p-8">
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <span className="ml-3 text-gray-600">데이터를 불러오는 중...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 에러 상태
+  if (isError) {
+    return (
+      <div className="bg-white rounded-lg shadow p-8">
+        <div className="text-center">
+          <i className="ri-error-warning-line text-4xl text-red-500 mb-4"></i>
+          <p className="text-gray-600 mb-4">데이터를 불러오는데 실패했습니다.</p>
+          <p className="text-sm text-gray-500 mb-4">{error?.message}</p>
+          <button
+            onClick={() => refetch()}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            다시 시도
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -263,26 +150,21 @@ export default function SupplierListTab() {
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold text-gray-900">공급업체 목록</h3>
             <div className="flex items-center space-x-4">
-              {/* 카테고리 필터 섹션 */}
-              <select
-                value={selectedCategory}
-                onChange={(e) => handleCategoryChange(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm cursor-pointer"
-              >
-                {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-
-              <button
-                onClick={() => setShowAddSupplierModal(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap cursor-pointer"
-              >
-                <i className="ri-add-line mr-2"></i>
-                신규 등록
-              </button>
+              {/* 공급업체 카테고리 드롭다운 */}
+              <Dropdown
+                label={getCategoryValue()}
+                items={SUPPLIER_CATEGORY_ITEMS}
+                onChange={handleSupplierCategoryChange}
+              />
+              {/* 공급업체 상태 드롭다운 */}
+              <Dropdown
+                label={getSatusValue()}
+                items={SUPPLIER_STATUS_ITEMS}
+                onChange={handelSupplierStatusChange}
+              />
+              <IconButton icon="ri-add-line" onClick={() => setShowAddSupplierModal(true)}>
+                공급업체 등록
+              </IconButton>
             </div>
           </div>
         </div>
@@ -292,7 +174,7 @@ export default function SupplierListTab() {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  공급업체 ID
+                  공급업체 코드
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   업체명
@@ -315,29 +197,29 @@ export default function SupplierListTab() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {currentSuppliers.map((supplier) => (
-                <tr key={supplier.id} className="hover:bg-gray-50">
+              {suppliers.map((supplier) => (
+                <tr key={supplier.vendorId} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {supplier.id}
+                    {supplier.vendorCode}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {supplier.name}
+                    {supplier.companyName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div>
-                      <div>{supplier.managerPhone}</div>
-                      <div className="text-xs text-gray-400">{supplier.managerEmail}</div>
+                      <div>{supplier.contactPhone}</div>
+                      <div className="text-xs text-gray-400">{supplier.contactEmail}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {supplier.category}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {supplier.deliveryDays}일
+                    {supplier.leadTimeLabel}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={getStatusBadge(supplier.status)}>
-                      {getStatusText(supplier.status)}
+                    <span className={getStatusBadge(supplier.statusCode)}>
+                      {supplier.statusLabel}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -353,10 +235,10 @@ export default function SupplierListTab() {
                   </td>
                 </tr>
               ))}
-              {currentSuppliers.length === 0 && (
+              {suppliers.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-6 py-8 text-center text-gray-500 text-sm">
-                    선택하신 카테고리에 해당하는 공급업체가 없습니다.
+                    공급업체가 없습니다.
                   </td>
                 </tr>
               )}
@@ -364,63 +246,64 @@ export default function SupplierListTab() {
           </table>
         </div>
 
-        {/* 페이지네이션 섹션 */}
-        <div className="p-6 flex items-center justify-between border-t border-gray-200">
-          <div className="text-sm text-gray-600">
-            총 {filteredSuppliers.length}건 ({startIndex + 1}-
-            {Math.min(endIndex, filteredSuppliers.length)} 표시)
-          </div>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-              className={`px-3 py-1 border border-gray-300 rounded-lg text-sm ${
-                currentPage === 1
-                  ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              이전
-            </button>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+        {/* 페이지네이션 */}
+        {pageInfo && (
+          <div className="p-6 flex items-center justify-between border-t border-gray-200">
+            <div className="text-sm text-gray-600">
+              총 {pageInfo.totalElements}건 ({pageInfo.size * currentPage + 1}-
+              {Math.min(pageInfo.size * (currentPage + 1), pageInfo.totalElements)} 표시)
+            </div>
+            <div className="flex items-center space-x-2">
               <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`px-3 py-1 rounded-lg text-sm font-medium ${
-                  currentPage === page
-                    ? 'bg-blue-600 text-white'
-                    : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
+                onClick={handlePrevPage}
+                disabled={isFirstPage}
+                className={`px-3 py-1 border border-gray-300 rounded-lg text-sm ${
+                  isFirstPage
+                    ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
+                    : 'text-gray-700 hover:bg-gray-100'
                 }`}
               >
-                {page}
+                이전
               </button>
-            ))}
 
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className={`px-3 py-1 border border-gray-300 rounded-lg text-sm ${
-                currentPage === totalPages
-                  ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              다음
-            </button>
+              {Array.from({ length: pageInfo.totalPages }, (_, i) => i).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`px-3 py-1 rounded-lg text-sm font-medium ${
+                    currentPage === page
+                      ? 'bg-blue-600 text-white'
+                      : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {page + 1}
+                </button>
+              ))}
+
+              <button
+                onClick={handleNextPage}
+                disabled={isLastPage}
+                className={`px-3 py-1 border border-gray-300 rounded-lg text-sm ${
+                  isLastPage
+                    ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                다음
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* 공급업체 신규 등록 모달 */}
+      {/* 모달들 */}
       <SupplierAddModal
         isOpen={showAddSupplierModal}
         onClose={() => setShowAddSupplierModal(false)}
         onAddSupplier={handleAddSupplier}
-        categories={categories.slice(1)} // '전체' 제외하고 전달
+        categories={categories}
       />
 
-      {/* 공급업체 상세 정보 모달 */}
       <SupplierDetailModal
         isOpen={isDetailModalOpen}
         supplier={selectedSupplier}

@@ -1,7 +1,10 @@
 import { Tab } from '@/app/purchase/types/TabNavigationType';
 import { TableHeader } from '@/app/purchase/types/TableHeader';
 import { KeyValueItem } from '@/app/purchase/types/CommonType';
-import { Period } from '@/app/purchase/types/PurchaseStatsType';
+
+export type Period = 'week' | 'month' | 'quarter' | 'year';
+export type SupplierCategory = 'ALL' | 'MATERIAL' | 'PARTS' | 'ETC';
+export type SupplierStatus = 'ALL' | 'ACTIVE' | 'INACTIVE';
 
 // 구매 기간 필터링
 export const PURCHASE_STAT_PERIODS: KeyValueItem<Period>[] = [
@@ -9,6 +12,21 @@ export const PURCHASE_STAT_PERIODS: KeyValueItem<Period>[] = [
   { key: 'month', value: '이번 달' },
   { key: 'quarter', value: '이번 분기' },
   { key: 'year', value: '연도별' },
+];
+
+// 공급 카테고리 필터링
+export const SUPPLIER_CATEGORY_ITEMS: KeyValueItem<SupplierCategory>[] = [
+  { key: 'ALL', value: '전체' },
+  { key: 'MATERIAL', value: '원자재' },
+  { key: 'PARTS', value: '부품' },
+  { key: 'ETC', value: '기타' },
+];
+
+// 공급업체 상태 필터링
+export const SUPPLIER_STATUS_ITEMS: KeyValueItem<SupplierStatus>[] = [
+  { key: 'ALL', value: '전체' },
+  { key: 'ACTIVE', value: '활성' },
+  { key: 'INACTIVE', value: '비활성' },
 ];
 
 // 탭 전환

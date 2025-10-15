@@ -148,15 +148,15 @@ export default function PurchaseRequestListTab() {
   };
 
   const statusItems = [
-    { label: '전체 상태', value: 'all' },
-    { label: '대기', value: 'waiting' },
-    { label: '승인', value: 'approved' },
-    { label: '반려', value: 'rejected' },
+    { key: 'all', value: '전체 상태' },
+    { key: 'waiting', value: '대기' },
+    { key: 'approved', value: '승인' },
+    { key: 'rejected', value: '반려' },
   ];
 
-  const getStatusLabel = (): string => {
-    const item = statusItems.find((s) => s.value === selectedStatus);
-    return item?.label || '전체 상태';
+  const getStatusValue = (): string => {
+    const item = statusItems.find((s) => s.key === selectedStatus);
+    return item?.value || '전체 상태';
   };
 
   return (
@@ -179,7 +179,7 @@ export default function PurchaseRequestListTab() {
               </select> */}
 
               <Dropdown
-                label={getStatusLabel()}
+                label={getStatusValue()}
                 items={statusItems}
                 onChange={(value) => {
                   setSelectedStatus(value);
