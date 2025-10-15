@@ -24,7 +24,6 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
 
   const handleCustomerSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     createCustomer(customerData);
   };
 
@@ -71,22 +70,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
       alert(`${data.manager.name} 등록 성공 \n
         고객 아이디 : ${data.customerCode}
         `);
-      // setCustomerData({
-      //   companyName: '',
-      //   businessNumber: '',
-      //   ceoName: '',
-      //   contactPhone: '',
-      //   contactEmail: '',
-      //   zipCode: '',
-      //   address: '',
-      //   detailAddress: '',
-      //   manager: {
-      //     name: '',
-      //     mobile: '',
-      //     email: '',
-      //   },
-      //   note: '',
-      // });
+
       $setShowCustomerModal(false);
     },
     onError: (error) => {
@@ -94,6 +78,22 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
     },
   });
 
+  // setCustomerData({
+  //   companyName: '',
+  //   businessNumber: '',
+  //   ceoName: '',
+  //   contactPhone: '',
+  //   contactEmail: '',
+  //   zipCode: '',
+  //   address: '',
+  //   detailAddress: '',
+  //   manager: {
+  //     name: '',
+  //     mobile: '',
+  //     email: '',
+  //   },
+  //   note: '',
+  // });
   return (
     <>
       {/* 고객 등록 모달 */}
@@ -292,7 +292,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                   취소
                 </button>
                 <button
+                  type="submit"
                   disabled={isPending}
+                  // onClick={handleCustomerSubmit}
                   className={`px-6 py-2 rounded-lg font-medium cursor-pointer whitespace-nowrap transition-colors
     ${
       isPending
