@@ -30,7 +30,7 @@ const CustomerList = () => {
       page: 0,
       size: 10,
       status: statusFilter || 'ALL',
-      search: debouncedSearchTerm || '',
+      keyword: debouncedSearchTerm || '',
     }),
     [statusFilter, debouncedSearchTerm],
   );
