@@ -19,7 +19,7 @@ export default function SupplierListTab() {
   const [showAddSupplierModal, setShowAddSupplierModal] = useState(false);
   const [showSupplierDetailModal, setShowSupplierDetailModal] = useState(false);
 
-  const [selectedSupplierId, setSelectedSupplierId] = useState<number | null>(null);
+  const [selectedSupplierId, setSelectedSupplierId] = useState<number>(-1);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSupplierStatus, setSelectedSupplierStatus] = useState<string>('');
 
@@ -84,7 +84,7 @@ export default function SupplierListTab() {
 
   const handleCloseDetail = () => {
     setShowSupplierDetailModal(false);
-    setSelectedSupplierId(null);
+    setSelectedSupplierId(-1);
   };
 
   const handleAddSupplier = async (newSupplierData: Partial<SupplierResponse>) => {
@@ -103,7 +103,7 @@ export default function SupplierListTab() {
     }
     return `${baseClasses} bg-red-100 text-red-800`;
   };
-  const getStatusText = (status: string) => (status === 'active' ? '활성' : '비활성');
+  const getStatusText = (status: string) => (status === 'ACTIVE' ? '활성' : '비활성');
 
   const getSatusValue = (): string => {
     const item = SUPPLIER_STATUS_ITEMS.find((s) => s.key === selectedSupplierStatus);
@@ -175,33 +175,33 @@ export default function SupplierListTab() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <tr className="text-center">
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   공급업체 코드
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   업체명
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   연락처
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   카테고리
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   배송 기간
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   상태
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   작업
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {suppliers.map((supplier) => (
-                <tr key={supplier.vendorId} className="hover:bg-gray-50">
+                <tr key={supplier.vendorId} className="hover:bg-gray-50 text-center">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {supplier.vendorCode}
                   </td>
@@ -210,15 +210,15 @@ export default function SupplierListTab() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div>
-                      <div>{supplier.contactPhone}</div>
-                      <div className="text-xs text-gray-400">{supplier.contactEmail}</div>
+                      <div>{supplier.managerPhone}</div>
+                      <div className="text-xs text-gray-400">{supplier.managerEmail}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {supplier.category}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {supplier.leadTimeLabel}
+                    {supplier.leadTimeDays}일
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={getStatusBadge(supplier.statusCode)}>
@@ -299,19 +299,17 @@ export default function SupplierListTab() {
         )}
       </div>
 
-      {/* 모달들 */}
-      <SupplierAddModal
-        isOpen={showAddSupplierModal}
-        onClose={() => setShowAddSupplierModal(false)}
-        onAddSupplier={handleAddSupplier}
-        categories={categories}
-      />
+      {showAddSupplierModal && (
+        <SupplierAddModal
+          onClose={() => setShowAddSupplierModal(false)}
+          onAddSupplier={handleAddSupplier}
+          categories={categories}
+        />
+      )}
 
-      <SupplierDetailModal
-        isOpen={showSupplierDetailModal}
-        vendorId={selectedSupplierId}
-        onClose={handleCloseDetail}
-      />
+      {showSupplierDetailModal && (
+        <SupplierDetailModal vendorId={selectedSupplierId} onClose={handleCloseDetail} />
+      )}
     </>
   );
 }

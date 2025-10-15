@@ -13,26 +13,13 @@ export interface SupplierRequest {
   materials: Material[];
 }
 
-export interface SupplierResponse {
-  id: string; // 업체 코드
-  name: string; // 업체명
-  category: string; // 카테고리
-  status: 'active' | 'inactive'; // 상태
-  managerName: string; // 담당자명
-  managerPhone: string; // 담당자 전화번호
-  managerEmail: string; // 담당자 이메일
-  address: string; // 주소
-  deliveryDays: string; // 배송기간
-  materials: Material[];
-}
-
 // 벤더(공급업체) 한 항목의 타입
 interface BaseSupplier {
   vendorId: number;
   vendorCode: string; // 공급업체 코드
   companyName: string; // 업체명
-  contactPhone: string; // 연락처
-  contactEmail: string; // 이메일
+  managerPhone: string; // 연락처
+  managerEmail: string; // 이메일
   category: string; // 카테고리
   leadTimeDays: number; // 배송기간
   statusCode: string; // 배송 상태

@@ -1,12 +1,22 @@
 import { Tab } from '@/app/purchase/types/TabNavigationType';
 import { TableHeader } from '@/app/purchase/types/TableHeader';
-import { KeyValueItem } from '@/app/purchase/types/CommonType';
+import { KeyValueItem } from '@/types/CommonType';
 
 export type Period = 'week' | 'month' | 'quarter' | 'year';
 export type SupplierCategory = 'ALL' | 'MATERIAL' | 'PARTS' | 'ETC';
 export type SupplierStatus = 'ALL' | 'ACTIVE' | 'INACTIVE';
 export type PurchaseOrderStatus = 'ALL' | 'APPROVED' | 'PENDING' | 'REJECTED' | 'DELIVERED';
+export type PurchaseReqStatus = 'ALL' | 'APPROVED' | 'PENDING' | 'REJECTED';
 
+// 구매 상태 필터링
+export const PURCHASE_REQ_STATUS: KeyValueItem<PurchaseReqStatus>[] = [
+  { key: 'ALL', value: '전체' },
+  { key: 'APPROVED', value: '승인' },
+  { key: 'PENDING', value: '대기' },
+  { key: 'REJECTED', value: '반려' },
+];
+
+// 발주 상태 필터링
 export const PURCHASE_ORDER_STATUS: KeyValueItem<PurchaseOrderStatus>[] = [
   { key: 'ALL', value: '전체' },
   { key: 'APPROVED', value: '승인' },
@@ -93,7 +103,7 @@ export const PURCHASE_REQUEST_TABLE_HEADERS = [
 ] as const;
 
 // 구매 상세 정보 모달 테이블 헤더
-export const PURCHASE_ITEM_TABLE_HEADERS = ['품목명', '수량', '단위', '단가, 금액'] as const;
+export const PURCHASE_ITEM_TABLE_HEADERS = ['품목명', '수량', '단위', '단가', '금액'] as const;
 
 // 발주서 상세 정보 주문 품목 테이블 헤더
 export const ORDER_ITEM_TABLE_HEADERS: readonly TableHeader[] = [

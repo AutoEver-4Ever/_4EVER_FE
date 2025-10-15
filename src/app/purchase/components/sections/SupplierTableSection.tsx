@@ -49,7 +49,7 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <p className="text-sm text-gray-600 mb-1">담당자명</p>
-              <p className="text-base font-medium text-gray-900">{supplier.name}</p>
+              <p className="text-base font-medium text-gray-900">{supplier.n}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">담당자 전화번호</p>
@@ -70,7 +70,7 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <p className="text-sm text-gray-600 mb-1">주소</p>
-              <p className="text-base font-medium text-gray-900">{supplier.ad}</p>
+              <p className="text-base font-medium text-gray-900">{supplier.address}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">배송 기간</p>

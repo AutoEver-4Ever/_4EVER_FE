@@ -10,14 +10,12 @@ type NewMaterial = Omit<Material, 'id'>;
 type SupplierSubmissionData = Omit<SupplierRequest, 'id'>;
 
 interface AddSupplierModalProps {
-  isOpen: boolean;
   onClose: () => void;
   onAddSupplier: (supplier: SupplierSubmissionData) => void;
   categories: string[];
 }
 
 export default function SupplierAddModal({
-  isOpen,
   onClose,
   onAddSupplier,
   categories,
@@ -124,8 +122,6 @@ export default function SupplierAddModal({
       },
     ]);
   };
-
-  if (!isOpen) return null;
 
   // deliveryDays가 string이므로 number로 변환하여 사용
   const currentDeliveryDays = parseInt(newSupplier.deliveryDays, 10) || 0;
