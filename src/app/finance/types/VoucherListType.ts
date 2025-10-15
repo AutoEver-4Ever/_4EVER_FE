@@ -1,3 +1,6 @@
+// 현재 VoucherDetailModalType과 VoucherListType의 타입이 같음!
+// api 연동 시 변경!
+
 export interface VoucherItem {
   name: string;
   spec: string;
@@ -13,8 +16,9 @@ export interface VoucherDetails {
   items: VoucherItem[];
 }
 
-export interface Voucher {
+export interface VoucherType {
   id: number;
+  productId: string;
   type: string;
   description: string;
   amount: string;

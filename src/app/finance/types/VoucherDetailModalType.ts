@@ -7,6 +7,9 @@ export interface VourcherDetailModalProps {
   $getStatusText: (status: string) => string;
 }
 
+// 현재 VoucherDetailModalType과 VoucherListType의 타입이 같음!
+// api 연동 시 변경!
+
 export interface VoucherItem {
   name: string;
   spec: string;

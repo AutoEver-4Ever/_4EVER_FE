@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Voucher } from '@/app/finance/types/VoucherListType';
 import VourcherDetailModal from './VoucherDetailModal';
 import { VoucherDetailType } from '../types/VoucherDetailModalType';
 
@@ -11,7 +10,6 @@ const VoucherList = () => {
   const [selectedVoucherId, setSelectedVoucherId] = useState<number>(0);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
   const [selectedVouchers, setSelectedVouchers] = useState<string[]>([]);
 
   const vouchers = [
@@ -168,18 +166,6 @@ const VoucherList = () => {
     setSelectedVouchers([]);
   };
 
-  // 필터링
-  const filteredVouchers = vouchers.filter((voucher) => {
-    const statusMatch = selectedStatus === 'all' || voucher.status === selectedStatus;
-    return statusMatch;
-  });
-
-  // 페이지네이션 계산
-  const totalPages = Math.ceil(filteredVouchers.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentVouchers = filteredVouchers.slice(startIndex, endIndex);
-
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
@@ -256,7 +242,7 @@ const VoucherList = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {currentVouchers.map((voucher) => (
+            {vouchers.map((voucher) => (
               <tr key={voucher.id} className="hover:bg-gray-50 transition-colors duration-200">
                 <td className="py-3 px-4">
                   <input
@@ -300,10 +286,7 @@ const VoucherList = () => {
       </div>
 
       <div className="mt-6 flex items-center justify-between">
-        <div className="text-sm text-gray-500">
-          총 {filteredVouchers.length}건의 전표 ({startIndex + 1}-
-          {Math.min(endIndex, filteredVouchers.length)} 표시)
-        </div>
+        <div className="text-sm text-gray-500">총 0건의 전표 0 - 0 표시</div>
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
@@ -317,7 +300,7 @@ const VoucherList = () => {
             이전
           </button>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          {Array.from({ length: 2 }, (_, i) => i + 1).map((page) => (
             <button
               key={page}
               onClick={() => setCurrentPage(page)}
@@ -332,10 +315,10 @@ const VoucherList = () => {
           ))}
 
           <button
-            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(Math.min(2, currentPage + 1))}
+            disabled={currentPage === 2}
             className={`px-3 py-1 border border-gray-300 rounded-md text-sm cursor-pointer ${
-              currentPage === totalPages
+              currentPage === 2
                 ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
                 : 'text-gray-600 hover:bg-gray-50'
             }`}
