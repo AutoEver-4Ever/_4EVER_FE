@@ -15,6 +15,13 @@ export interface CustomerData {
   note: string;
 }
 
+export interface ServerResponse {
+  status: number;
+  success: boolean;
+  message: string;
+  data: CreateCustomerResponse;
+}
+
 export interface CreateCustomerResponse {
   customerId: number;
   customerCode: string;

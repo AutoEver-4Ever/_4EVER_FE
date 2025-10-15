@@ -67,8 +67,8 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
   const { mutate: createCustomer, isPending } = useMutation({
     mutationFn: postCustomer,
     onSuccess: (data) => {
-      alert(`${data.manager.name} 등록 성공 \n
-        고객 아이디 : ${data.customerCode}
+      alert(`${data.data.manager.name} 등록 성공 \n
+        고객 아이디 : ${data.data.customerCode}
         `);
 
       $setShowCustomerModal(false);
@@ -234,7 +234,7 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                         type="text"
                         value={customerData.zipCode}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          updateCustomerData('address', e.target.value)
+                          updateCustomerData('zipCode', e.target.value)
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="00000"

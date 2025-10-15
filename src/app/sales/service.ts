@@ -8,7 +8,11 @@ import {
   CustomerQueryParams,
   PageType,
 } from '@/app/sales/types/SalesCustomerListType';
-import { CreateCustomerResponse, CustomerData } from '@/app/sales/types/NewCustomerModalType';
+import {
+  CreateCustomerResponse,
+  CustomerData,
+  ServerResponse,
+} from '@/app/sales/types/NewCustomerModalType';
 
 // 통계 지표
 export const getSalesStats = async (): Promise<Record<string, SalesStatCard[]>> => {
@@ -90,7 +94,7 @@ export const getCustomerDetail = async (customerId: number): Promise<CustomerDet
   return data;
 };
 
-export const postCustomer = async (customer: CustomerData): Promise<CreateCustomerResponse> => {
+export const postCustomer = async (customer: CustomerData): Promise<ServerResponse> => {
   const res = await axios.post('https://api.everp.co.kr/api/business/sd/customers', customer);
   return res.data;
 };
