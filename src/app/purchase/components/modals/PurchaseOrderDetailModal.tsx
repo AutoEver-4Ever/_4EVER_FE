@@ -1,13 +1,28 @@
 'use client';
 
 import { PurchaseOrderDetailModalProps } from '@/app/purchase/types/PurchaseOrderDetailModalProps';
+import { useQuery } from '@tanstack/react-query';
+import { fetchPurchaseOrderDetail } from '@/app/purchase/api/purchase.api';
+import { PurchaseOrderDetailResponse } from '@/app/purchase/types/PurchaseOrderType';
 
 export default function PurchaseOrderDetailModal({
-  order,
+  purchaseId,
   onClose,
-  getStatusColor,
-  getStatusText,
 }: PurchaseOrderDetailModalProps) {
+  const {
+    data: order,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<PurchaseOrderDetailResponse>({
+    queryKey: ['purchase-order-detail'],
+    queryFn: () => fetchPurchaseOrderDetail(purchaseId),
+  });
+
+  if (!order) return null;
+  if (isLoading) return <div>로딩 중...</div>;
+  if (isError) return <div>에러 발생: {error?.message}</div>;
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
@@ -24,19 +39,19 @@ export default function PurchaseOrderDetailModal({
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">발주번호</label>
-                <div className="text-lg font-semibold text-gray-900">{order.id}</div>
+                <div className="text-lg font-semibold text-gray-900">{order.poNumber}</div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">공급업체</label>
-                <div className="text-gray-900">{order.details.supplierInfo.name}</div>
+                <div className="text-gray-900">{order.vendorName}</div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">연락처</label>
-                <div className="text-gray-900">{order.details.supplierInfo.contact}</div>
+                <div className="text-gray-900">{order.managerPhone}</div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-                <div className="text-blue-600">{order.details.supplierInfo.email}</div>
+                <div className="text-blue-600">{order.managerEmail}</div>
               </div>
             </div>
 
@@ -51,11 +66,7 @@ export default function PurchaseOrderDetailModal({
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
-                <span
-                  className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(order.status)}`}
-                >
-                  {getStatusText(order.status)}
-                </span>
+                <span className={`px-2 py-1 rounded text-xs font-medium }`}>{order.status}</span>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">총 금액</label>
@@ -79,17 +90,17 @@ export default function PurchaseOrderDetailModal({
                   </tr>
                 </thead>
                 <tbody>
-                  {order.details.orderItems.map((item, index) => (
-                    <tr key={index} className="border-b">
-                      <td className="px-4 py-3 text-sm text-gray-900">{item.item}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900 text-right">
+                  {order.items.map((item, index) => (
+                    <tr key={index} className="border-b text-center">
+                      <td className="px-4 py-3 text-sm text-gray-900">{item.itemName}</td>
+                      <td className="px-4 py-3 text-sm text-gray-900">
                         {item.quantity.toLocaleString()}
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-900">{item.unit}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900 text-right">
+                      <td className="px-4 py-3 text-sm text-gray-900">
                         ₩{item.unitPrice.toLocaleString()}
                       </td>
-                      <td className="px-4 py-3 text-sm font-medium text-gray-900 text-right">
+                      <td className="px-4 py-3 font-medium text-gray-900 text-right">
                         ₩{item.amount.toLocaleString()}
                       </td>
                     </tr>
@@ -97,14 +108,9 @@ export default function PurchaseOrderDetailModal({
                 </tbody>
                 <tfoot className="bg-gray-50">
                   <tr>
-                    <td colSpan={5} className="px-4 py-3 text-right font-medium text-gray-900">
-                      총 금액
-                    </td>
-                    <td className="px-4 py-3 text-right font-medium text-green-600">
-                      ₩
-                      {order.details.orderItems
-                        .reduce((sum, item) => sum + item.amount, 0)
-                        .toLocaleString()}
+                    <td colSpan={5} className="px-4 py-3 text-right font-medium">
+                      <span className="pr-4 text-gray-900">총 금액</span>
+                      <span className="text-2xl text-green-600">₩{order.totalAmount}</span>
                     </td>
                   </tr>
                 </tfoot>
@@ -115,7 +121,7 @@ export default function PurchaseOrderDetailModal({
           {/* 메모 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">메모</label>
-            <div className="text-gray-900 bg-gray-50 p-3 rounded-lg">{order.details.notes}</div>
+            <div className="text-gray-900 bg-gray-50 p-3 rounded-lg">{order.note}</div>
           </div>
 
           {/* 닫기 버튼 */}

@@ -231,10 +231,8 @@ export default function PurchaseOrderListTab() {
       {/* 발주서 상세 정보 모달 */}
       {showDetailModal && selectedOrder && (
         <PurchaseOrderDetailModal
-          order={selectedOrder}
+          purchaseId={selectedOrder.id}
           onClose={() => setShowDetailModal(false)}
-          getStatusColor={getStatusColor}
-          getStatusText={getStatusText}
         />
       )}
     </div>

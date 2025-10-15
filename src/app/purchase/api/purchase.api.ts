@@ -3,7 +3,10 @@ import { API_BASE_URL } from '@/config/api';
 import { PURCHASE_ENDPOINTS } from '@/config/purchaseEndpoints';
 import { ApiResponse } from '@/types/api';
 import { PurchaseStatsData } from '@/app/purchase/types/PurchaseStatsType';
-import { PurchaseOrderListResponse } from '@/app/purchase/types/PurchaseOrderType';
+import {
+  PurchaseOrderDetailResponse,
+  PurchaseOrderListResponse,
+} from '@/app/purchase/types/PurchaseOrderType';
 import {
   PurchaseReqDetailResponse,
   PurchaseReqListResponse,
@@ -107,6 +110,17 @@ export const fetchPurchaseOrderList = async (
     },
   );
   // console.log(res.data.data);
+  return res.data.data;
+};
+
+export const fetchPurchaseOrderDetail = async (
+  purchaseId: number,
+): Promise<PurchaseOrderDetailResponse> => {
+  const res = await axios.get<ApiResponse<PurchaseOrderDetailResponse>>(
+    `${API_BASE_URL}${PURCHASE_ENDPOINTS.PURCHASE_ORDER_DETAIL(purchaseId)}`,
+  );
+
+  console.log(res.data.data);
   return res.data.data;
 };
 

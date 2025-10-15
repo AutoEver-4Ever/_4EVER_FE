@@ -1,31 +1,39 @@
 import { Page } from '@/types/Page';
 import { PurchaseOrderStatus } from '@/app/purchase/constants';
 
-interface SupplierInfo {
-  name: string;
-  contact: string;
-  email: string;
-  address: string;
+// 발주서 상세
+export interface PurchaseOrderItem {
+  itemName: string; // 품목명
+  spec: string; // 규격 > 삭제 예정
+  quantity: number; // 수량
+  unit: string; // 단위
+  unitPrice: number; // 단가
+  amount: number; // 금액
 }
 
-interface OrderItem {
-  item: string;
-  quantity: number;
-  unit: string;
-  unitPrice: number;
-  amount: number;
-}
-
-interface OrderDetails {
-  supplierInfo: SupplierInfo;
-  orderItems: OrderItem[];
-  notes: string;
+export interface PurchaseOrderDetailResponse {
+  id: number; // 주문 ID
+  poNumber: string; // 발주 번호
+  vendorName: string; // 공급업체명
+  managerPhone: string; // 담당자 전화번호
+  managerEmail: string; // 담당자 이메일
+  orderDate: string; // 주문일
+  deliveryDate: string; // 납품일
+  status: string; // 상태 (예: 승인됨)
+  totalAmount: number; // 총 금액
+  items: PurchaseOrderItem[]; // 품목 목록
+  deliveryAddress: string; // 납품지 주소 > 삭제 예정
+  requestedDeliveryDate: string; // 요청 납기일 > 삭제 예정
+  specialInstructions: string; // 특이사항 > 삭제 예정
+  paymentTerms: string; // 결제 조건 > 삭제 예정
+  note: string; // 비고
 }
 
 // export interface PurchaseOrder {
 //   details: OrderDetails;
 // }
 
+// 발주서 목록
 // 개별 발주(Purchase Order) 항목
 export interface PurchaseOrder {
   id: number;

@@ -1,9 +1,4 @@
-import { PurchaseOrder } from '@/app/purchase/types/PurchaseOrderType';
-import { PurchaseOrderStatus } from '@/app/purchase/constants';
-
 export interface PurchaseOrderDetailModalProps {
-  order: PurchaseOrder;
+  purchaseId: number;
   onClose: () => void;
-  getStatusColor: (status: PurchaseOrderStatus) => string;
-  getStatusText: (status: string) => string;
 }

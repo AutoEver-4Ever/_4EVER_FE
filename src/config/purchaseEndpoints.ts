@@ -6,7 +6,7 @@ export const PURCHASE_ENDPOINTS = {
   PURCHASE_ORDERS: `${PURCHASE_BASE_PATH}/purchase-orders`, // 발주서 목록 조회
   PURCHASE_ORDER_APPROVE: (poId: string) => `${PURCHASE_BASE_PATH}/purchase-orders/${poId}/approve`, // 발주서 승인
   PURCHASE_ORDER_REJECT: (poId: string) => `${PURCHASE_BASE_PATH}/purchase-orders/${poId}/reject`, // 발주서 반려
-  PURCHASE_ORDER_DETAIL: (purchaseId: string) =>
+  PURCHASE_ORDER_DETAIL: (purchaseId: number) =>
     `${PURCHASE_BASE_PATH}/purchase-orders/${purchaseId}`, // 발주서 상세 조회
 
   // 구매 요청
