@@ -1,41 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-
-export interface ArVoucherItem {
-  name: string;
-  spec: string;
-  quantity: number;
-  unit: string;
-  unitPrice: number;
-  amount: number;
-}
-
-export interface ArVoucherDetails {
-  voucherType: string;
-  memo: string;
-  items: ArVoucherItem[];
-}
-
-export interface ArVoucher {
-  id: string;
-  type: string;
-  description: string;
-  amount: string;
-  date: string;
-  dueDate: string;
-  status: string;
-  reference: string;
-  vendor: string;
-  details: ArVoucherDetails;
-}
+import { Voucher, VoucherDetails, VoucherItem } from '@/app/finance/types/VoucherListType';
 
 const ArVoucherList = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedVoucher, setSelectedVoucher] = useState<ArVoucher | null>(null);
-  const [editFormData, setEditFormData] = useState<ArVoucher | null>(null);
+  const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
+  const [editFormData, setEditFormData] = useState<Voucher | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [selectedVouchers, setSelectedVouchers] = useState<string[]>([]);
@@ -189,12 +162,12 @@ const ArVoucherList = () => {
     setSelectedVouchers([]);
   };
 
-  const handleViewDetail = (voucher: ArVoucher) => {
+  const handleViewDetail = (voucher: Voucher) => {
     setSelectedVoucher(voucher);
     setShowDetailModal(true);
   };
 
-  const handleEditVoucher = (voucher: ArVoucher) => {
+  const handleEditVoucher = (voucher: Voucher) => {
     setEditFormData({
       ...voucher,
       details: { ...voucher.details },
@@ -210,13 +183,13 @@ const ArVoucherList = () => {
     setEditFormData(null);
   };
 
-  const updateEditFormData = <K extends keyof ArVoucher>(field: K, value: ArVoucher[K]) => {
+  const updateEditFormData = <K extends keyof Voucher>(field: K, value: Voucher[K]) => {
     setEditFormData((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
-  const updateEditFormDetails = <K extends keyof ArVoucherDetails>(
+  const updateEditFormDetails = <K extends keyof VoucherDetails>(
     field: K,
-    value: ArVoucherDetails[K],
+    value: VoucherDetails[K],
   ) => {
     setEditFormData((prev) =>
       prev
@@ -495,7 +468,7 @@ const ArVoucherList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedVoucher.details.items.map((item: ArVoucherItem, index: number) => (
+                      {selectedVoucher.details.items.map((item: VoucherItem, index: number) => (
                         <tr key={index} className="border-b">
                           <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
                           <td className="px-4 py-3 text-sm text-gray-900">{item.spec}</td>
@@ -522,7 +495,7 @@ const ArVoucherList = () => {
                         <td className="px-4 py-3 text-right font-medium text-green-600">
                           ₩
                           {selectedVoucher.details.items
-                            .reduce((sum: number, item: ArVoucherItem) => sum + item.amount, 0)
+                            .reduce((sum: number, item: VoucherItem) => sum + item.amount, 0)
                             .toLocaleString()}
                         </td>
                       </tr>

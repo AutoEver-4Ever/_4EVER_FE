@@ -1,41 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-
-export interface ApVoucherItem {
-  name: string;
-  spec: string;
-  quantity: number;
-  unit: string;
-  unitPrice: number;
-  amount: number;
-}
-
-export interface ApVoucherDetails {
-  voucherType: string;
-  memo: string;
-  items: ApVoucherItem[];
-}
-
-export interface ApVoucher {
-  id: string;
-  type: string;
-  description: string;
-  amount: string;
-  date: string;
-  dueDate: string;
-  status: string;
-  reference: string;
-  vendor: string;
-  details: ApVoucherDetails;
-}
+import { Voucher, VoucherDetails, VoucherItem } from '@/app/finance/types/VoucherListType';
 
 const VoucherList = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedVoucher, setSelectedVoucher] = useState<ApVoucher | null>(null);
-  const [editFormData, setEditFormData] = useState<ApVoucher | null>(null);
+  const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
+  const [editFormData, setEditFormData] = useState<Voucher | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [selectedVouchers, setSelectedVouchers] = useState<string[]>([]);
@@ -157,12 +130,12 @@ const VoucherList = () => {
     }
   };
 
-  const handleViewDetail = (voucher: ApVoucher) => {
+  const handleViewDetail = (voucher: Voucher) => {
     setSelectedVoucher(voucher);
     setShowDetailModal(true);
   };
 
-  const handleEditVoucher = (voucher: ApVoucher) => {
+  const handleEditVoucher = (voucher: Voucher) => {
     setEditFormData({
       ...voucher,
       details: { ...voucher.details },
@@ -178,13 +151,13 @@ const VoucherList = () => {
     setEditFormData(null);
   };
 
-  const updateEditFormData = <K extends keyof ApVoucher>(field: K, value: ApVoucher[K]) => {
+  const updateEditFormData = <K extends keyof Voucher>(field: K, value: Voucher[K]) => {
     setEditFormData((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
-  const updateEditFormDetails = <K extends keyof ApVoucherDetails>(
+  const updateEditFormDetails = <K extends keyof VoucherDetails>(
     field: K,
-    value: ApVoucherDetails[K],
+    value: VoucherDetails[K],
   ) => {
     setEditFormData((prev) =>
       prev
@@ -199,10 +172,10 @@ const VoucherList = () => {
     );
   };
 
-  const updateAccountEntry = <K extends keyof ApVoucherItem>(
+  const updateAccountEntry = <K extends keyof VoucherItem>(
     index: number,
     field: K,
-    value: ApVoucherItem[K],
+    value: VoucherItem[K],
   ) => {
     setEditFormData((prev) =>
       prev
@@ -523,7 +496,7 @@ const VoucherList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedVoucher.details.items.map((item: ApVoucherItem, index: number) => (
+                      {selectedVoucher.details.items.map((item: VoucherItem, index: number) => (
                         <tr key={index} className="border-b">
                           <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
                           <td className="px-4 py-3 text-sm text-gray-900">{item.spec}</td>
@@ -550,7 +523,7 @@ const VoucherList = () => {
                         <td className="px-4 py-3 text-right font-medium text-green-600">
                           ₩
                           {selectedVoucher.details.items
-                            .reduce((sum: number, item: ApVoucherItem) => sum + item.amount, 0)
+                            .reduce((sum: number, item: VoucherItem) => sum + item.amount, 0)
                             .toLocaleString()}
                         </td>
                       </tr>
@@ -715,7 +688,7 @@ const VoucherList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {editFormData.details.items.map((item: ApVoucherItem, index: number) => (
+                      {editFormData.details.items.map((item: VoucherItem, index: number) => (
                         <tr key={index} className="border-b">
                           <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
                           <td className="px-4 py-3 text-sm text-gray-900">{item.spec}</td>
@@ -742,7 +715,7 @@ const VoucherList = () => {
                         <td className="px-4 py-3 text-right font-medium text-green-600">
                           ₩
                           {editFormData.details.items
-                            .reduce((sum: number, item: ApVoucherItem) => sum + item.amount, 0)
+                            .reduce((sum: number, item: VoucherItem) => sum + item.amount, 0)
                             .toLocaleString()}
                         </td>
                       </tr>

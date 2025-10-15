@@ -1,8 +1,6 @@
 'use client';
 
-interface FinanceStatsProps {
-  $selectedPeriod: string;
-}
+import { FinanceStatsProps } from '@/app/finance/types/FinanceStatsProps';
 
 const FinanceStats = ({ $selectedPeriod }: FinanceStatsProps) => {
   const stats = [
