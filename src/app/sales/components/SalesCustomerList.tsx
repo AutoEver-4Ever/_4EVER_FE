@@ -163,7 +163,7 @@ const CustomerList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
-                      {customer.transactionAmount}
+                      ₩{customer.transactionAmount.toLocaleString()}
                     </div>
                     <div className="text-xs text-gray-500">{customer.orderCount}건</div>
                   </td>
