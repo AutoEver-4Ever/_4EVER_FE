@@ -6,7 +6,6 @@ import { CustomerDetail } from '@/app/sales/types/SalesCustomerDetailType';
 import CustomerEditModal from './CustomerEditModal';
 import { getCustomerDetail } from '../service';
 import { useQuery } from '@tanstack/react-query';
-// import { Customer } from '@/app/sales/types/SalesCustomerList';
 
 const CustomerDetailModal = ({
   $showDetailModal,
@@ -29,6 +28,18 @@ const CustomerDetailModal = ({
   useEffect(() => {
     setErrorModal(isError);
   }, [isError]);
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'ACTIVE':
+        return '활성';
+      case 'DEACTIVE':
+        return '비활성';
+
+      default:
+        return status;
+    }
+  };
 
   if (isLoading)
     return (
@@ -90,9 +101,9 @@ const CustomerDetailModal = ({
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
                     <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${$getStatusColor(customer!.status)}`}
+                      className={`px-2 py-1 rounded text-xs font-medium ${$getStatusColor(customer!.statusCode)}`}
                     >
-                      {customer!.status}
+                      {getStatusText(customer!.statusCode)}
                     </span>
                   </div>
                 </div>
@@ -152,7 +163,7 @@ const CustomerDetailModal = ({
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-                      <div className="text-blue-600">{customer!.contact.email}</div>
+                      <div className="text-blue-600">{customer!.manager.email}</div>
                     </div>
                   </div>
                   <div className="space-y-4">

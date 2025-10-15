@@ -4,12 +4,7 @@ export interface CustomerDetail {
   companyName: string;
   businessNumber: string;
   ceo: string;
-  establishmentDate: string;
-  industry: string;
-  creditRating: string;
-  employeeCount: number;
-  website: string;
-  status: string;
+  statusCode: string;
   contact: Contact;
   manager: Manager;
   transaction: Transaction;
@@ -18,24 +13,17 @@ export interface CustomerDetail {
 
 export interface Contact {
   phone: string;
-  fax: string;
   email: string;
   address: string;
 }
 
 export interface Manager {
   name: string;
-  position: string;
-  department: string;
   mobile: string;
-  directPhone: string;
+  email: string;
 }
 
 export interface Transaction {
   totalOrders: number;
   totalAmount: number;
-  lastOrderDate: string;
-  paymentTerm: string;
-  creditLimit: number;
-  taxType: string;
 }
