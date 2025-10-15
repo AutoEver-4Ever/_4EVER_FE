@@ -1,5 +1,6 @@
 import FinanceHeader from '@/app/finance/components/FinanceHeader';
 import FinanceTabNavigation from './components/FinanceTabNavigation';
+import { Suspense } from 'react';
 
 export default function FinancePage() {
   return (
@@ -9,7 +10,9 @@ export default function FinancePage() {
         <FinanceHeader />
 
         {/* 탭 네비게이션 */}
-        <FinanceTabNavigation />
+        <Suspense fallback={<div>Loading...</div>}>
+          <FinanceTabNavigation />
+        </Suspense>
       </main>
     </div>
   );
