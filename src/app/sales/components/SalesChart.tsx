@@ -20,8 +20,14 @@ import { getAnalytics } from '../service';
 import { AnalyticsQueryParams, SalesAnalysis } from '@/app/sales/types/SalesChartType';
 
 const SalesChart = () => {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const today = new Date();
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(today.getMonth() - 5);
+
+  const formatDate = (date: Date) => date.toISOString().split('T')[0];
+
+  const [startDate, setStartDate] = useState(formatDate(sixMonthsAgo));
+  const [endDate, setEndDate] = useState(formatDate(today));
 
   const queryParams = useMemo(
     () => ({
@@ -42,84 +48,7 @@ const SalesChart = () => {
     staleTime: 1000,
   });
 
-  // const monthlyData = [
-  //   { month: '1월', sales: 420000000, orders: 85, customers: 45 },
-  //   { month: '2월', sales: 380000000, orders: 78, customers: 42 },
-  //   { month: '3월', sales: 450000000, orders: 92, customers: 48 },
-  //   { month: '4월', sales: 520000000, orders: 105, customers: 52 },
-  //   { month: '5월', sales: 480000000, orders: 98, customers: 49 },
-  //   { month: '6월', sales: 550000000, orders: 112, customers: 55 },
-  //   { month: '7월', sales: 485000000, orders: 127, customers: 58 },
-  // ];
-
-  // const weeklyData = [
-  //   { week: '12월 1주차', sales: 120000000, orders: 22, customers: 12 },
-  //   { week: '12월 2주차', sales: 145000000, orders: 27, customers: 15 },
-  //   { week: '12월 3주차', sales: 132000000, orders: 25, customers: 13 },
-  //   { week: '12월 4주차', sales: 155000000, orders: 31, customers: 17 },
-  //   { week: '1월 1주차', sales: 120000000, orders: 31, customers: 17 },
-  //   { week: '1월 2주차', sales: 145000000, orders: 31, customers: 17 },
-  //   { week: '1월 3주차', sales: 132000000, orders: 31, customers: 17 },
-  //   { week: '1월 4주차', sales: 155000000, orders: 31, customers: 17 },
-  //   { week: '2월 1주차', sales: 120000000, orders: 31, customers: 17 },
-  //   { week: '2월 2주차', sales: 145000000, orders: 31, customers: 17 },
-  //   { week: '2월 3주차', sales: 132000000, orders: 31, customers: 17 },
-  //   { week: '2월 4주차', sales: 155000000, orders: 31, customers: 17 },
-  // ];
-
-  // const productData = [
-  //   { name: '스테인리스 강판', value: 35, amount: 180000000 },
-  //   { name: '알루미늄 합금', value: 25, amount: 125000000 },
-  //   { name: '탄소강', value: 20, amount: 95000000 },
-  //   { name: '구리 파이프', value: 12, amount: 58000000 },
-  //   { name: '특수강', value: 8, amount: 42000000 },
-  // ];
-
-  // const customerData = [
-  //   {
-  //     id: 'C-001',
-  //     name: '삼성전자',
-  //     manager: '김철수',
-  //     orders: 45,
-  //     amount: 1250000000,
-  //     status: '활성',
-  //   },
-  //   {
-  //     id: 'C-002',
-  //     name: 'LG화학',
-  //     manager: '박영희',
-  //     orders: 32,
-  //     amount: 890000000,
-  //     status: '활성',
-  //   },
-  //   {
-  //     id: 'C-003',
-  //     name: '현대자동차',
-  //     manager: '이민수',
-  //     orders: 28,
-  //     amount: 720000000,
-  //     status: '활성',
-  //   },
-  //   {
-  //     id: 'C-004',
-  //     name: 'SK하이닉스',
-  //     manager: '정유진',
-  //     orders: 24,
-  //     amount: 650000000,
-  //     status: '활성',
-  //   },
-  //   {
-  //     id: 'C-005',
-  //     name: 'POSCO',
-  //     manager: '최정호',
-  //     orders: 20,
-  //     amount: 580000000,
-  //     status: '비활성',
-  //   },
-  // ];
-
-  const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
-
+  const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#6B7280'];
   const formatCurrency = (value: number) => {
     return `₩${(value / 100000000).toFixed(1)}억`;
   };
@@ -280,7 +209,7 @@ const SalesChart = () => {
               주요 고객별 매출
             </h3>
           </div>
-          <div className="h-74 mt-15">
+          <div className="h-120 mt-15">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={customerData} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" />
