@@ -1,7 +1,7 @@
 'use client';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import ArVoucherList from './ArVoucherList';
+// import ArVoucherList from './ArVoucherList';
 import VoucherList from './VoucherList';
 
 const FinanceTabNavigation = () => {
@@ -43,8 +43,9 @@ const FinanceTabNavigation = () => {
       </div>
 
       <div className="space-y-8">
-        {activeTab === 'sales' && <ArVoucherList />}
-        {activeTab === 'purchase' && <VoucherList />}
+        {/* {activeTab === 'sales' && <VoucherList />} */}
+        {/* {activeTab === 'purchase' && <VoucherList />} */}
+        <VoucherList />
       </div>
     </div>
   );

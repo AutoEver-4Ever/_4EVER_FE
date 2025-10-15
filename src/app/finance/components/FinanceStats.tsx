@@ -1,6 +1,6 @@
 'use client';
 
-import { FinanceStatsProps } from '@/app/finance/types/FinanceStatsProps';
+import { FinanceStatsProps } from '@/app/finance/types/FinanceStatsType';
 
 const FinanceStats = ({ $selectedPeriod }: FinanceStatsProps) => {
   const stats = [

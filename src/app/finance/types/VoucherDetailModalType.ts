@@ -1,3 +1,11 @@
+export interface VourcherDetailModalProps {
+  $showDetailModal: boolean;
+  $setShowDetailModal: (show: boolean) => void;
+  $selectedVoucherId: number;
+  $getStatusColor: (status: string) => string;
+  $getStatusText: (status: string) => string;
+}
+
 export interface VoucherItem {
   name: string;
   spec: string;
@@ -13,8 +21,9 @@ export interface VoucherDetails {
   items: VoucherItem[];
 }
 
-export interface Voucher {
+export interface VoucherDetailType {
   id: number;
+  voucherId: string;
   type: string;
   description: string;
   amount: string;
