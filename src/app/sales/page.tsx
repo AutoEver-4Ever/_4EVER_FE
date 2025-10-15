@@ -36,9 +36,9 @@ export default async function SalesPage() {
           <SalesStats />
 
           {/* 탭 콘텐츠 */}
-          {/* <Suspense fallback={<div>Loading...</div>}> */}
-          <SalesTabNavigation />
-          {/* </Suspense> */}
+          <Suspense fallback={<div>Loading...</div>}>
+            <SalesTabNavigation />
+          </Suspense>
         </main>
       </div>
     </Providers>
