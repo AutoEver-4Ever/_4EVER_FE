@@ -1,3 +1,6 @@
+import { Page } from '@/types/Page';
+import { PurchaseOrderStatus } from '@/app/purchase/constants';
+
 interface SupplierInfo {
   name: string;
   contact: string;
@@ -19,13 +22,24 @@ interface OrderDetails {
   notes: string;
 }
 
+// export interface PurchaseOrder {
+//   details: OrderDetails;
+// }
+
+// 개별 발주(Purchase Order) 항목
 export interface PurchaseOrder {
-  id: string;
-  supplier: string;
-  items: string;
-  totalAmount: string;
-  orderDate: string;
-  deliveryDate: string;
-  status: 'pending' | 'approved' | 'rejected';
-  details: OrderDetails;
+  id: number;
+  poNumber: string; // 발주 번호
+  supplierName: string; // 공급업체명
+  itemsSummary: string; // 품목 요약
+  orderDate: string; // 발주일 (YYYY-MM-DD)
+  deliveryDate: string; // 납기일 (YYYY-MM-DD)
+  totalAmount: number; // 총 금액
+  status: PurchaseOrderStatus; // 상태
+}
+
+// 최종 응답 타입
+export interface PurchaseOrderListResponse {
+  content: PurchaseOrder[];
+  page: Page;
 }

@@ -25,6 +25,6 @@ export const PURCHASE_ENDPOINTS = {
 
   // 공급업체
   VENDORS: `${PURCHASE_BASE_PATH}/vendors`, // 공급업체 목록 조회, 등록
-  VENDOR_DETAIL: (vendorId: string) => `${PURCHASE_BASE_PATH}/vendors/${vendorId}`, // 공급업체 상세 조회, 수정
-  VENDOR_ACCOUNT: (vendorId: string) => `${PURCHASE_BASE_PATH}/vendors/${vendorId}/account`, // 공급업체 계정 생성
+  VENDOR_DETAIL: (vendorId: number) => `${PURCHASE_BASE_PATH}/vendors/${vendorId}`, // 공급업체 상세 조회, 수정
+  VENDOR_ACCOUNT: (vendorId: number) => `${PURCHASE_BASE_PATH}/vendors/${vendorId}/account`, // 공급업체 계정 생성
 };

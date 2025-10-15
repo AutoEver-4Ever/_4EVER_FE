@@ -94,7 +94,7 @@ export default function PurchaseRequestDetailModal({
             <label className="block text-sm font-medium text-gray-700 mb-3">주문 자재 목록</label>
             <div className="overflow-x-auto">
               <table className="w-full border border-gray-300 rounded-lg">
-                {/* 테이블 헤더: 품목명, 수량, 단위, 단가 */}
+                {/* 테이블 헤더: 품목명, 수량, 단위, 단가, 금액 */}
                 <thead className="bg-gray-50">
                   <tr>
                     {PURCHASE_ITEM_TABLE_HEADERS.map((header) => (
@@ -114,6 +114,7 @@ export default function PurchaseRequestDetailModal({
                       <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
                       <td className="px-4 py-3 text-sm text-gray-900">{item.quantity}</td>
                       <td className="px-4 py-3 text-sm text-gray-900">{item.unit}</td>
+                      <td className="px-4 py-3 text-sm text-gray-900">₩{item.price}</td>
                       <td className="px-4 py-3 text-sm text-gray-900">₩{item.price}</td>
                     </tr>
                   ))}

@@ -13,7 +13,7 @@ interface PurchasePeriodData {
 }
 
 // 전체 데이터 구조
-export interface PurchaseData {
+export interface PurchaseStatsData {
   week: PurchasePeriodData;
   month: PurchasePeriodData;
   quarter: PurchasePeriodData;

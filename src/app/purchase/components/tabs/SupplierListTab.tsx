@@ -17,11 +17,13 @@ import {
 
 export default function SupplierListTab() {
   const [showAddSupplierModal, setShowAddSupplierModal] = useState(false);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedSupplier, setSelectedSupplier] = useState<SupplierResponse | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [showSupplierDetailModal, setShowSupplierDetailModal] = useState(false);
+
+  const [selectedSupplierId, setSelectedSupplierId] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSupplierStatus, setSelectedSupplierStatus] = useState<string>('');
+
+  const [currentPage, setCurrentPage] = useState(0);
   const [pageSize] = useState(10);
 
   const categories = ['전체', '철강/금속', '화학/소재', '전자부품', '기계부품', '포장재', '소모품'];
@@ -76,13 +78,13 @@ export default function SupplierListTab() {
   };
 
   const handleViewDetail = (supplier: SupplierResponse) => {
-    setSelectedSupplier(supplier);
-    setIsDetailModalOpen(true);
+    setSelectedSupplierId(supplier.vendorId);
+    setShowSupplierDetailModal(true);
   };
 
   const handleCloseDetail = () => {
-    setIsDetailModalOpen(false);
-    setSelectedSupplier(null);
+    setShowSupplierDetailModal(false);
+    setSelectedSupplierId(null);
   };
 
   const handleAddSupplier = async (newSupplierData: Partial<SupplierResponse>) => {
@@ -101,6 +103,7 @@ export default function SupplierListTab() {
     }
     return `${baseClasses} bg-red-100 text-red-800`;
   };
+  const getStatusText = (status: string) => (status === 'active' ? '활성' : '비활성');
 
   const getSatusValue = (): string => {
     const item = SUPPLIER_STATUS_ITEMS.find((s) => s.key === selectedSupplierStatus);
@@ -219,7 +222,7 @@ export default function SupplierListTab() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={getStatusBadge(supplier.statusCode)}>
-                      {supplier.statusLabel}
+                      {getStatusText(supplier.statusCode)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -305,8 +308,8 @@ export default function SupplierListTab() {
       />
 
       <SupplierDetailModal
-        isOpen={isDetailModalOpen}
-        supplier={selectedSupplier}
+        isOpen={showSupplierDetailModal}
+        vendorId={selectedSupplierId}
         onClose={handleCloseDetail}
       />
     </>

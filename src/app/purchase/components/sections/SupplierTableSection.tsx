@@ -1,7 +1,7 @@
-import { SupplierResponse } from '@/app/purchase/types/SupplierType';
+import { SupplierDetailResponse } from '@/app/purchase/types/SupplierType';
 
 interface ReadSupplierProps {
-  supplier: SupplierResponse;
+  supplier: SupplierDetailResponse;
   onClose: () => void;
   onEdit: () => void;
 }
@@ -24,11 +24,11 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <p className="text-sm text-gray-600 mb-1">업체 ID</p>
-              <p className="text-base font-medium text-gray-900">{supplier.id}</p>
+              <p className="text-base font-medium text-gray-900">{supplier.vendorCode}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">업체명</p>
-              <p className="text-base font-medium text-gray-900">{supplier.name}</p>
+              <p className="text-base font-medium text-gray-900">{supplier.companyName}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">카테고리</p>
@@ -36,8 +36,8 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">상태</p>
-              <span className={getStatusBadge(supplier.status)}>
-                {getStatusText(supplier.status)}
+              <span className={getStatusBadge(supplier.statusCode)}>
+                {getStatusText(supplier.statusCode)}
               </span>
             </div>
           </div>
@@ -49,7 +49,7 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <p className="text-sm text-gray-600 mb-1">담당자명</p>
-              <p className="text-base font-medium text-gray-900">{supplier.managerName}</p>
+              <p className="text-base font-medium text-gray-900">{supplier.name}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">담당자 전화번호</p>
@@ -70,7 +70,7 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <p className="text-sm text-gray-600 mb-1">주소</p>
-              <p className="text-base font-medium text-gray-900">{supplier.address}</p>
+              <p className="text-base font-medium text-gray-900">{supplier.ad}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">배송 기간</p>
@@ -87,7 +87,7 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
               <thead className="bg-gray-50">
                 <tr>
                   <th className="border px-3 py-2 text-left">제품명</th>
-                  <th className="border px-3 py-2 text-left">사양</th>
+                  <th className="border px-3 py-2 text-left">단위</th>
                   <th className="border px-3 py-2 text-left">단가</th>
                 </tr>
               </thead>
@@ -95,7 +95,7 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
                 {supplier.materials.map((m) => (
                   <tr key={m.id} className="odd:bg-white even:bg-gray-50">
                     <td className="border px-3 py-2">{m.productName}</td>
-                    <td className="border px-3 py-2">{m.spec}</td>
+                    <td className="border px-3 py-2">{m.unit}</td>
                     <td className="border px-3 py-2">{m.unitPrice}</td>
                   </tr>
                 ))}

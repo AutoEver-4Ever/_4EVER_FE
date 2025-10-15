@@ -32,7 +32,7 @@ export default function PurchaseOrderTable({
               className="py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
               onClick={() => handleSort('orderDate')}
             >
-              <div className="flex items-center space-x-1">
+              <div className="flex justify-center items-center space-x-1">
                 <span>주문일자</span>
                 <i className={getSortIcon('orderDate')}></i>
               </div>
@@ -41,7 +41,7 @@ export default function PurchaseOrderTable({
               className="py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
               onClick={() => handleSort('deliveryDate')}
             >
-              <div className="flex items-center space-x-1">
+              <div className="flex justify-center items-center space-x-1">
                 <span>납기일</span>
                 <i className={getSortIcon('deliveryDate')}></i>
               </div>
@@ -56,13 +56,16 @@ export default function PurchaseOrderTable({
         </thead>
         <tbody className="divide-y divide-gray-200">
           {currentOrders.map((order) => (
-            <tr key={order.id} className="hover:bg-gray-50 transition-colors duration-200">
-              <td className="py-3 px-4 text-sm font-medium text-gray-900">{order.id}</td>
-              <td className="py-3 px-4 text-sm text-gray-900">{order.supplier}</td>
-              <td className="py-3 px-4 text-sm text-gray-900 max-w-xs truncate">{order.items}</td>
-              <td className="py-3 px-4 text-sm font-medium text-gray-900 text-right">
-                {order.totalAmount}
+            <tr
+              key={order.id}
+              className="hover:bg-gray-50 transition-colors duration-200 text-center"
+            >
+              <td className="py-3 px-4 text-sm font-medium text-gray-900">{order.poNumber}</td>
+              <td className="py-3 px-4 text-sm text-gray-900">{order.supplierName}</td>
+              <td className="py-3 px-4 text-sm text-gray-900 max-w-xs truncate">
+                {order.itemsSummary}
               </td>
+              <td className="py-3 px-4 text-sm font-medium text-gray-900">{order.totalAmount}</td>
               <td className="py-3 px-4 text-sm text-gray-500">{order.orderDate}</td>
               <td className="py-3 px-4 text-sm text-gray-500">{order.deliveryDate}</td>
               <td className="py-3 px-4">
@@ -81,7 +84,7 @@ export default function PurchaseOrderTable({
                   >
                     <i className="ri-eye-line"></i>
                   </button>
-                  {order.status === 'pending' && (
+                  {order.status === 'PENDING' && (
                     <>
                       <button
                         onClick={() => handleApprove(order.id)}

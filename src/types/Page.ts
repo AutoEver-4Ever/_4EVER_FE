@@ -3,5 +3,5 @@ export interface Page {
   size: number;
   totalElements: number;
   totalPages: number;
-  hasNext: string;
+  hasNext: boolean;
 }
