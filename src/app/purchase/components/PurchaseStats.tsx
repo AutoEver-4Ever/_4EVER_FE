@@ -5,9 +5,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { fetchPurchaseStats } from '@/app/purchase/api/purchase.api';
 import { mapPurchaseStatsToCards } from '@/app/purchase/services/purchase.service';
-import PeriodFilterSection from '@/app/purchase/components/sections/PeriodFilterSection';
-import { Period } from '../types/PurchaseStatsType';
-import { PURCHASE_STAT_PERIODS } from '../constants';
+import { Period } from '@/app/purchase/types/PurchaseStatsType';
+import { PURCHASE_STAT_PERIODS } from '@/app/purchase/constants';
+import SlidingNavBar from '@/app/components/common/SlidingNavBar';
 
 export default function PurchaseStats() {
   const [selectedPeriod, setSelectedPeriod] = useState<Period>('week');
@@ -25,15 +25,16 @@ export default function PurchaseStats() {
 
   const stats = data[selectedPeriod];
 
-  // 선택된 기간의 레이블을 조회합니다.
+  // 선택된 기간의 레이블 조회
   const currentPeriodLabel =
     PURCHASE_STAT_PERIODS.find((p) => p.key === selectedPeriod)?.value || selectedPeriod; // '이번 주', '이번 달' 등
 
   return (
     <div className="space-y-4">
-      <PeriodFilterSection
-        selectedPeriod={selectedPeriod} // 'week' | 'month' | 'quarter' | 'year'
-        onPeriodChange={setSelectedPeriod} // key를 받아서 바로 상태 업데이트
+      <SlidingNavBar
+        items={PURCHASE_STAT_PERIODS}
+        selectedKey={selectedPeriod}
+        onSelect={(key) => setSelectedPeriod(key as Period)}
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
