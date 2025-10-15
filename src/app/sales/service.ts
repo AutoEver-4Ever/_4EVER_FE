@@ -13,6 +13,7 @@ import {
   CustomerData,
   ServerResponse,
 } from '@/app/sales/types/NewCustomerModalType';
+import { AnalyticsQueryParams, SalesAnalysis } from '@/app/sales/types/SalesChartType';
 
 // 통계 지표
 export const getSalesStats = async (): Promise<Record<string, SalesStatCard[]>> => {
@@ -99,3 +100,13 @@ export const postCustomer = async (customer: CustomerData): Promise<ServerRespon
   return res.data;
 };
 // ----------------------- 매출 분석 -----------------------
+
+export const getAnalytics = async (params?: AnalyticsQueryParams): Promise<SalesAnalysis> => {
+  const query = new URLSearchParams({
+    ...(params?.start ? { start: params.start } : {}),
+    ...(params?.end ? { end: params.end } : {}),
+  }).toString();
+
+  const res = await axios.get(`https://api.everp.co.kr/api/business/sd/analytics/sales?${query}`);
+  return res.data.data;
+};
