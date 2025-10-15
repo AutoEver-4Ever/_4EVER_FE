@@ -10,6 +10,7 @@ const VourcherDetailModal = ({
   $showDetailModal,
   $setShowDetailModal,
   $selectedVoucherId,
+  $setSelectedVoucherId,
   $getStatusColor,
   $getStatusText,
 }: VourcherDetailModalProps) => {
@@ -48,6 +49,11 @@ const VourcherDetailModal = ({
     },
   };
 
+  const onClose = () => {
+    $setSelectedVoucherId(0);
+    $setShowDetailModal(false);
+  };
+
   return (
     <>
       {$showDetailModal && (
@@ -56,7 +62,7 @@ const VourcherDetailModal = ({
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold text-gray-900">전표 상세 정보</h3>
               <button
-                onClick={() => $setShowDetailModal(false)}
+                onClick={onClose}
                 className="text-gray-400 hover:text-gray-600 cursor-pointer"
               >
                 <i className="ri-close-line text-2xl"></i>
@@ -81,6 +87,10 @@ const VourcherDetailModal = ({
                     <label className="block text-sm font-medium text-gray-700 mb-1">거래처</label>
                     <div className="text-gray-900">{mockVouchers.vendor}</div>
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">메모</label>
+                    <div className="text-gray-900">{mockVouchers.details.memo}</div>
+                  </div>
                 </div>
                 <div className="space-y-4">
                   <div>
@@ -104,18 +114,6 @@ const VourcherDetailModal = ({
                 </div>
               </div>
 
-              {/* 적요 및 메모 */}
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">적요</label>
-                  <div className="text-gray-900">{mockVouchers.description}</div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">메모</label>
-                  <div className="text-gray-900">{mockVouchers.details.memo}</div>
-                </div>
-              </div>
-
               {/* 주문 품목 */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">주문 품목</label>
@@ -126,9 +124,7 @@ const VourcherDetailModal = ({
                         <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
                           품목
                         </th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
-                          규격
-                        </th>
+
                         <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
                           수량
                         </th>
@@ -147,7 +143,6 @@ const VourcherDetailModal = ({
                       {mockVouchers.details.items.map((item: VoucherItem, index: number) => (
                         <tr key={index} className="border-b">
                           <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
-                          <td className="px-4 py-3 text-sm text-gray-900">{item.spec}</td>
                           <td className="px-4 py-3 text-sm text-gray-900 text-center">
                             {item.quantity}
                           </td>
@@ -165,7 +160,7 @@ const VourcherDetailModal = ({
                     </tbody>
                     <tfoot className="bg-gray-50">
                       <tr>
-                        <td colSpan={5} className="px-4 py-3 text-right font-medium text-gray-900">
+                        <td colSpan={4} className="px-4 py-3 text-right font-medium text-gray-900">
                           총 금액
                         </td>
                         <td className="px-4 py-3 text-right font-medium text-green-600">
@@ -183,7 +178,7 @@ const VourcherDetailModal = ({
               {/* 버튼 */}
               <div className="flex gap-3 pt-6 border-t border-gray-200">
                 <button
-                  onClick={() => $setShowDetailModal(false)}
+                  onClick={onClose}
                   className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium cursor-pointer"
                 >
                   닫기

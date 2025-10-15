@@ -145,9 +145,10 @@ const VoucherList = () => {
     }
   };
 
-  const handleViewDetail = (voucher: Voucher) => {
-    setSelectedVoucherId(voucher.id);
+  const handleViewDetail = (id: number) => {
     setShowDetailModal(true);
+    setSelectedVoucherId(id);
+    console.log(showDetailModal);
   };
 
   const handleSelectVoucher = (voucherId: number, checked: boolean) => {
@@ -230,9 +231,7 @@ const VoucherList = () => {
               <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 전표번호
               </th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                내용
-              </th>
+
               <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 거래처
               </th>
@@ -268,7 +267,6 @@ const VoucherList = () => {
                   />
                 </td>
                 <td className="py-3 px-4 text-sm font-medium text-gray-900">{voucher.id}</td>
-                <td className="py-3 px-4 text-sm text-gray-900">{voucher.description}</td>
                 <td className="py-3 px-4 text-sm text-gray-900">{voucher.vendor}</td>
                 <td className="py-3 px-4 text-sm font-medium text-gray-900 text-right">
                   {voucher.amount}
@@ -288,7 +286,7 @@ const VoucherList = () => {
                 <td className="py-3 px-4 text-center">
                   <div className="flex items-center justify-center space-x-2">
                     <button
-                      onClick={() => handleViewDetail}
+                      onClick={() => handleViewDetail(voucher.id)}
                       className="text-blue-600 hover:text-blue-500 cursor-pointer"
                     >
                       <i className="ri-eye-line"></i>
@@ -352,6 +350,7 @@ const VoucherList = () => {
         $showDetailModal={showDetailModal}
         $setShowDetailModal={setShowDetailModal}
         $selectedVoucherId={selectedVoucherId}
+        $setSelectedVoucherId={setSelectedVoucherId}
         $getStatusColor={getStatusColor}
         $getStatusText={getStatusText}
       />

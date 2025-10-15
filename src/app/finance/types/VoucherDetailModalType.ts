@@ -2,6 +2,7 @@ export interface VourcherDetailModalProps {
   $showDetailModal: boolean;
   $setShowDetailModal: (show: boolean) => void;
   $selectedVoucherId: number;
+  $setSelectedVoucherId: (id: number) => void;
   $getStatusColor: (status: string) => string;
   $getStatusText: (status: string) => string;
 }
