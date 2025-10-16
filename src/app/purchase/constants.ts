@@ -1,27 +1,40 @@
 import { Tab } from '@/app/purchase/types/TabNavigationType';
 import { TableHeader } from '@/app/purchase/types/TableHeader';
+import { KeyValueItem } from '@/app/purchase/types/CommonType';
+import { Period } from '@/app/purchase/types/PurchaseStatsType';
+import PurchaseRequestListTab from './components/tabs/PurchaseRequestListTab';
+import PurchaseOrderListTab from './components/tabs/PurchaseOrderListTab';
+import SupplierListTab from './components/tabs/SupplierListTab';
 
 // 구매 기간 필터링
-export const PURCHASE_PERIODS = ['이번 주', '이번 달', '이번 분기', '올해'] as const;
+export const PURCHASE_STAT_PERIODS: KeyValueItem<Period>[] = [
+  { key: 'week', value: '이번 주' },
+  { key: 'month', value: '이번 달' },
+  { key: 'quarter', value: '이번 분기' },
+  { key: 'year', value: '연도별' },
+];
 
-// 탭 전환
+// 구매 관리 탭 전환
 export const PURCHASE_TABS: Tab[] = [
   {
     id: 'requests',
     name: '구매 요청',
     icon: 'ri-file-add-line',
+    component: PurchaseRequestListTab,
   },
   {
     id: 'orders',
     name: '발주서',
     icon: 'ri-shopping-bag-3-line',
+    component: PurchaseOrderListTab,
   },
   {
     id: 'suppliers',
     name: '공급업체 관리',
     icon: 'ri-building-line',
+    component: SupplierListTab,
   },
-] as const;
+];
 
 // 공급사
 export const SUPPLIERS = [
@@ -39,6 +52,7 @@ export const PURCHASE_LIST_TABLE_HEADERS = [
   '요청번호',
   '요청자',
   '요청일',
+  '납기일',
   '총 금액',
   '상태',
   '작업',
@@ -51,7 +65,6 @@ export const PURCHASE_REQUEST_TABLE_HEADERS = [
   '단위',
   '예상 단가',
   '예상 총액',
-  '희망 공급업체',
   '희망 납기일',
   '사용 목적',
   '비고',
