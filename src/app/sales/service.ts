@@ -15,6 +15,7 @@ import {
 } from '@/app/sales/types/NewCustomerModalType';
 import { AnalyticsQueryParams, SalesAnalysis } from '@/app/sales/types/SalesChartType';
 import { Order, OrderQueryParams } from '@/app/sales/types/SalesOrderListType';
+import { OrderDetail } from '@/app/sales/types/SalesOrderDetailType';
 
 // 통계 지표
 export const getSalesStats = async (): Promise<Record<string, SalesStatCard[]>> => {
@@ -90,11 +91,11 @@ export const getOrderList = async (
   return { data, pageData };
 };
 
-// export const getOrderDetail = async (customerId: number): Promise<CustomerDetail> => {
-//   const res = await axios.get(`https://api.everp.co.kr/api/business/sd/customers/${customerId}`);
-//   const data: CustomerDetail = res.data.data;
-//   return data;
-// };
+export const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
+  const res = await axios.get(`https://api.everp.co.kr/api/business/sd/customers/${orderId}`);
+  const data: OrderDetail = res.data.data;
+  return data;
+};
 
 // ----------------------- 고객 관리 -----------------------
 export const getCustomerList = async (

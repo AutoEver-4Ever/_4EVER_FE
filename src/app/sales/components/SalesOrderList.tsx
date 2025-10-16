@@ -17,7 +17,7 @@ type statusType =
 
 const SalesOrderList = () => {
   const [showOrderDetailModal, setShowOrderDetailModal] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState('');
+  const [selectedOrderId, setSelectedOrderId] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<statusType>('ALL');
 
@@ -82,8 +82,8 @@ const SalesOrderList = () => {
     }
   };
 
-  const handleViewOrder = (order: Order) => {
-    // setSelectedOrder(salesOrder);
+  const handleViewOrder = (id: number) => {
+    setSelectedOrderId(id);
     setShowOrderDetailModal(true);
   };
 
@@ -219,7 +219,7 @@ const SalesOrderList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
-                      onClick={() => setShowOrderDetailModal(true)}
+                      onClick={() => handleViewOrder(order.id)}
                       className="text-blue-600 hover:text-blue-900 cursor-pointer"
                       title="상세보기"
                     >

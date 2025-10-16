@@ -110,13 +110,13 @@ const CustomerDetailModal = ({
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">고객명</label>
-                    <div className="text-gray-900">{customer!.companyName}</div>
+                    <div className="text-gray-900">{customer?.companyName}</div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       사업자번호
                     </label>
-                    <div className="text-gray-900">{customer!.businessNumber}</div>
+                    <div className="text-gray-900">{customer?.businessNumber}</div>
                   </div>
                 </div>
               </div>
@@ -132,19 +132,19 @@ const CustomerDetailModal = ({
                       </label>
                       <div className="flex items-center space-x-2">
                         <i className="ri-phone-line text-green-600 mb-1"></i>
-                        <span className="text-gray-900">{customer!.contact.phone}</span>
+                        <span className="text-gray-900">{customer?.contact.phone}</span>
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-                      <div className="text-blue-600">{customer!.contact.email}</div>
+                      <div className="text-blue-600">{customer?.contact.email}</div>
                     </div>
                   </div>
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">주소</label>
-                      <div className="text-gray-900">{customer!.contact.address}</div>
+                      <div className="text-gray-900">{customer?.contact.address}</div>
                     </div>
                   </div>
                 </div>
@@ -159,11 +159,11 @@ const CustomerDetailModal = ({
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         담당자명
                       </label>
-                      <div className="text-gray-900">{customer!.manager.name}</div>
+                      <div className="text-gray-900">{customer?.manager.name}</div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-                      <div className="text-blue-600">{customer!.manager.email}</div>
+                      <div className="text-blue-600">{customer?.manager.email}</div>
                     </div>
                   </div>
                   <div className="space-y-4">
@@ -171,7 +171,7 @@ const CustomerDetailModal = ({
                       <label className="block text-sm font-medium text-gray-700 mb-1">휴대폰</label>
                       <div className="flex items-center space-x-2">
                         <i className="ri-phone-line text-green-600 mb-1"></i>
-                        <span className="text-gray-900">{customer!.manager.mobile}</span>
+                        <span className="text-gray-900">{customer?.manager.mobile}</span>
                       </div>
                     </div>
                   </div>
@@ -187,7 +187,7 @@ const CustomerDetailModal = ({
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         총 주문건수
                       </label>
-                      <div className="text-gray-900">{customer!.transaction.totalOrders}건</div>
+                      <div className="text-gray-900">{customer?.transaction.totalOrders}건</div>
                     </div>
                   </div>
                   <div className="space-y-4">
@@ -196,7 +196,7 @@ const CustomerDetailModal = ({
                         총 거래금액
                       </label>
                       <div className="text-green-600 font-semibold">
-                        ₩{customer!.transaction.totalAmount.toLocaleString()}
+                        ₩{customer?.transaction.totalAmount.toLocaleString()}
                       </div>
                     </div>
                   </div>
@@ -206,7 +206,7 @@ const CustomerDetailModal = ({
               {/* 비고 */}
               <div className="border-t border-gray-200 pt-6">
                 <label className="block text-sm font-medium text-gray-700 mb-1">비고</label>
-                <div className="text-gray-900 bg-gray-50 p-3 rounded-lg">{customer!.note}</div>
+                <div className="text-gray-900 bg-gray-50 p-3 rounded-lg">{customer?.note}</div>
               </div>
 
               {/* 버튼 */}
