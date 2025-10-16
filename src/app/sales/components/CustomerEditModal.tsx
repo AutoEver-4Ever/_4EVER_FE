@@ -120,9 +120,9 @@ const CustomerEditModal = ({
                     <label className="block text-sm font-medium text-gray-700 mb-1">대표이사</label>
                     <input
                       type="text"
-                      value={$editFormData.ceo}
+                      value={$editFormData.ceoName}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateEditFormData('ceo', e.target.value)
+                        updateEditFormData('ceoName', e.target.value)
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     />
@@ -132,7 +132,7 @@ const CustomerEditModal = ({
                     <select
                       value={$editFormData.status}
                       onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        updateEditFormData('status', e.target.value)
+                        updateEditFormData('statusCode', e.target.value)
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg pr-8"
                     >

@@ -3,7 +3,7 @@ export interface CustomerDetail {
   customerCode: string;
   companyName: string;
   businessNumber: string;
-  ceo: string;
+  ceoName: string;
   statusCode: string;
   contact: Contact;
   manager: Manager;

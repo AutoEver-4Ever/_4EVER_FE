@@ -96,7 +96,7 @@ const CustomerDetailModal = ({
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">대표이사</label>
-                    <div className="text-gray-900">{customer!.ceo}</div>
+                    <div className="text-gray-900">{customer!.ceoName}</div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
