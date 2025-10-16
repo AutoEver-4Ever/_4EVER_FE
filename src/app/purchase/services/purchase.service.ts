@@ -1,8 +1,8 @@
 // services/purchase.ts
-import { PurchaseData } from '@/app/purchase/types/PurchaseStatsType';
+import { PurchaseStatsData } from '@/app/purchase/types/PurchaseStatsType';
 import { StatCard } from '@/types/StatCardType';
 
-export const mapPurchaseStatsToCards = (data: PurchaseData): Record<string, StatCard[]> => {
+export const mapPurchaseStatsToCards = (data: PurchaseStatsData): Record<string, StatCard[]> => {
   return Object.entries(data).reduce(
     (acc, [period, stats]) => {
       const cards: StatCard[] = [

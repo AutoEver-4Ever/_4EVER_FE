@@ -20,7 +20,7 @@ export interface PurchaseOrderDetailResponse {
   managerEmail: string; // 담당자 이메일
   orderDate: string; // 주문일
   deliveryDate: string; // 납품일
-  status: string; // 상태 (예: 승인됨)
+  statusCode: string; // 상태 (예: 승인됨)
   totalAmount: number; // 총 금액
   items: PurchaseOrderItem[]; // 품목 목록
   deliveryAddress: string; // 납품지 주소 > 삭제 예정

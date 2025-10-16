@@ -66,7 +66,9 @@ export default function PurchaseOrderDetailModal({
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
-                <span className={`px-2 py-1 rounded text-xs font-medium }`}>{order.status}</span>
+                <span className={`px-2 py-1 rounded text-xs font-medium }`}>
+                  {order.statusCode}
+                </span>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">총 금액</label>

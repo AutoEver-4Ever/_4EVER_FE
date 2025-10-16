@@ -1,4 +1,4 @@
-import { SupplierResponse } from '@/app/purchase/types/SupplierType';
+import { SupplierResponse, SupplierInfo } from '@/app/purchase/types/SupplierType';
 import { useState } from 'react';
 
 interface EditSupplierProps {
@@ -10,8 +10,8 @@ interface EditSupplierProps {
 
 const categories = ['철강/금속', '화학/소재', '전자부품', '기계부품', '포장재', '소모품'];
 const statuses = [
-  { value: 'active', label: '활성' },
-  { value: 'inactive', label: '비활성' },
+  { value: 'ACTIVE', label: '활성' },
+  { value: 'INACTIVE', label: '비활성' },
 ];
 
 export default function EditSupplierFormSection({
@@ -22,22 +22,29 @@ export default function EditSupplierFormSection({
 }: EditSupplierProps) {
   const [form, setForm] = useState<SupplierResponse>(supplier);
 
-  const handleInputChange = (field: keyof SupplierResponse, value: string) => {
-    const updated = { ...form, [field]: value };
+  const handleSupplierInfoChange = (field: keyof SupplierInfo, value: string | number) => {
+    const updated = {
+      ...form,
+      supplierInfo: {
+        ...form.supplierInfo,
+        [field]: value,
+      },
+    };
     setForm(updated);
     setEditForm(updated);
   };
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    const { supplierInfo } = form;
+
     if (
-      !form.name ||
-      !form.category ||
-      !form.managerName ||
-      !form.managerPhone ||
-      !form.managerEmail ||
-      !form.address ||
-      !form.deliveryDays
+      !supplierInfo.supplierName ||
+      !supplierInfo.category ||
+      !supplierInfo.supplierEmail ||
+      !supplierInfo.supplierPhone ||
+      !supplierInfo.supplierBaseAddress ||
+      !supplierInfo.deliveryLeadTime
     ) {
       alert('필수 항목을 입력해주세요');
       return;
@@ -56,7 +63,16 @@ export default function EditSupplierFormSection({
             <label className="block text-sm font-medium text-gray-700 mb-2">업체 ID</label>
             <input
               type="text"
-              value={form.id}
+              value={form.supplierInfo.supplierId}
+              disabled
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">업체 코드</label>
+            <input
+              type="text"
+              value={form.supplierInfo.supplierCode}
               disabled
               className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
             />
@@ -67,8 +83,8 @@ export default function EditSupplierFormSection({
             </label>
             <input
               type="text"
-              value={form.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
+              value={form.supplierInfo.supplierName}
+              onChange={(e) => handleSupplierInfoChange('supplierName', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
@@ -78,8 +94,8 @@ export default function EditSupplierFormSection({
               카테고리 <span className="text-red-500">*</span>
             </label>
             <select
-              value={form.category}
-              onChange={(e) => handleInputChange('category', e.target.value)}
+              value={form.supplierInfo.category}
+              onChange={(e) => handleSupplierInfoChange('category', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
               required
             >
@@ -96,8 +112,8 @@ export default function EditSupplierFormSection({
               상태 <span className="text-red-500">*</span>
             </label>
             <select
-              value={form.status}
-              onChange={(e) => handleInputChange('status', e.target.value as 'active' | 'inactive')}
+              value={form.supplierInfo.supplierStatus}
+              onChange={(e) => handleSupplierInfoChange('supplierStatus', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
               required
             >
@@ -111,42 +127,30 @@ export default function EditSupplierFormSection({
         </div>
       </div>
 
-      {/* 담당자 정보 */}
+      {/* 연락처 정보 */}
       <div>
-        <h4 className="text-lg font-semibold text-gray-900 mb-4">담당자 정보</h4>
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">연락처 정보</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              담당자명 <span className="text-red-500">*</span>
+              전화번호 <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
-              value={form.managerName}
-              onChange={(e) => handleInputChange('managerName', e.target.value)}
+              value={form.supplierInfo.supplierPhone}
+              onChange={(e) => handleSupplierInfoChange('supplierPhone', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              담당자 전화번호 <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={form.managerPhone}
-              onChange={(e) => handleInputChange('managerPhone', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              담당자 이메일 <span className="text-red-500">*</span>
+              이메일 <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
-              value={form.managerEmail}
-              onChange={(e) => handleInputChange('managerEmail', e.target.value)}
+              value={form.supplierInfo.supplierEmail}
+              onChange={(e) => handleSupplierInfoChange('supplierEmail', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
@@ -157,28 +161,39 @@ export default function EditSupplierFormSection({
       {/* 배송 정보 */}
       <div>
         <h4 className="text-lg font-semibold text-gray-900 mb-4">배송 정보</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              주소 <span className="text-red-500">*</span>
+              기본 주소 <span className="text-red-500">*</span>
             </label>
             <input
-              value={form.address}
-              onChange={(e) => handleInputChange('address', e.target.value)}
+              type="text"
+              value={form.supplierInfo.supplierBaseAddress}
+              onChange={(e) => handleSupplierInfoChange('supplierBaseAddress', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              배송기간(일) <span className="text-red-500">*</span>
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">상세 주소</label>
             <input
               type="text"
-              value={form.deliveryDays}
-              onChange={(e) => handleInputChange('deliveryDays', e.target.value)}
+              value={form.supplierInfo.supplierDetailAddress || ''}
+              onChange={(e) => handleSupplierInfoChange('supplierDetailAddress', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              배송 리드타임(일) <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              value={form.supplierInfo.deliveryLeadTime}
+              onChange={(e) => handleSupplierInfoChange('deliveryLeadTime', Number(e.target.value))}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
+              min="0"
             />
           </div>
         </div>

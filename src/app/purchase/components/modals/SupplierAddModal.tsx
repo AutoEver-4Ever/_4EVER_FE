@@ -34,7 +34,7 @@ export default function SupplierAddModal({
   const [materialRows, setMaterialRows] = useState<NewMaterial[]>([
     {
       productName: '',
-      spec: '',
+      unit: '',
       unitPrice: '',
     },
   ]);
@@ -44,7 +44,7 @@ export default function SupplierAddModal({
       ...materialRows,
       {
         productName: '',
-        spec: '',
+        unit: '',
         unitPrice: '',
       },
     ]);
@@ -82,7 +82,7 @@ export default function SupplierAddModal({
 
     // 입력된 자재만 필터링
     const filteredMaterials: Material[] = materialRows
-      .filter((m) => m.productName && m.spec && m.unitPrice)
+      .filter((m) => m.productName && m.unit && m.unitPrice)
       .map((m) => ({
         id: `MAT-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
         ...m,
@@ -117,7 +117,7 @@ export default function SupplierAddModal({
     setMaterialRows([
       {
         productName: '',
-        spec: '',
+        unit: '',
         unitPrice: '',
       },
     ]);
@@ -133,7 +133,7 @@ export default function SupplierAddModal({
   };
 
   const filledMaterialCount = materialRows.filter(
-    (m) => m.productName && m.spec && m.unitPrice,
+    (m) => m.productName && m.unit && m.unitPrice,
   ).length;
 
   return (
@@ -323,8 +323,8 @@ export default function SupplierAddModal({
                       <td className="px-4 py-3">
                         <input
                           type="text"
-                          value={material.spec}
-                          onChange={(e) => handleMaterialChange(index, 'spec', e.target.value)}
+                          value={material.unit}
+                          onChange={(e) => handleMaterialChange(index, 'unit', e.target.value)}
                           placeholder="예: φ10×1000mm"
                           className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />

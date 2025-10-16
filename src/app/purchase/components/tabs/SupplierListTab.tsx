@@ -135,9 +135,11 @@ export default function SupplierListTab() {
                 items={SUPPLIER_STATUS_ITEMS}
                 onChange={handelSupplierStatusChange}
               />
-              <IconButton icon="ri-add-line" onClick={() => setShowAddSupplierModal(true)}>
-                공급업체 등록
-              </IconButton>
+              <IconButton
+                label="공급업체 등록"
+                icon="ri-add-line"
+                onClick={() => setShowAddSupplierModal(true)}
+              />
             </div>
           </div>
         </div>

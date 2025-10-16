@@ -5,7 +5,7 @@ interface PurchaseMetric {
 }
 
 // 하나의 기간(week, month, quarter, year) 단위 데이터 구조
-interface PurchasePeriodData {
+export interface PurchasePeriodData {
   purchase_request_count: PurchaseMetric;
   purchase_approval_pending_count: PurchaseMetric;
   purchase_order_amount: PurchaseMetric;
