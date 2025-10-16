@@ -24,7 +24,6 @@ export const PURCHASE_ENDPOINTS = {
   STATISTICS: `${PURCHASE_BASE_PATH}/statistics`, // MM 통계 조회
 
   // 공급업체
-  VENDORS: `${PURCHASE_BASE_PATH}/vendors`, // 공급업체 목록 조회, 등록
-  VENDOR_DETAIL: (vendorId: number) => `${PURCHASE_BASE_PATH}/vendors/${vendorId}`, // 공급업체 상세 조회, 수정
-  VENDOR_ACCOUNT: (vendorId: number) => `${PURCHASE_BASE_PATH}/vendors/${vendorId}/account`, // 공급업체 계정 생성
+  VENDORS: `${PURCHASE_BASE_PATH}/supplier`, // 공급업체 목록 조회, 등록
+  VENDOR_DETAIL: (vendorId: number) => `${PURCHASE_BASE_PATH}/supplier/${vendorId}`, // 공급업체 상세 조회, 수정
 };

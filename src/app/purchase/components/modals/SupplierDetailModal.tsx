@@ -8,11 +8,11 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchSupplierDetail } from '../../api/purchase.api';
 
 interface DetailSupplierModalProps {
-  vendorId: number;
+  supplierId: number;
   onClose: () => void;
 }
 
-export default function SupplierDetailModal({ vendorId, onClose }: DetailSupplierModalProps) {
+export default function SupplierDetailModal({ supplierId, onClose }: DetailSupplierModalProps) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editForm, setEditForm] = useState<SupplierDetailResponse | null>();
 
@@ -23,7 +23,7 @@ export default function SupplierDetailModal({ vendorId, onClose }: DetailSupplie
     error,
   } = useQuery<SupplierDetailResponse>({
     queryKey: ['suppliers-detail'],
-    queryFn: () => fetchSupplierDetail(vendorId),
+    queryFn: () => fetchSupplierDetail(supplierId),
   });
 
   useEffect(() => {
@@ -36,14 +36,14 @@ export default function SupplierDetailModal({ vendorId, onClose }: DetailSupplie
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-8 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        {isEditMode && (
+        {/* {isEditMode && (
           <EditSupplierFormSection
             supplier={editForm}
             setEditForm={setEditForm}
             onCancel={() => setIsEditMode(false)}
             onSave={() => setIsEditMode(false)}
           />
-        )}
+        )} */}
         {supplier && !isEditMode && (
           <ReadSupplierFormSection
             supplier={supplier}

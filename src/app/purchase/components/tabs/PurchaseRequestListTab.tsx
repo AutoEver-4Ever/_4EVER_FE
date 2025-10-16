@@ -9,6 +9,7 @@ import { PURCHASE_LIST_TABLE_HEADERS, PURCHASE_REQ_STATUS } from '@/app/purchase
 import IconButton from '@/app/components/common/IconButton';
 import Dropdown from '@/app/components/common/Dropdown';
 import { PurchaseReqListResponse, PurchaseReqResponse } from '@/app/purchase/types/PurchaseReqType';
+import DateRangePicker from '@/app/components/common/DateRangePicker';
 
 const getStatusColor = (status: string): string => {
   switch (status) {
@@ -44,18 +45,23 @@ export default function PurchaseRequestListTab() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState<number>(-1);
 
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
   // React Query로 요청 목록 가져오기
   const {
     data: requestData,
     isLoading,
     isError,
   } = useQuery<PurchaseReqListResponse>({
-    queryKey: ['purchaseRequests', currentPage, pageSize, selectedStatus],
+    queryKey: ['purchaseRequests', currentPage, pageSize, selectedStatus, startDate, endDate],
     queryFn: () =>
       fetchPurchaseReqList({
         page: currentPage,
         size: pageSize,
         status: selectedStatus || undefined,
+        createdFrom: startDate,
+        createdTo: endDate,
       }),
   });
 
@@ -111,6 +117,12 @@ export default function PurchaseRequestListTab() {
         <div className="p-6 border-b border-gray-200 flex justify-between items-center">
           <h3 className="text-lg font-semibold text-gray-900">구매 요청 목록</h3>
           <div className="flex items-center space-x-4">
+            <DateRangePicker
+              startDate={startDate}
+              onStartDateChange={setStartDate}
+              endDate={endDate}
+              onEndDateChange={setEndDate}
+            />
             <Dropdown
               label={getStatusValue()}
               items={PURCHASE_REQ_STATUS}
@@ -141,7 +153,10 @@ export default function PurchaseRequestListTab() {
               {requests.map((request) => (
                 <tr key={request.id} className="hover:bg-gray-50 text-center">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {request.prNumber}
+                    <div className="flex flex-col">
+                      <span>{request.prNumber}</span>
+                      <span>{request.departmentName}</span>
+                    </div>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">{request.requesterName}</td>
                   <td className="px-6 py-4 text-sm text-gray-500">{request.requestDate}</td>
@@ -226,15 +241,18 @@ export default function PurchaseRequestListTab() {
         )}
       </div>
 
-      {/* 모달 */}
-      {/* <PurchaseRequestModal
-        isOpen={showRequestModal}
-        onClose={() => setShowRequestModal(false)}
-        onSubmit={() => {
-          setShowRequestModal(false);
-          refetch();
-        }}
-      /> */}
+      {/* 구매 요청 작성 모달 */}
+      {showRequestModal && (
+        <PurchaseRequestModal
+          onClose={() => setShowRequestModal(false)}
+          // onSubmit={() => {
+          //   setShowRequestModal(false);
+          //   refetch();
+          // }}
+        />
+      )}
+
+      {/* 구매 요청 상세 모달 */}
       {showDetailModal && (
         <PurchaseRequestDetailModal purchaseId={selectedRequestId} onClose={handleCloseDetail} />
       )}

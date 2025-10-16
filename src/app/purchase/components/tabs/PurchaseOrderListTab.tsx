@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchPurchaseOrderList } from '../../api/purchase.api';
 import { PURCHASE_ORDER_STATUS, PurchaseOrderStatus } from '@/app/purchase/constants';
 import Dropdown from '@/app/components/common/Dropdown';
+import DateRangePicker from '@/app/components/common/DateRangePicker';
 
 type SortField = 'orderDate' | 'deliveryDate' | '';
 type SortDirection = 'asc' | 'desc';
@@ -42,6 +43,9 @@ export default function PurchaseOrderListTab() {
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [currentPage, setCurrentPage] = useState<number>(0); // 0부터 시작
   const [pageSize] = useState(10);
+
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const {
     data: orderData,
@@ -161,6 +165,13 @@ export default function PurchaseOrderListTab() {
           <i className="ri-file-list-3-line text-blue-600 text-lg"></i>
           <h3 className="text-lg font-semibold text-gray-900">발주서 목록</h3>
         </div>
+
+        <DateRangePicker
+          startDate={startDate}
+          onStartDateChange={setStartDate}
+          endDate={endDate}
+          onEndDateChange={setEndDate}
+        />
 
         {/* 상태 필터 */}
         <Dropdown

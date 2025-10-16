@@ -1,7 +1,7 @@
 import { Page } from '@/types/Page';
 import { PurchaseOrderStatus } from '@/app/purchase/constants';
 
-// 발주서 상세
+// 발주서 주문 품목 상세
 export interface PurchaseOrderItem {
   itemName: string; // 품목명
   spec: string; // 규격 > 삭제 예정
@@ -11,6 +11,7 @@ export interface PurchaseOrderItem {
   amount: number; // 금액
 }
 
+// 발주서 상세
 export interface PurchaseOrderDetailResponse {
   id: number; // 주문 ID
   poNumber: string; // 발주 번호
@@ -29,16 +30,12 @@ export interface PurchaseOrderDetailResponse {
   note: string; // 비고
 }
 
-// export interface PurchaseOrder {
-//   details: OrderDetails;
-// }
-
 // 발주서 목록
 // 개별 발주(Purchase Order) 항목
 export interface PurchaseOrder {
   id: number;
   poNumber: string; // 발주 번호
-  supplierName: string; // 공급업체명
+  vendorName: string; // 공급업체명
   itemsSummary: string; // 품목 요약
   orderDate: string; // 발주일 (YYYY-MM-DD)
   deliveryDate: string; // 납기일 (YYYY-MM-DD)

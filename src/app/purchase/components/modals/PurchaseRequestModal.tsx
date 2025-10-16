@@ -5,7 +5,7 @@ import { PurchaseRequestItem } from '@/app/purchase/types/PurchaseRequestItemTyp
 import { PURCHASE_REQUEST_TABLE_HEADERS, SUPPLIERS } from '@/app/purchase/constants';
 import { PurchaseRequestItemProps } from '@/app/purchase/types/PurchaseRequestModalType';
 
-export default function PurchaseRequestModal({ isOpen, onClose }: PurchaseRequestItemProps) {
+export default function PurchaseRequestModal({ onClose }: PurchaseRequestItemProps) {
   const [requestItems, setRequestItems] = useState<PurchaseRequestItem[]>([
     {
       id: '1',
@@ -94,8 +94,6 @@ export default function PurchaseRequestModal({ isOpen, onClose }: PurchaseReques
       },
     ]);
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

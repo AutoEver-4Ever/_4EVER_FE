@@ -61,7 +61,7 @@ export default function PurchaseOrderTable({
               className="hover:bg-gray-50 transition-colors duration-200 text-center"
             >
               <td className="py-3 px-4 text-sm font-medium text-gray-900">{order.poNumber}</td>
-              <td className="py-3 px-4 text-sm text-gray-900">{order.supplierName}</td>
+              <td className="py-3 px-4 text-sm text-gray-900">{order.vendorName}</td>
               <td className="py-3 px-4 text-sm text-gray-900 max-w-xs truncate">
                 {order.itemsSummary}
               </td>

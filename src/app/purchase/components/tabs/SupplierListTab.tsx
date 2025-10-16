@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import SupplierAddModal from '@/app/purchase/components/modals/SupplierAddModal';
 import SupplierDetailModal from '@/app/purchase/components/modals/SupplierDetailModal';
-import { SupplierListResponse, SupplierResponse } from '@/app/purchase/types/SupplierType';
+import { SupplierInfo, SupplierListResponse } from '@/app/purchase/types/SupplierType';
 import IconButton from '@/app/components/common/IconButton';
 import { fetchSupplierList } from '@/app/purchase/api/purchase.api';
 import Dropdown from '@/app/components/common/Dropdown';
@@ -19,22 +19,18 @@ export default function SupplierListTab() {
   const [showAddSupplierModal, setShowAddSupplierModal] = useState(false);
   const [showSupplierDetailModal, setShowSupplierDetailModal] = useState(false);
 
-  const [selectedSupplierId, setSelectedSupplierId] = useState<number>(-1);
+  const [selectedSupplierId, setSelectedSupplierId] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSupplierStatus, setSelectedSupplierStatus] = useState<string>('');
 
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize] = useState(10);
 
-  const categories = ['전체', '철강/금속', '화학/소재', '전자부품', '기계부품', '포장재', '소모품'];
-
   // React Query로 데이터 가져오기 - 쿼리 파라미터 전달
   const {
     data: supplierData,
     isLoading,
     isError,
-    error,
-    refetch,
   } = useQuery<SupplierListResponse>({
     queryKey: ['suppliers', currentPage, pageSize, selectedCategory, selectedSupplierStatus],
     queryFn: () =>
@@ -46,8 +42,12 @@ export default function SupplierListTab() {
       }),
   });
 
-  const suppliers = supplierData?.content || [];
-  const pageInfo = supplierData?.page;
+  if (isLoading) return <p>불러오는 중...</p>;
+  if (isError || !supplierData) return <p>데이터를 불러오지 못했습니다.</p>;
+
+  const suppliers = supplierData.content || [];
+  const pageInfo = supplierData.page;
+
   const isFirstPage = currentPage === 0; // 0부터 시작이면
   const isLastPage = pageInfo ? currentPage === pageInfo.totalPages - 1 : true;
 
@@ -77,24 +77,24 @@ export default function SupplierListTab() {
     }
   };
 
-  const handleViewDetail = (supplier: SupplierResponse) => {
-    setSelectedSupplierId(supplier.vendorId);
-    setShowSupplierDetailModal(true);
+  const handleViewDetail = (supplierId: string) => {
+    setSelectedSupplierId(supplierId);
+    setShowSupplierDetailModal(true); // 모달창 생성
   };
 
-  const handleCloseDetail = () => {
+  const handleCloseDetailModal = () => {
     setShowSupplierDetailModal(false);
-    setSelectedSupplierId(-1);
+    setSelectedSupplierId('');
   };
 
-  const handleAddSupplier = async (newSupplierData: Partial<SupplierResponse>) => {
-    // TODO: 실제 API 호출로 공급업체 등록
-    // await createSupplier(newSupplierData);
+  // const handleAddSupplier = async (newSupplierData: Partial<SupplierResponse>) => {
+  //   // TODO: 실제 API 호출로 공급업체 등록
+  //   // await createSupplier(newSupplierData);
 
-    setShowAddSupplierModal(false);
-    refetch();
-    alert('공급업체가 성공적으로 등록되었습니다.');
-  };
+  //   setShowAddSupplierModal(false);
+  //   refetch();
+  //   alert('공급업체가 성공적으로 등록되었습니다.');
+  // };
 
   const getStatusBadge = (status: string) => {
     const baseClasses = 'px-2 py-1 rounded-full text-xs font-medium';
@@ -110,41 +110,11 @@ export default function SupplierListTab() {
     return item?.value || '전체';
   };
 
-  const getCategoryValue = (): string => {
-    const item = SUPPLIER_CATEGORY_ITEMS.find((s) => s.key === selectedCategory);
+  const getCategoryValue = (category?: string): string => {
+    const key = category ?? selectedCategory;
+    const item = SUPPLIER_CATEGORY_ITEMS.find((s) => s.key === key);
     return item?.value || '전체';
   };
-
-  // 로딩 상태
-  if (isLoading) {
-    return (
-      <div className="bg-white rounded-lg shadow p-8">
-        <div className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span className="ml-3 text-gray-600">데이터를 불러오는 중...</span>
-        </div>
-      </div>
-    );
-  }
-
-  // 에러 상태
-  if (isError) {
-    return (
-      <div className="bg-white rounded-lg shadow p-8">
-        <div className="text-center">
-          <i className="ri-error-warning-line text-4xl text-red-500 mb-4"></i>
-          <p className="text-gray-600 mb-4">데이터를 불러오는데 실패했습니다.</p>
-          <p className="text-sm text-gray-500 mb-4">{error?.message}</p>
-          <button
-            onClick={() => refetch()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            다시 시도
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -183,10 +153,13 @@ export default function SupplierListTab() {
                   업체명
                 </th>
                 <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  연락처
+                  카테고리
                 </th>
                 <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  카테고리
+                  언락처
+                </th>
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  주소
                 </th>
                 <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   배송 기간
@@ -200,44 +173,53 @@ export default function SupplierListTab() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {suppliers.map((supplier) => (
-                <tr key={supplier.vendorId} className="hover:bg-gray-50 text-center">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {supplier.vendorCode}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {supplier.companyName}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <div>
-                      <div>{supplier.managerPhone}</div>
-                      <div className="text-xs text-gray-400">{supplier.managerEmail}</div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {supplier.category}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {supplier.leadTimeDays}일
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={getStatusBadge(supplier.statusCode)}>
-                      {getStatusText(supplier.statusCode)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => handleViewDetail(supplier)}
-                        className="w-8 h-8 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded cursor-pointer"
-                        title="상세보기"
-                      >
-                        <i className="ri-eye-line"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {suppliers.map((supplier) => {
+                const { statusCode, supplierInfo } = supplier;
+                return (
+                  <tr key={supplierInfo.supplierId} className="hover:bg-gray-50 text-center">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {supplierInfo.supplierCode}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {supplierInfo.supplierName}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {getCategoryValue(supplierInfo.category)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div className="flex flex-col">
+                        <span>{supplierInfo.supplierEmail}</span>
+                        <span>{supplierInfo.supplierPhone}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div className="flex flex-col">
+                        <span>{supplierInfo.supplierBaseAddress}</span>
+                        <span>{supplierInfo.supplierDetailAddress}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {supplierInfo.deliveryLeadTime}일
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={getStatusBadge(supplierInfo.supplierStatus)}>
+                        {getStatusText(supplierInfo.supplierStatus)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleViewDetail(supplierInfo.supplierId)}
+                          className="w-8 h-8 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded cursor-pointer"
+                          title="상세보기"
+                        >
+                          <i className="ri-eye-line"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
               {suppliers.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-6 py-8 text-center text-gray-500 text-sm">
@@ -299,16 +281,19 @@ export default function SupplierListTab() {
         )}
       </div>
 
-      {showAddSupplierModal && (
+      {/* {showAddSupplierModal && (
         <SupplierAddModal
           onClose={() => setShowAddSupplierModal(false)}
           onAddSupplier={handleAddSupplier}
           categories={categories}
         />
-      )}
+      )} */}
 
       {showSupplierDetailModal && (
-        <SupplierDetailModal vendorId={selectedSupplierId} onClose={handleCloseDetail} />
+        <SupplierDetailModal
+          supplierId={Number(selectedSupplierId)}
+          onClose={handleCloseDetailModal}
+        />
       )}
     </>
   );
