@@ -1,4 +1,3 @@
-// app/purchase/components/PurchaseRequestList.tsx
 'use client';
 
 import { useState } from 'react';
@@ -6,6 +5,8 @@ import PurchaseRequestModal from '@/app/purchase/components/modals/PurchaseReque
 import PurchaseRequestDetailModal from '@/app/purchase/components/modals/PurchaseRequestDetailModal';
 import { PurchaseRequestResult } from '@/app/purchase/types/PurchaseRequestResultType';
 import { PURCHASE_LIST_TABLE_HEADERS } from '@/app/purchase/constants';
+import IconButton from '@/app/components/common/IconButton';
+import Dropdown from '@/app/components/common/Dropdown';
 
 const getStatusColor = (status: string): string => {
   switch (status) {
@@ -37,7 +38,7 @@ const getStatusText = (status: string): string => {
   }
 };
 
-export default function PurchaseRequestList() {
+export default function PurchaseRequestListTab() {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
@@ -146,6 +147,18 @@ export default function PurchaseRequestList() {
     setShowDetailModal(true);
   };
 
+  const statusItems = [
+    { label: '전체 상태', value: 'all' },
+    { label: '대기', value: 'waiting' },
+    { label: '승인', value: 'approved' },
+    { label: '반려', value: 'rejected' },
+  ];
+
+  const getStatusLabel = (): string => {
+    const item = statusItems.find((s) => s.value === selectedStatus);
+    return item?.label || '전체 상태';
+  };
+
   return (
     <>
       <div className="bg-white rounded-lg border border-gray-200">
@@ -154,7 +167,7 @@ export default function PurchaseRequestList() {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">구매 요청 목록</h3>
             <div className="flex items-center space-x-4">
-              <select
+              {/* <select
                 value={selectedStatus}
                 onChange={(e) => handleStatusChange(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-8"
@@ -163,16 +176,23 @@ export default function PurchaseRequestList() {
                 <option value="waiting">대기</option>
                 <option value="approved">승인</option>
                 <option value="rejected">반려</option>
-              </select>
+              </select> */}
+
+              <Dropdown
+                label={getStatusLabel()}
+                items={statusItems}
+                onChange={(value) => {
+                  setSelectedStatus(value);
+                  setCurrentPage(1);
+                }}
+              />
 
               {/* 구매 요청 작성 버튼 */}
-              <button
+              <IconButton
+                label=" 구매 요청 작성"
+                icon="ri-add-line"
                 onClick={() => setShowRequestModal(true)}
-                className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"
-              >
-                <i className="ri-add-line"></i>
-                <span>구매 요청 작성</span>
-              </button>
+              />
             </div>
           </div>
         </div>
@@ -196,17 +216,22 @@ export default function PurchaseRequestList() {
             {/* 테이블 바디 */}
             <tbody className="bg-white divide-y divide-gray-200">
               {currentRequests.map((request) => (
-                <tr key={request.id} className="hover:bg-gray-50 transition-colors duration-200">
+                <tr
+                  key={request.id}
+                  className="hover:bg-gray-50 transition-colors duration-200 text-center"
+                >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{request.id}</div>
                     <div className="text-sm text-gray-500">{request.department}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{request.requester}</div>
-                    <div className="text-sm text-gray-500">납기: {request.dueDate}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {request.requestDate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {request.dueDate}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {request.totalAmount}
@@ -219,7 +244,7 @@ export default function PurchaseRequestList() {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex justify-center items-center space-x-2">
                       {/* 상세보기(눈 아이콘) */}
                       <button
                         onClick={() => handleViewDetail(request)}
