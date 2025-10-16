@@ -37,6 +37,7 @@ export interface TopCustomer {
   customerName: string;
   orderCount: number;
   sale: number;
+  active: boolean;
 }
 
 export interface SalesAnalysis {

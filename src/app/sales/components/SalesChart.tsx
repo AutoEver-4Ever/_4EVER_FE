@@ -81,7 +81,7 @@ const SalesChart = () => {
       name: c.customerName,
       orders: c.orderCount,
       amount: c.sale,
-      status: '활성', // 필요 시 상태 추가
+      active: c.active, // 필요 시 상태 추가
     }));
   }, [analyticsData]);
 
@@ -237,10 +237,7 @@ const SalesChart = () => {
 
                 <Bar dataKey="amount">
                   {customerData.map((c, i) => (
-                    <Cell
-                      key={i}
-                      // fill={c.status === '활성' ? 'url(#barActive)' : 'url(#barInactive)'}
-                    />
+                    <Cell key={i} fill={c.active ? 'url(#barActive)' : 'url(#barInactive)'} />
                   ))}
                 </Bar>
               </BarChart>
