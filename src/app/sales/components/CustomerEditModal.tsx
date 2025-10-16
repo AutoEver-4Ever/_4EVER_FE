@@ -21,17 +21,15 @@ const CustomerEditModal = ({
   }, [$editFormData]);
   const handleEditSave = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!$editFormData) return;
 
-    // SalesCustomerDetailType → CustomerList 구조로 변환
     const updatedCustomer = {
-      id: $editFormData.id,
-      name: $editFormData.name,
+      id: $editFormData.customerId,
+      name: $editFormData.companyName,
       manager: $editFormData.manager,
       address: $editFormData.contact.address,
-      dealInfo: $editFormData.dealInfo,
-      status: $editFormData.status,
+      dealInfo: $editFormData.transaction, // 거래 정보 매핑
+      status: $editFormData.statusCode,
     };
 
     alert('고객 정보가 성공적으로 수정되었습니다.');
@@ -43,14 +41,14 @@ const CustomerEditModal = ({
     field: K,
     value: CustomerDetail[K],
   ) => {
-    $setEditFormData((prev: CustomerDetail) => {
+    $setEditFormData((prev: CustomerDetail | null) => {
       if (!prev) return null;
       return { ...prev, [field]: value };
     });
   };
 
   const updateContactInfo = <K extends keyof Contact>(field: K, value: Contact[K]) => {
-    $setEditFormData((prev: CustomerDetail) => {
+    $setEditFormData((prev: CustomerDetail | null) => {
       if (!prev) return null;
       return {
         ...prev,
@@ -63,7 +61,7 @@ const CustomerEditModal = ({
   };
 
   const updateManagerInfo = <K extends keyof Manager>(field: K, value: Manager[K]) => {
-    $setEditFormData((prev: CustomerDetail) => {
+    $setEditFormData((prev: CustomerDetail | null) => {
       if (!prev) return null;
       return {
         ...prev,
@@ -76,7 +74,7 @@ const CustomerEditModal = ({
   };
 
   const updateTransactionInfo = <K extends keyof Transaction>(field: K, value: Transaction[K]) => {
-    $setEditFormData((prev: CustomerDetail) => {
+    $setEditFormData((prev: CustomerDetail | null) => {
       if (!prev) return null;
       return {
         ...prev,
@@ -130,7 +128,7 @@ const CustomerEditModal = ({
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
                     <select
-                      value={$editFormData.status}
+                      value={$editFormData.statusCode}
                       onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                         updateEditFormData('statusCode', e.target.value)
                       }
