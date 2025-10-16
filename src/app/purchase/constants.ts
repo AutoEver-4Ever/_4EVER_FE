@@ -2,6 +2,9 @@ import { Tab } from '@/app/purchase/types/TabNavigationType';
 import { TableHeader } from '@/app/purchase/types/TableHeader';
 import { KeyValueItem } from '@/app/purchase/types/CommonType';
 import { Period } from '@/app/purchase/types/PurchaseStatsType';
+import PurchaseRequestListTab from './components/tabs/PurchaseRequestListTab';
+import PurchaseOrderListTab from './components/tabs/PurchaseOrderListTab';
+import SupplierListTab from './components/tabs/SupplierListTab';
 
 // 구매 기간 필터링
 export const PURCHASE_STAT_PERIODS: KeyValueItem<Period>[] = [
@@ -11,24 +14,27 @@ export const PURCHASE_STAT_PERIODS: KeyValueItem<Period>[] = [
   { key: 'year', value: '연도별' },
 ];
 
-// 탭 전환
+// 구매 관리 탭 전환
 export const PURCHASE_TABS: Tab[] = [
   {
     id: 'requests',
     name: '구매 요청',
     icon: 'ri-file-add-line',
+    component: PurchaseRequestListTab,
   },
   {
     id: 'orders',
     name: '발주서',
     icon: 'ri-shopping-bag-3-line',
+    component: PurchaseOrderListTab,
   },
   {
     id: 'suppliers',
     name: '공급업체 관리',
     icon: 'ri-building-line',
+    component: SupplierListTab,
   },
-] as const;
+];
 
 // 공급사
 export const SUPPLIERS = [
