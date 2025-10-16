@@ -51,7 +51,9 @@ export const getSalesStats = async (): Promise<Record<string, SalesStatCard[]>> 
 };
 
 // ----------------------- 견적 관리 -----------------------
-export const getQuoteList = async (params?: QuoteQueryParams): Promise<Quote[]> => {
+export const getQuoteList = async (
+  params?: QuoteQueryParams,
+): Promise<{ data: Quote[]; pageData: PageType }> => {
   const query = new URLSearchParams({
     ...(params?.startDate ? { startDate: params.startDate } : {}),
     ...(params?.endDate ? { endDate: params.endDate } : {}),
@@ -63,7 +65,9 @@ export const getQuoteList = async (params?: QuoteQueryParams): Promise<Quote[]> 
   }).toString();
   const res = await axios.get(`https://api.everp.co.kr/api/business/sd/quotations?${query}`);
   const data: Quote[] = res.data.data.items;
-  return data;
+  const pageData: PageType = res.data.data.page;
+
+  return { data, pageData };
 };
 
 export const getQuoteDetail = async (quotationId: number): Promise<QuoteDetail> => {

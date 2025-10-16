@@ -31,7 +31,7 @@ const CustomerList = () => {
   const queryParams = useMemo(
     () => ({
       page: currentPage - 1,
-      size: 8,
+      size: 10,
       status: statusFilter || 'ALL',
       keyword: debouncedSearchTerm || '',
     }),

@@ -24,17 +24,18 @@ const SalesOrderList = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 200);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const queryParams = useMemo(
     () => ({
       start: startDate || '',
       end: endDate || '',
-      page: 0,
+      page: currentPage - 1,
       size: 10,
       keyword: debouncedSearchTerm || '',
       status: statusFilter || 'ALL',
     }),
-    [startDate, endDate, statusFilter, debouncedSearchTerm],
+    [startDate, endDate, currentPage, statusFilter, debouncedSearchTerm],
   );
   const {
     data: orderRes,
@@ -86,6 +87,33 @@ const SalesOrderList = () => {
   const handleViewOrder = (id: number) => {
     setSelectedOrderId(id);
     setShowOrderDetailModal(true);
+  };
+
+  const totalPages = pageInfo?.totalPages ?? 1;
+
+  const maxVisible = 5;
+  const getPageRange = () => {
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      const start = Math.max(1, currentPage - 2);
+      const end = Math.min(totalPages, start + maxVisible - 1);
+
+      if (start > 1) {
+        pages.push(1);
+        if (start > 2) pages.push('...');
+      }
+
+      for (let i = start; i <= end; i++) pages.push(i);
+
+      if (end < totalPages) {
+        if (end < totalPages - 1) pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+    return pages;
   };
 
   return (
@@ -232,6 +260,63 @@ const SalesOrderList = () => {
           </table>
         )}
       </div>
+      {/* 페이지네이션 */}
+      {isError || isLoading ? null : (
+        <div className="px-6 py-4 border-t border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-700">
+              총 <span className="font-medium">{pageInfo?.totalElements}</span>명의 고객
+            </div>
+
+            <div className="flex justify-center items-center space-x-2 mt-6">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => prev - 1)}
+                className={`px-3 py-1 border rounded-md text-sm transition-colors ${
+                  currentPage === 1
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
+                }`}
+              >
+                이전
+              </button>
+
+              {getPageRange().map((p, index) =>
+                p === '...' ? (
+                  <span key={index} className="px-2 text-gray-400">
+                    ...
+                  </span>
+                ) : (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentPage(p as number)}
+                    className={`px-3 py-1 rounded-md text-sm ${
+                      currentPage === p
+                        ? 'bg-blue-600 text-white'
+                        : 'border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ),
+              )}
+
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((prev) => prev + 1)}
+                className={`px-3 py-1 border rounded-md text-sm transition-colors ${
+                  currentPage === totalPages
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
+                }`}
+              >
+                다음
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <SalesOrderDetailModal
         $showOrderDetailModal={showOrderDetailModal}
         $setShowOrderDetailModal={setShowOrderDetailModal}
