@@ -1,27 +1,23 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 import { Period, SalesStatCard } from '@/app/sales/types/SalesStatsType';
 import { getSalesStats } from '@/app/sales/service';
 
-const SalesStats = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState<Period>('week');
-  const periods: { id: Period; name: string }[] = [
-    { id: 'week', name: '이번 주' },
-    { id: 'month', name: '이번 달' },
-    { id: 'quarter', name: '이번 분기' },
-    { id: 'year', name: '연도별' },
-  ];
+interface SalesStatsProps {
+  $selectedPeriod: Period;
+}
 
+const SalesStats = ({ $selectedPeriod }: SalesStatsProps) => {
   const { data, isLoading, isError } = useQuery<Record<Period, SalesStatCard[]>>({
     queryKey: ['stats'],
     queryFn: getSalesStats,
+    staleTime: 1000,
   });
   if (isLoading) return <p>불러오는 중...</p>;
   if (isError || !data) return <p>데이터를 불러오지 못했습니다.</p>;
 
-  const stats = data[selectedPeriod];
+  const stats = data[$selectedPeriod];
 
   // const mockStats = [
   //   {
@@ -44,23 +40,6 @@ const SalesStats = () => {
 
   return (
     <div className="space-y-4">
-      {/* 필터링 버튼 */}
-      <div className="flex items-center space-x-2">
-        {periods.map((period) => (
-          <button
-            key={period.id}
-            onClick={() => setSelectedPeriod(period.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer whitespace-nowrap ${
-              selectedPeriod === period.id
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            {period.name}
-          </button>
-        ))}
-      </div>
-
       {/* 통계 카드 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {stats.map((stat, index) => (

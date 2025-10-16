@@ -1,43 +1,82 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { QuoteStatus, Quote, QuoteQueryParams } from '@/app/sales/types/SalesQuoteListType';
 import QuoteDetailModal from './QuoteDetailModal';
 import { useQuery } from '@tanstack/react-query';
 import { getQuoteList } from '@/app/sales/service';
+import { useDebounce } from 'use-debounce';
+import QuoteReviewModal from './QuoteReviewModal';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<QuoteStatus>('ALL');
   const [showQuoteModal, setShowQuoteModal] = useState(false);
-  const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
-  const [showNewQuoteModal, setShowNewQuoteModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
   const [selectedQuotes, setSelectedQuotes] = useState<number[]>([]);
 
   const [selectedQuoteId, setSelectedQuoteId] = useState<number>(0);
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 200);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const queryParams = useMemo(
+    () => ({
+      page: currentPage - 1,
+      size: 10,
+      startDate: startDate || '',
+      endDate: endDate || '',
+      status: statusFilter || 'ALL',
+      search: debouncedSearchTerm || '',
+    }),
+    [startDate, endDate, currentPage, statusFilter, debouncedSearchTerm],
+  );
 
   const {
-    data: quotes = [],
+    data: quoteRes,
     isLoading,
     isError,
-    refetch,
+    isFetching,
+    isRefetching,
   } = useQuery({
-    queryKey: [
-      'quoteList',
-      {
-        page: 1,
-        size: 5,
-        startDate: startDate,
-        endDate: endDate,
-        status: statusFilter,
-        search: searchTerm,
-      },
-    ],
+    queryKey: ['quoteList', queryParams],
     queryFn: ({ queryKey }) => getQuoteList(queryKey[1] as QuoteQueryParams),
+    staleTime: 1000,
   });
+
+  const quotes = quoteRes?.data ?? [];
+  const pageInfo = quoteRes?.pageData;
+
+  useEffect(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'auto';
+    }
+
+    window.addEventListener('load', () => {
+      const savedY = sessionStorage.getItem('scrollY');
+      if (savedY) window.scrollTo(0, parseInt(savedY));
+    });
+
+    window.addEventListener('scroll', () => {
+      sessionStorage.setItem('scrollY', String(window.scrollY));
+    });
+
+    return () => {
+      window.removeEventListener('scroll', () => {});
+      window.removeEventListener('load', () => {});
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(
+  //     `%c[Query 상태]%c isFetching=${isFetching}, isRefetching=${isRefetching}, isLoading=${isLoading}`,
+  //     'color: orange; font-weight: bold;',
+  //     'color: white; background: #222; padding: 2px 4px; border-radius: 3px;',
+  //   );
+  // }, [isFetching, isRefetching, isLoading]);
+
   const getStatusColor = (status: QuoteStatus) => {
     switch (status) {
       case 'PENDING':
@@ -85,7 +124,6 @@ const SalesQuoteList = () => {
   };
 
   const handleViewQuote = (quote: Quote) => {
-    // setSelectedQuote(quote);
     setSelectedQuoteId(quote.quotationId);
     setShowQuoteModal(true);
   };
@@ -109,6 +147,33 @@ const SalesQuoteList = () => {
     ) {
       alert(`견적서 ${quote.quotationId}가 삭제되었습니다.`);
     }
+  };
+
+  const totalPages = pageInfo?.totalPages ?? 1;
+
+  const maxVisible = 5;
+  const getPageRange = () => {
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      const start = Math.max(1, currentPage - 2);
+      const end = Math.min(totalPages, start + maxVisible - 1);
+
+      if (start > 1) {
+        pages.push(1);
+        if (start > 2) pages.push('...');
+      }
+
+      for (let i = start; i <= end; i++) pages.push(i);
+
+      if (end < totalPages) {
+        if (end < totalPages - 1) pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+    return pages;
   };
 
   return (
@@ -167,7 +232,7 @@ const SalesQuoteList = () => {
           </div>
 
           <button
-            onClick={() => setShowNewQuoteModal(true)}
+            onClick={() => setShowReviewModal(true)}
             className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"
           >
             <i className="ri-add-line"></i>
@@ -258,9 +323,9 @@ const SalesQuoteList = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <span
-                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(quote.statusLabel)}`}
+                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(quote.statusCode)}`}
                       >
-                        {getStatusText(quote.statusLabel)}
+                        {getStatusText(quote.statusCode)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
@@ -280,6 +345,63 @@ const SalesQuoteList = () => {
             </table>
           )}
         </div>
+        {/* 페이지네이션 */}
+        {isError || isLoading ? null : (
+          <div className="px-6 py-4 border-t border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-gray-700">
+                총 <span className="font-medium">{pageInfo?.totalElements}</span>명의 고객
+              </div>
+
+              <div className="flex justify-center items-center space-x-2 mt-6">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((prev) => prev - 1)}
+                  className={`px-3 py-1 border rounded-md text-sm transition-colors ${
+                    currentPage === 1
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
+                  }`}
+                >
+                  이전
+                </button>
+
+                {getPageRange().map((p, index) =>
+                  p === '...' ? (
+                    <span key={index} className="px-2 text-gray-400">
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentPage(p as number)}
+                      className={`px-3 py-1 rounded-md text-sm ${
+                        currentPage === p
+                          ? 'bg-blue-600 text-white'
+                          : 'border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ),
+                )}
+
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
+                  className={`px-3 py-1 border rounded-md text-sm transition-colors ${
+                    currentPage === totalPages
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
+                  }`}
+                >
+                  다음
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* 신규 견적서 작성 모달 */}
         {/* <NewQuoteModal
           $showNewQuoteModal={showNewQuoteModal}
@@ -292,6 +414,13 @@ const SalesQuoteList = () => {
           $selectedQuoteId={selectedQuoteId}
           $getStatusColor={getStatusColor}
           $getStatusText={getStatusText}
+        />
+
+        <QuoteReviewModal
+          $isOpen={showReviewModal}
+          $onClose={() => {
+            setShowReviewModal(false);
+          }}
         />
       </div>
     </div>

@@ -1,9 +1,9 @@
-import { SalesCustomerDetailType } from '@/app/sales/types/SalesCustomerDetailType';
+import { CustomerDetail } from '@/app/sales/types/SalesCustomerDetailType';
 
 export interface CustomerEditModalProps {
   $showEditModal: boolean;
   $setShowEditModal: (show: boolean) => void;
-  $editFormData: SalesCustomerDetailType | null;
-  $setEditFormData: React.Dispatch<React.SetStateAction<SalesCustomerDetailType | null>>;
+  $editFormData: CustomerDetail | null;
+  $setEditFormData: React.Dispatch<React.SetStateAction<CustomerDetail | null>>;
   $setShowDetailModal: (show: boolean) => void;
 }

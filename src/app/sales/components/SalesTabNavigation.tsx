@@ -26,7 +26,7 @@ const SalesTabNavigation = () => {
     router.replace(`?${params.toString()}`, { scroll: false });
   };
   return (
-    <div className="mb-6">
+    <div className="mb-6 mt-6">
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           {tabs.map((tab) => (

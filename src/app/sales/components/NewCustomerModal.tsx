@@ -2,55 +2,98 @@
 
 import { useState } from 'react';
 import { CustomerData, NewCustomerModalProps } from '@/app/sales/types/NewCustomerModalType';
-
+import { useMutation } from '@tanstack/react-query';
+import { postCustomer } from '@/app/sales/service';
 const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCustomerModalProps) => {
   const [customerData, setCustomerData] = useState<CustomerData>({
     companyName: '',
     businessNumber: '',
-    representative: '',
-    contactPerson: '',
-    position: '',
-    phone: '',
-    mobile: '',
-    email: '',
+    ceoName: '',
+    contactPhone: '',
+    contactEmail: '',
+    zipCode: '',
     address: '',
     detailAddress: '',
-    zipCode: '',
-    notes: '',
+    manager: {
+      name: '',
+      mobile: '',
+      email: '',
+    },
+    note: '',
   });
 
   const handleCustomerSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 고객번호 생성
-    const customerNumber = `CUS-${new Date().getFullYear()}-${String(
-      Math.floor(Math.random() * 1000) + 1,
-    ).padStart(3, '0')}`;
+    createCustomer(customerData);
+  };
 
-    alert(
-      `신규 고객이 성공적으로 등록되었습니다!\n고객번호: ${customerNumber}\n회사명: ${customerData.companyName}\n담당자: ${customerData.contactPerson}`,
-    );
-
+  const handleCustomerCancle = (e: React.FormEvent) => {
     $setShowCustomerModal(false);
-    // 폼 초기화
     setCustomerData({
       companyName: '',
       businessNumber: '',
-      representative: '',
-      contactPerson: '',
-      position: '',
-      phone: '',
-      mobile: '',
-      email: '',
+      ceoName: '',
+      contactPhone: '',
+      contactEmail: '',
+      zipCode: '',
       address: '',
       detailAddress: '',
-      zipCode: '',
-      notes: '',
+      manager: {
+        name: '',
+        mobile: '',
+        email: '',
+      },
+      note: '',
     });
   };
 
   const updateCustomerData = <K extends keyof CustomerData>(field: K, value: CustomerData[K]) => {
     setCustomerData((prev) => ({ ...prev, [field]: value }));
   };
+
+  const updateManagerData = <K extends keyof CustomerData['manager']>(
+    field: K,
+    value: CustomerData['manager'][K],
+  ) => {
+    setCustomerData((prev) => ({
+      ...prev,
+      manager: {
+        ...prev.manager,
+        [field]: value,
+      },
+    }));
+  };
+
+  const { mutate: createCustomer, isPending } = useMutation({
+    mutationFn: postCustomer,
+    onSuccess: (data) => {
+      alert(`${data.data.manager.name} 등록 성공 \n
+        고객 아이디 : ${data.data.customerCode}
+        `);
+
+      $setShowCustomerModal(false);
+    },
+    onError: (error) => {
+      alert(`고객 등록 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+
+  // setCustomerData({
+  //   companyName: '',
+  //   businessNumber: '',
+  //   ceoName: '',
+  //   contactPhone: '',
+  //   contactEmail: '',
+  //   zipCode: '',
+  //   address: '',
+  //   detailAddress: '',
+  //   manager: {
+  //     name: '',
+  //     mobile: '',
+  //     email: '',
+  //   },
+  //   note: '',
+  // });
   return (
     <>
       {/* 고객 등록 모달 */}
@@ -104,9 +147,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <label className="block text-sm font-medium text-gray-700 mb-1">대표자명</label>
                     <input
                       type="text"
-                      value={customerData.representative}
+                      value={customerData.ceoName}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateCustomerData('representative', e.target.value)
+                        updateCustomerData('ceoName', e.target.value)
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="대표자명을 입력하세요"
@@ -118,9 +161,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     </label>
                     <input
                       type="tel"
-                      value={customerData.phone}
+                      value={customerData.contactPhone}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateCustomerData('phone', e.target.value)
+                        updateCustomerData('contactPhone', e.target.value)
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="02-0000-0000"
@@ -140,9 +183,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     </label>
                     <input
                       type="text"
-                      value={customerData.contactPerson}
+                      value={customerData.manager.name}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateCustomerData('contactPerson', e.target.value)
+                        updateManagerData('name', e.target.value)
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="담당자명을 입력하세요"
@@ -154,9 +197,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <label className="block text-sm font-medium text-gray-700 mb-1">휴대폰</label>
                     <input
                       type="tel"
-                      value={customerData.mobile}
+                      value={customerData.manager.mobile}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateCustomerData('mobile', e.target.value)
+                        updateManagerData('mobile', e.target.value)
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="010-0000-0000"
@@ -166,9 +209,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
                     <label className="block text-sm font-medium text-gray-700 mb-1">이메일 *</label>
                     <input
                       type="email"
-                      value={customerData.email}
+                      value={customerData.manager.email}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateCustomerData('email', e.target.value)
+                        updateManagerData('email', e.target.value)
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="example@company.com"
@@ -229,9 +272,9 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">비고</label>
                 <textarea
-                  value={customerData.notes}
+                  value={customerData.note}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                    updateCustomerData('notes', e.target.value)
+                    updateCustomerData('note', e.target.value)
                   }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   rows={3}
@@ -243,16 +286,23 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
               <div className="flex gap-3 pt-6 border-t border-gray-200">
                 <button
                   type="button"
-                  onClick={() => $setShowCustomerModal(false)}
+                  onClick={handleCustomerCancle}
                   className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium cursor-pointer whitespace-nowrap"
                 >
                   취소
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-[#2563EB] text-white rounded-lg hover:bg-blue-600 transition-colors font-medium cursor-pointer whitespace-nowrap"
+                  disabled={isPending}
+                  // onClick={handleCustomerSubmit}
+                  className={`px-6 py-2 rounded-lg font-medium cursor-pointer whitespace-nowrap transition-colors
+    ${
+      isPending
+        ? 'bg-gray-400 text-white cursor-not-allowed'
+        : 'bg-[#2563EB] text-white hover:bg-blue-600'
+    }`}
                 >
-                  고객 등록
+                  {isPending ? '등록 중...' : '고객 등록'}
                 </button>
               </div>
             </form>

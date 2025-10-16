@@ -2,10 +2,10 @@
 
 import { CustomerEditModalProps } from '@/app/sales/types/CustomerEditModalType';
 import {
-  SalesCustomerDetailType,
+  CustomerDetail,
   Contact,
   Manager,
-  DealInfo,
+  Transaction,
 } from '@/app/sales/types/SalesCustomerDetailType';
 import { useEffect } from 'react';
 
@@ -21,17 +21,15 @@ const CustomerEditModal = ({
   }, [$editFormData]);
   const handleEditSave = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!$editFormData) return;
 
-    // SalesCustomerDetailType → CustomerList 구조로 변환
     const updatedCustomer = {
-      id: $editFormData.id,
-      name: $editFormData.name,
+      id: $editFormData.customerId,
+      name: $editFormData.companyName,
       manager: $editFormData.manager,
       address: $editFormData.contact.address,
-      dealInfo: $editFormData.dealInfo,
-      status: $editFormData.status,
+      dealInfo: $editFormData.transaction, // 거래 정보 매핑
+      status: $editFormData.statusCode,
     };
 
     alert('고객 정보가 성공적으로 수정되었습니다.');
@@ -39,53 +37,53 @@ const CustomerEditModal = ({
     $setEditFormData(null);
   };
 
-  const updateEditFormData = <K extends keyof SalesCustomerDetailType>(
+  const updateEditFormData = <K extends keyof CustomerDetail>(
     field: K,
-    value: SalesCustomerDetailType[K],
+    value: CustomerDetail[K],
   ) => {
-    $setEditFormData((prev) => (prev ? { ...prev, [field]: value } : prev));
-  };
-
-  const updateDealInfo = <K extends keyof DealInfo>(field: K, value: DealInfo[K]) => {
-    $setEditFormData((prev) =>
-      prev
-        ? {
-            ...prev,
-            dealInfo: {
-              ...prev.dealInfo,
-              [field]: value,
-            },
-          }
-        : prev,
-    );
+    $setEditFormData((prev: CustomerDetail | null) => {
+      if (!prev) return null;
+      return { ...prev, [field]: value };
+    });
   };
 
   const updateContactInfo = <K extends keyof Contact>(field: K, value: Contact[K]) => {
-    $setEditFormData((prev) =>
-      prev
-        ? {
-            ...prev,
-            contact: {
-              ...prev.contact,
-              [field]: value,
-            },
-          }
-        : prev,
-    );
+    $setEditFormData((prev: CustomerDetail | null) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        contact: {
+          ...prev.contact,
+          [field]: value,
+        },
+      };
+    });
   };
 
   const updateManagerInfo = <K extends keyof Manager>(field: K, value: Manager[K]) => {
-    $setEditFormData((prev) =>
-      prev
-        ? {
-            ...prev,
-            manager: {
-              ...prev.manager,
-              [field]: value,
-            },
-          }
-        : prev,
-    );
+    $setEditFormData((prev: CustomerDetail | null) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        manager: {
+          ...prev.manager,
+          [field]: value,
+        },
+      };
+    });
+  };
+
+  const updateTransactionInfo = <K extends keyof Transaction>(field: K, value: Transaction[K]) => {
+    $setEditFormData((prev: CustomerDetail | null) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        transaction: {
+          ...prev.transaction,
+          [field]: value,
+        },
+      };
+    });
   };
   return (
     <>
@@ -111,7 +109,7 @@ const CustomerEditModal = ({
                     <label className="block text-sm font-medium text-gray-700 mb-1">고객코드</label>
                     <input
                       type="text"
-                      value={$editFormData.id}
+                      value={$editFormData.customerCode}
                       readOnly
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
                     />
@@ -120,9 +118,9 @@ const CustomerEditModal = ({
                     <label className="block text-sm font-medium text-gray-700 mb-1">대표이사</label>
                     <input
                       type="text"
-                      value={$editFormData.ceo}
+                      value={$editFormData.ceoName}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateEditFormData('ceo', e.target.value)
+                        updateEditFormData('ceoName', e.target.value)
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     />
@@ -130,9 +128,9 @@ const CustomerEditModal = ({
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
                     <select
-                      value={$editFormData.status}
+                      value={$editFormData.statusCode}
                       onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        updateEditFormData('status', e.target.value)
+                        updateEditFormData('statusCode', e.target.value)
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg pr-8"
                     >
@@ -146,9 +144,9 @@ const CustomerEditModal = ({
                     <label className="block text-sm font-medium text-gray-700 mb-1">고객명</label>
                     <input
                       type="text"
-                      value={$editFormData.name}
+                      value={$editFormData.companyName}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        updateEditFormData('name', e.target.value)
+                        updateEditFormData('companyName', e.target.value)
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       required
@@ -247,9 +245,9 @@ const CustomerEditModal = ({
                       <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
                       <input
                         type="email"
-                        value={$editFormData.manager.email}
+                        value={$editFormData.contact.email}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          updateManagerInfo('email', e.target.value)
+                          updateContactInfo('email', e.target.value)
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       />
@@ -283,10 +281,9 @@ const CustomerEditModal = ({
                       <input
                         type="text"
                         inputMode="numeric"
-                        pattern="[0-9]*"
-                        value={$editFormData.dealInfo.totalOrders}
+                        value={$editFormData.transaction.totalOrders}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          updateDealInfo('totalOrders', e.target.value.replace(/[^0-9]/g, ''))
+                          updateTransactionInfo('totalOrders', Number(e.target.value))
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                         required
@@ -299,10 +296,10 @@ const CustomerEditModal = ({
                         총 거래금액
                       </label>
                       <input
-                        type="text"
-                        value={$editFormData.dealInfo.totalAmount}
+                        type="number"
+                        value={$editFormData.transaction.totalAmount}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          updateDealInfo('totalAmount', e.target.value.replace(/[^0-9]/g, ''))
+                          updateTransactionInfo('totalAmount', Number(e.target.value))
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       />
@@ -315,9 +312,9 @@ const CustomerEditModal = ({
               <div className="border-t border-gray-200 pt-6">
                 <label className="block text-sm font-medium text-gray-700 mb-1">비고</label>
                 <textarea
-                  value={$editFormData.dealInfo.notes}
+                  value={$editFormData.note}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                    updateDealInfo('notes', e.target.value)
+                    updateEditFormData('note', e.target.value)
                   }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                   rows={3}

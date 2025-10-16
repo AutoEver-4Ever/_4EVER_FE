@@ -17,7 +17,7 @@ export interface QuoteDetail {
   statusLabel: QuoteStatus;
   customerName: string;
   ownerName: string;
-  items: Item;
+  items: Item[];
   totalAmount: number;
 }
 

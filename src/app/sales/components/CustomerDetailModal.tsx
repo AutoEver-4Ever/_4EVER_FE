@@ -1,10 +1,11 @@
 'use client';
 
-import { CustomerDetailModalProps } from '@/app/sales/types/CustomerDetailModalType';
-import { useState } from 'react';
-import { SalesCustomerDetailType } from '../types/SalesCustomerDetailType';
+import { CustomerDetailModalProps } from '@/app/sales/types/CustomerDetailModalProps';
+import { useEffect, useState } from 'react';
+import { CustomerDetail } from '@/app/sales/types/SalesCustomerDetailType';
 import CustomerEditModal from './CustomerEditModal';
-// import { Customer } from '@/app/sales/types/SalesCustomerList';
+import { getCustomerDetail } from '../service';
+import { useQuery } from '@tanstack/react-query';
 
 const CustomerDetailModal = ({
   $showDetailModal,
@@ -14,32 +15,62 @@ const CustomerDetailModal = ({
   $setShowEditModal,
   $setEditFormData,
 }: CustomerDetailModalProps) => {
-  const [mockCustomer] = useState<SalesCustomerDetailType>({
-    id: 'C-001',
-    name: '삼성전자',
-    ceo: '이재용',
-    businessNumber: '123-45-67890',
-    status: '활성',
-    dealInfo: {
-      totalOrders: '45',
-      totalAmount: '₩1,250,000,000',
-      notes: '주요 고객사, 정기 거래처',
-    },
-    manager: {
-      name: '김철수',
-      email: 'kim@samsung.com',
-      mobile: '010-1234-5678',
-    },
-    contact: {
-      phone: '02-1234-5678',
-      email: 'contact@samsung.com',
-      address: '서울시 강남구 테헤란로 123',
-    },
+  const {
+    data: customer,
+    isLoading,
+    isError,
+  } = useQuery<CustomerDetail>({
+    queryKey: ['customerDetail', $selectedCustomerId],
+    queryFn: () => getCustomerDetail($selectedCustomerId),
+    enabled: !!$selectedCustomerId && $showDetailModal,
   });
+  const [errorModal, setErrorModal] = useState(false);
+  useEffect(() => {
+    setErrorModal(isError);
+  }, [isError]);
 
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'ACTIVE':
+        return '활성';
+      case 'DEACTIVE':
+        return '비활성';
+
+      default:
+        return status;
+    }
+  };
+
+  if (isLoading)
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 w-96 text-center">
+          <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-600 text-sm font-medium">견적서를 불러오는 중입니다...</p>
+        </div>
+      </div>
+    );
+
+  if (errorModal)
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 w-96 text-center text-red-600">
+          <i className="ri-error-warning-line text-4xl mb-2" />
+          <p className="font-medium">고객 상세 데이터를 불러오는 중 오류가 발생했습니다.</p>
+          <button
+            onClick={() => {
+              setErrorModal(false);
+            }}
+            className="mt-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
+          >
+            닫기
+          </button>
+        </div>
+      </div>
+    );
   return (
     <>
-      {$showDetailModal && mockCustomer && (
+      {$showDetailModal && (
         <div className="fixed inset-0  bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
@@ -58,32 +89,34 @@ const CustomerDetailModal = ({
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">고객코드</label>
-                    <div className="text-lg font-semibold text-gray-900">{mockCustomer.id}</div>
+                    <div className="text-lg font-semibold text-gray-900">
+                      {customer!.customerCode}
+                    </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">대표이사</label>
-                    <div className="text-gray-900">{mockCustomer.ceo}</div>
+                    <div className="text-gray-900">{customer!.ceoName}</div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
                     <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${$getStatusColor(mockCustomer.status)}`}
+                      className={`px-2 py-1 rounded text-xs font-medium ${$getStatusColor(customer!.statusCode)}`}
                     >
-                      {mockCustomer.status}
+                      {getStatusText(customer!.statusCode)}
                     </span>
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">고객명</label>
-                    <div className="text-gray-900">{mockCustomer.name}</div>
+                    <div className="text-gray-900">{customer?.companyName}</div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       사업자번호
                     </label>
-                    <div className="text-gray-900">{mockCustomer.businessNumber}</div>
+                    <div className="text-gray-900">{customer?.businessNumber}</div>
                   </div>
                 </div>
               </div>
@@ -99,19 +132,19 @@ const CustomerDetailModal = ({
                       </label>
                       <div className="flex items-center space-x-2">
                         <i className="ri-phone-line text-green-600 mb-1"></i>
-                        <span className="text-gray-900">{mockCustomer.contact.phone}</span>
+                        <span className="text-gray-900">{customer?.contact.phone}</span>
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-                      <div className="text-blue-600">{mockCustomer.contact.email}</div>
+                      <div className="text-blue-600">{customer?.contact.email}</div>
                     </div>
                   </div>
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">주소</label>
-                      <div className="text-gray-900">{mockCustomer.contact.address}</div>
+                      <div className="text-gray-900">{customer?.contact.address}</div>
                     </div>
                   </div>
                 </div>
@@ -126,11 +159,11 @@ const CustomerDetailModal = ({
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         담당자명
                       </label>
-                      <div className="text-gray-900">{mockCustomer.manager.name}</div>
+                      <div className="text-gray-900">{customer?.manager.name}</div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-                      <div className="text-blue-600">{mockCustomer.manager.email}</div>
+                      <div className="text-blue-600">{customer?.manager.email}</div>
                     </div>
                   </div>
                   <div className="space-y-4">
@@ -138,7 +171,7 @@ const CustomerDetailModal = ({
                       <label className="block text-sm font-medium text-gray-700 mb-1">휴대폰</label>
                       <div className="flex items-center space-x-2">
                         <i className="ri-phone-line text-green-600 mb-1"></i>
-                        <span className="text-gray-900">{mockCustomer.manager.mobile}</span>
+                        <span className="text-gray-900">{customer?.manager.mobile}</span>
                       </div>
                     </div>
                   </div>
@@ -154,7 +187,7 @@ const CustomerDetailModal = ({
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         총 주문건수
                       </label>
-                      <div className="text-gray-900">{mockCustomer.dealInfo.totalOrders}건</div>
+                      <div className="text-gray-900">{customer?.transaction.totalOrders}건</div>
                     </div>
                   </div>
                   <div className="space-y-4">
@@ -163,7 +196,7 @@ const CustomerDetailModal = ({
                         총 거래금액
                       </label>
                       <div className="text-green-600 font-semibold">
-                        {mockCustomer.dealInfo.totalAmount}
+                        ₩{customer?.transaction.totalAmount.toLocaleString()}
                       </div>
                     </div>
                   </div>
@@ -173,9 +206,7 @@ const CustomerDetailModal = ({
               {/* 비고 */}
               <div className="border-t border-gray-200 pt-6">
                 <label className="block text-sm font-medium text-gray-700 mb-1">비고</label>
-                <div className="text-gray-900 bg-gray-50 p-3 rounded-lg">
-                  {mockCustomer.dealInfo.notes}
-                </div>
+                <div className="text-gray-900 bg-gray-50 p-3 rounded-lg">{customer?.note}</div>
               </div>
 
               {/* 버튼 */}
@@ -188,7 +219,7 @@ const CustomerDetailModal = ({
                 </button>
                 <button
                   onClick={() => {
-                    $setEditFormData(mockCustomer);
+                    $setEditFormData(customer!);
                     $setShowEditModal(true);
                   }}
                   className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium cursor-pointer whitespace-nowrap"

@@ -17,7 +17,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "recharts": "^3.2.1",
-    "remixicon": "^4.6.0"
+    "remixicon": "^4.6.0",
+    "use-debounce": "^10.0.6"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.0.0",
