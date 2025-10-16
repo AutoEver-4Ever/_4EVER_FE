@@ -137,15 +137,6 @@ const SalesOrderDetailModal = ({
                     </div>
                   </div>
 
-                  {/* 배송 정보 */}
-                  <div className="mb-8">
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">배송 정보</h3>
-                    <div>
-                      <label className="text-sm font-medium text-gray-500">배송지 주소</label>
-                      <p className="text-sm text-gray-900">{customer?.address}</p>
-                    </div>
-                  </div>
-
                   {/* 주문 품목 */}
                   <div className="mb-8">
                     <h3 className="text-lg font-medium text-gray-900 mb-4">주문 품목</h3>
@@ -160,6 +151,9 @@ const SalesOrderDetailModal = ({
                               수량
                             </th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                              단위
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                               단가
                             </th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
@@ -170,10 +164,11 @@ const SalesOrderDetailModal = ({
                         <tbody className="divide-y divide-gray-200">
                           {items?.map((item, index) => (
                             <tr key={`${item.productName}-${index}`}>
-                              <td className="px-4 py-3 text-sm text-gray-900">{item.unit}</td>
                               <td className="px-4 py-3 text-sm text-gray-900">
-                                {item.quantity.toLocaleString()}개
+                                {item.productName}
                               </td>
+                              <td className="px-4 py-3 text-sm text-gray-900">{item.quantity}</td>
+                              <td className="px-4 py-3 text-sm text-gray-900">{item.unit}</td>
                               <td className="px-4 py-3 text-sm text-gray-900">
                                 ₩{item.unitPrice.toLocaleString()}
                               </td>
@@ -186,13 +181,13 @@ const SalesOrderDetailModal = ({
                         <tfoot className="bg-gray-50">
                           <tr>
                             <td
-                              colSpan={3}
+                              colSpan={4}
                               className="px-4 py-3 text-sm font-medium text-gray-900 text-right"
                             >
                               총 주문금액
                             </td>
                             <td className="px-4 py-3 text-sm font-bold text-gray-900">
-                              {order!.totalAmount}
+                              ₩{order!.totalAmount.toLocaleString()}
                             </td>
                           </tr>
                         </tfoot>

@@ -50,15 +50,15 @@ const SalesOrderList = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'production':
+      case 'PRODUCTION':
         return 'bg-blue-100 text-blue-700';
-      case 'ready':
+      case 'MATERIAL_PREPARATION':
         return 'bg-green-100 text-green-700';
-      case 'shipping':
+      case 'READY_FOR_SHIPMENT':
         return 'bg-yellow-100 text-yellow-700';
-      case 'delivered':
+      case 'DELIVERING':
         return 'bg-purple-100 text-purple-700';
-      case 'confirmed':
+      case 'DELIVERED':
         return 'bg-gray-100 text-gray-700';
       default:
         return 'bg-gray-100 text-gray-700';
@@ -67,16 +67,17 @@ const SalesOrderList = () => {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'production':
+      case 'PRODUCTION':
         return '생산중';
-      case 'ready':
-        return '출고 준비 완료';
-      case 'shipping':
+      case 'MATERIAL_PREPARATION':
+        return '자재 준비중';
+      case 'READY_FOR_SHIPMENT':
+        return '출하 준비 완료';
+      case 'DELIVERING':
         return '배송중';
-      case 'delivered':
+      case 'DELIVERED':
         return '배송완료';
-      case 'confirmed':
-        return '구매확정';
+
       default:
         return status;
     }
@@ -138,12 +139,11 @@ const SalesOrderList = () => {
             }
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-8"
           >
-            <option value="all">전체 상태</option>
-            <option value="production">생산중</option>
-            <option value="ready">출고 준비 완료</option>
-            <option value="shipping">배송중</option>
-            <option value="delivered">배송완료</option>
-            <option value="confirmed">구매확정</option>
+            <option value="ALL">전체 상태</option>
+            <option value="PRODUCTION">생산중</option>
+            <option value="READY_FOR_SHIPMENT">출하 준비 완료</option>
+            <option value="DELIVERING">배송중</option>
+            <option value="DELIVERED">배송완료</option>
           </select>
         </div>
       </div>
