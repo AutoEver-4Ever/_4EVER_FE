@@ -29,6 +29,9 @@ const SalesChart = () => {
   const [startDate, setStartDate] = useState(formatDate(sixMonthsAgo));
   const [endDate, setEndDate] = useState(formatDate(today));
 
+  const minDate = formatDate(sixMonthsAgo);
+  const maxDate = formatDate(today);
+
   const queryParams = useMemo(
     () => ({
       start: startDate || '',
@@ -93,6 +96,8 @@ const SalesChart = () => {
           <input
             type="date"
             value={startDate}
+            min={minDate}
+            max={maxDate}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStartDate(e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white"
           />
