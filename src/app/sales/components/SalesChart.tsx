@@ -56,17 +56,28 @@ const SalesChart = () => {
     return `₩${(value / 100000000).toFixed(1)}억`;
   };
 
-  // trend → 주차별 매출 추이 데이터
+  // trend 주차별 매출 추이 데이터
   const weeklyData = useMemo(() => {
     if (!analyticsData) return [];
-    return analyticsData.trend.map((t) => ({
-      week: `${t.month}월 ${t.week}주차`,
-      sales: t.sale,
-      orders: t.orderCount,
-    }));
+
+    const monthWeekMap: Record<number, number> = {};
+
+    return analyticsData.trend.map((t) => {
+      if (!monthWeekMap[t.month]) {
+        monthWeekMap[t.month] = 1;
+      } else {
+        monthWeekMap[t.month]++;
+      }
+
+      return {
+        week: `${t.month}월 ${monthWeekMap[t.month]}주차`,
+        sales: t.sale,
+        orders: t.orderCount,
+      };
+    });
   }, [analyticsData]);
 
-  // productShare → 제품별 매출 비중
+  // productShare 제품별 매출 비중
   const productData = useMemo(() => {
     if (!analyticsData) return [];
     return analyticsData.productShare.map((p) => ({
@@ -76,7 +87,7 @@ const SalesChart = () => {
     }));
   }, [analyticsData]);
 
-  // topCustomers → 주요 고객별 매출
+  // topCustomers 주요 고객별 매출
   const customerData = useMemo(() => {
     if (!analyticsData) return [];
     return analyticsData.topCustomers.map((c) => ({
