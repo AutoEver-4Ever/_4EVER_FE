@@ -188,9 +188,11 @@ export default function PurchaseRequestListTab() {
               />
 
               {/* 구매 요청 작성 버튼 */}
-              <IconButton icon="ri-add-line" onClick={() => setShowRequestModal(true)}>
-                구매 요청 작성
-              </IconButton>
+              <IconButton
+                label=" 구매 요청 작성"
+                icon="ri-add-line"
+                onClick={() => setShowRequestModal(true)}
+              />
             </div>
           </div>
         </div>

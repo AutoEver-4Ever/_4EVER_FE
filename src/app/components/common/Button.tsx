@@ -1,14 +1,15 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  label: string;
   variant?: 'primary' | 'secondary' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   icon?: string;
 }
 
 export default function Button({
+  label,
   variant = 'primary',
   size = 'md',
   className,
-  children,
 }: ButtonProps) {
   const base = 'rounded-lg font-semibold focus:outline-none transition cursor-pointer';
   const variants = {
@@ -23,8 +24,6 @@ export default function Button({
   };
 
   return (
-    <button className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}>
-      {children}
-    </button>
+    <button className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}>{label}</button>
   );
 }
