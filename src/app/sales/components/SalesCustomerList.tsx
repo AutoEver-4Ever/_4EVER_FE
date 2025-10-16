@@ -9,9 +9,11 @@ import { useQuery } from '@tanstack/react-query';
 import { getCustomerList } from '../service';
 import { useDebounce } from 'use-debounce';
 import { CustomerDetail } from '../types/SalesCustomerDetailType';
+
+type statusType = 'ALL' | 'ACTIVE' | 'DEACTIVE';
 const CustomerList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'DEACTIVE'>('ALL');
+  const [statusFilter, setStatusFilter] = useState<statusType>('ALL');
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState<number>(0);
   const [showCustomerModal, setShowCustomerModal] = useState(false);
@@ -89,7 +91,7 @@ const CustomerList = () => {
           <div className="flex items-center space-x-2">
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as 'ALL' | 'ACTIVE' | 'DEACTIVE')}
+              onChange={(e) => setStatusFilter(e.target.value as statusType)}
               className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
             >
               <option value="ALL">전체</option>

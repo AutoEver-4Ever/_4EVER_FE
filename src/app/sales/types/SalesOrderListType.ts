@@ -5,20 +5,31 @@ export interface OrderItem {
   totalPrice: number;
 }
 
+export type OrderStatus = 'PENDING' | 'DELIVERED' | 'CANCELLED';
+
 export interface Order {
-  id: string;
-  customer: string;
-  contact: string;
-  phone: string;
-  email: string;
-  address: string;
+  id: number;
+  soNumber: string;
+  customerId: number;
+  customerName: string;
+  manager: {
+    name: string;
+    mobile: string;
+  };
+  contactName: string;
+  contactPhone: string;
   orderDate: string;
   deliveryDate: string;
-  amount: string;
-  status: 'production' | 'ready' | 'shipping' | 'delivered' | 'confirmed';
-  priority: 'low' | 'medium' | 'high';
-  items: OrderItem[];
-  notes?: string;
-  paymentMethod?: string;
-  deliveryAddress?: string;
+  totalAmount: number;
+  statusCode: OrderStatus;
+  actions: string[];
+}
+
+export interface OrderQueryParams {
+  start: string;
+  end: string;
+  keyword: string;
+  status: string;
+  page: number;
+  size: number;
 }

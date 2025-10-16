@@ -1,4 +1,4 @@
-export interface SalesCustomerListType {
+export interface SalesCustomer {
   customerId: number;
   customerCode: string;
   companyName: string;

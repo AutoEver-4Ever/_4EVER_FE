@@ -4,7 +4,7 @@ import { Quote, QuoteQueryParams } from '@/app/sales/types/SalesQuoteListType';
 import { QuoteDetail } from '@/app/sales/types/QuoteDetailModalType';
 import { CustomerDetail } from '@/app/sales/types/SalesCustomerDetailType';
 import {
-  SalesCustomerListType,
+  SalesCustomer,
   CustomerQueryParams,
   PageType,
 } from '@/app/sales/types/SalesCustomerListType';
@@ -14,6 +14,7 @@ import {
   ServerResponse,
 } from '@/app/sales/types/NewCustomerModalType';
 import { AnalyticsQueryParams, SalesAnalysis } from '@/app/sales/types/SalesChartType';
+import { Order, OrderQueryParams } from '@/app/sales/types/SalesOrderListType';
 
 // 통계 지표
 export const getSalesStats = async (): Promise<Record<string, SalesStatCard[]>> => {
@@ -71,11 +72,34 @@ export const getQuoteDetail = async (quotationId: number): Promise<QuoteDetail> 
 };
 
 // ----------------------- 주문 관리 -----------------------
+export const getOrderList = async (
+  params?: OrderQueryParams,
+): Promise<{ data: Order[]; pageData: PageType }> => {
+  const query = new URLSearchParams({
+    ...(params?.start ? { start: params.start } : {}),
+    ...(params?.end ? { end: params.end } : {}),
+    ...(params?.status ? { status: params.status } : {}),
+    ...(params?.keyword ? { keyword: params.keyword } : {}),
+    ...(params?.page ? { page: String(params.page) } : {}),
+    ...(params?.size ? { size: String(params.size) } : {}),
+  }).toString();
+
+  const res = await axios.get(`https://api.everp.co.kr/api/business/sd/orders?${query}`);
+  const data: Order[] = res.data.data.content;
+  const pageData: PageType = res.data.data.page;
+  return { data, pageData };
+};
+
+// export const getOrderDetail = async (customerId: number): Promise<CustomerDetail> => {
+//   const res = await axios.get(`https://api.everp.co.kr/api/business/sd/customers/${customerId}`);
+//   const data: CustomerDetail = res.data.data;
+//   return data;
+// };
 
 // ----------------------- 고객 관리 -----------------------
 export const getCustomerList = async (
   params?: CustomerQueryParams,
-): Promise<{ data: SalesCustomerListType[]; pageData: PageType }> => {
+): Promise<{ data: SalesCustomer[]; pageData: PageType }> => {
   const query = new URLSearchParams({
     ...(params?.status ? { status: params.status } : {}),
     ...(params?.keyword ? { keyword: params.keyword } : {}),
@@ -84,7 +108,7 @@ export const getCustomerList = async (
   }).toString();
 
   const res = await axios.get(`https://api.everp.co.kr/api/business/sd/customers?${query}`);
-  const data: SalesCustomerListType[] = res.data.data.customers;
+  const data: SalesCustomer[] = res.data.data.customers;
   const pageData: PageType = res.data.data.page;
   return { data, pageData };
 };
