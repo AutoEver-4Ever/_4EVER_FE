@@ -18,17 +18,19 @@ export interface OrderDetail {
   customer: {
     customerId: number;
     customerName: string;
+    customerCode: string;
+    customerBaseAddress: string;
+    customerDetailAddress: string;
     manager: {
-      name: string;
-      mobile: string;
-      email: string;
+      managerName: string;
+      managerPhone: string;
+      managerEmail: string;
     };
-    address: string;
   };
   items: {
     productName: string;
     quantity: number;
-    unit: string; // uomName
+    uonName: string;
     unitPrice: number;
     amount: number;
   }[];

@@ -8,21 +8,18 @@ export interface OrderItem {
 export type OrderStatus = 'PENDING' | 'DELIVERED' | 'CANCELLED';
 
 export interface Order {
-  id: number;
+  soId: number;
   soNumber: string;
-  customerId: number;
   customerName: string;
   manager: {
-    name: string;
-    mobile: string;
+    managerName: string;
+    managerPhone: string;
+    managerEmail: string;
   };
-  contactName: string;
-  contactPhone: string;
   orderDate: string;
   deliveryDate: string;
   totalAmount: number;
   statusCode: OrderStatus;
-  actions: string[];
 }
 
 export interface OrderQueryParams {

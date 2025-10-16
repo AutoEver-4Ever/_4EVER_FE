@@ -10,7 +10,7 @@ import { getOrderList } from '../service';
 type statusType =
   | 'ALL'
   | 'MATERIAL_PREPARATION'
-  | 'PRODUCTION'
+  | 'IN_PRODUCTION'
   | 'READY_FOR_SHIPMENT'
   | 'DELIVERING'
   | 'DELIVERED';
@@ -51,7 +51,7 @@ const SalesOrderList = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'PRODUCTION':
+      case 'IN_PRODUCTION':
         return 'bg-blue-100 text-blue-700';
       case 'MATERIAL_PREPARATION':
         return 'bg-green-100 text-green-700';
@@ -68,7 +68,7 @@ const SalesOrderList = () => {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'PRODUCTION':
+      case 'IN_PRODUCTION':
         return '생산중';
       case 'MATERIAL_PREPARATION':
         return '자재 준비중';
@@ -168,7 +168,7 @@ const SalesOrderList = () => {
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-8"
           >
             <option value="ALL">전체 상태</option>
-            <option value="PRODUCTION">생산중</option>
+            <option value="IN_PRODUCTION">생산중</option>
             <option value="READY_FOR_SHIPMENT">출하 준비 완료</option>
             <option value="DELIVERING">배송중</option>
             <option value="DELIVERED">배송완료</option>
@@ -217,14 +217,14 @@ const SalesOrderList = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {orders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50 transition-colors duration-200">
+                <tr key={order.soId} className="hover:bg-gray-50 transition-colors duration-200">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{order.soNumber}</div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm font-medium text-gray-900">{order.customerName}</div>
                     <div className="text-sm text-gray-500">
-                      {order.contactName} · {order.contactPhone}
+                      {order.manager.managerName} · {order.manager.managerPhone}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -234,7 +234,7 @@ const SalesOrderList = () => {
                     {order.deliveryDate}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {order.totalAmount}
+                    ₩{order.totalAmount.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
@@ -247,7 +247,7 @@ const SalesOrderList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
-                      onClick={() => handleViewOrder(order.id)}
+                      onClick={() => handleViewOrder(order.soId)}
                       className="text-blue-600 hover:text-blue-900 cursor-pointer"
                       title="상세보기"
                     >

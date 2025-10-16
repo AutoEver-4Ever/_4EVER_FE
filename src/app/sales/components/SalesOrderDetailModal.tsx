@@ -100,7 +100,7 @@ const SalesOrderDetailModal = ({
                         <div>
                           <label className="text-sm font-medium text-gray-500">상태</label>
                           <span
-                            className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${$getStatusColor(
+                            className={`inline-block px-2 py-1 text-xs font-medium rounded-full ml-2 ${$getStatusColor(
                               order!.statusCode,
                             )}`}
                           >
@@ -119,19 +119,21 @@ const SalesOrderDetailModal = ({
                         </div>
                         <div>
                           <label className="text-sm font-medium text-gray-500">담당자</label>
-                          <p className="text-sm text-gray-900">{customer?.manager.name}</p>
+                          <p className="text-sm text-gray-900">{customer?.manager.managerName}</p>
                         </div>
                         <div>
                           <label className="text-sm font-medium text-gray-500">연락처</label>
-                          <p className="text-sm text-gray-900">{customer?.manager.mobile}</p>
+                          <p className="text-sm text-gray-900">{customer?.manager.managerPhone}</p>
                         </div>
                         <div>
                           <label className="text-sm font-medium text-gray-500">이메일</label>
-                          <p className="text-sm text-gray-900">{customer?.manager.email}</p>
+                          <p className="text-sm text-gray-900">{customer?.manager.managerEmail}</p>
                         </div>
                         <div>
                           <label className="text-sm font-medium text-gray-500">주소</label>
-                          <p className="text-sm text-gray-900">{customer?.address}</p>
+                          <p className="text-sm text-gray-900">
+                            {customer?.customerBaseAddress} {customer?.customerDetailAddress}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -168,7 +170,7 @@ const SalesOrderDetailModal = ({
                                 {item.productName}
                               </td>
                               <td className="px-4 py-3 text-sm text-gray-900">{item.quantity}</td>
-                              <td className="px-4 py-3 text-sm text-gray-900">{item.unit}</td>
+                              <td className="px-4 py-3 text-sm text-gray-900">{item.uonName}</td>
                               <td className="px-4 py-3 text-sm text-gray-900">
                                 ₩{item.unitPrice.toLocaleString()}
                               </td>

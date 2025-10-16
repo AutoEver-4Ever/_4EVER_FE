@@ -96,7 +96,7 @@ export const getOrderList = async (
 };
 
 export const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
-  const res = await axios.get(`https://api.everp.co.kr/api/business/sd/orders/1201`);
+  const res = await axios.get(`https://api.everp.co.kr/api/business/sd/orders/${orderId}`);
   const data: OrderDetail = res.data.data;
   return data;
 };
