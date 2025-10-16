@@ -1,15 +1,16 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  label: string;
   icon: string;
   variant?: 'primary' | 'secondary' | 'outline';
   size?: 'sm' | 'md' | 'lg';
 }
 
 export default function IconButton({
+  label,
   icon,
   variant = 'primary',
   size = 'md',
   className,
-  children,
   ...props
 }: ButtonProps) {
   const base =
@@ -39,7 +40,7 @@ export default function IconButton({
           <i className={`${icon} ${iconSizes[size]}`}></i>
         </span>
       )}
-      <span className="pr-1">{children}</span>
+      <span className="pr-1">{label}</span>
     </button>
   );
 }

@@ -1,12 +1,13 @@
 import Providers from '@/app/providers';
 import PurchaseHeader from '@/app/purchase/components/PurchaseHeader';
 import PurchaseStats from '@/app/purchase/components/PurchaseStats';
-import PurchaseTabNavigation from '@/app/purchase/components/PurchaseTabNavigation';
+import TabNavigation from '@/app/components/common/TabNavigation';
 import { getQueryClient } from '@/lib/queryClient';
 import { dehydrate } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { fetchPurchaseStats } from '@/app/purchase/api/purchase.api';
 import { mapPurchaseStatsToCards } from '@/app/purchase/services/purchase.service';
+import { PURCHASE_TABS } from './constants';
 
 export default async function PurchasePage() {
   const queryClient = getQueryClient();
@@ -33,8 +34,7 @@ export default async function PurchasePage() {
         </Providers>
 
         <Suspense fallback={<div>Loading...</div>}>
-          {/* 탭 네비게이션: 구매 요청 / 발주서 / 공급업체 관리 */}
-          <PurchaseTabNavigation />
+          <TabNavigation tabs={PURCHASE_TABS} />
         </Suspense>
       </main>
     </div>

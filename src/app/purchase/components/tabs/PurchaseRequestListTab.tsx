@@ -128,9 +128,13 @@ export default function PurchaseRequestListTab() {
               items={PURCHASE_REQ_STATUS}
               onChange={handleStatusChange}
             />
-            <IconButton icon="ri-add-line" onClick={() => setShowRequestModal(true)}>
-              구매 요청 작성
-            </IconButton>
+
+            {/* 구매 요청 작성 버튼 */}
+            <IconButton
+              label="구매 요청 작성"
+              icon="ri-add-line"
+              onClick={() => setShowRequestModal(true)}
+            />
           </div>
         </div>
 
@@ -240,7 +244,6 @@ export default function PurchaseRequestListTab() {
           </div>
         )}
       </div>
-
       {/* 구매 요청 작성 모달 */}
       {showRequestModal && (
         <PurchaseRequestModal
