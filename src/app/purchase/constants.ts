@@ -102,10 +102,11 @@ export const PURCHASE_REQUEST_TABLE_HEADERS = [
   '단위',
   '예상 단가',
   '예상 총액',
+  '희망 공급업체',
   '희망 납기일',
   '사용 목적',
   '비고',
-  '작업',
+  '',
 ] as const;
 
 // 구매 상세 정보 모달 테이블 헤더

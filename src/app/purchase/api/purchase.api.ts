@@ -24,7 +24,23 @@ interface FetchPurchaseReqParams extends PaginationParams {
   createdFrom?: string;
   createdTo?: string;
 }
-// API 함수 수정
+
+// 구매 요청 등록
+export interface CreatePurchaseRequest {
+  requesterId: number;
+  items: {
+    itemName: string;
+    quantity: number;
+    uomName: string;
+    expectedUnitPrice: number;
+    expectedTotalPrice: number;
+    preferredVendorName: string;
+    desiredDeliveryDate: string;
+    purpose: string;
+    note?: string;
+  }[];
+}
+
 interface FetchSupplierListParams extends PaginationParams {
   category?: string;
   status?: string;
@@ -80,6 +96,17 @@ export const fetchPurchaseReqDetail = async (
 
   // console.log(res.data.data);
   return res.data.data;
+};
+
+// 구매 요청 등록
+export const createPurchaseRequest = async (
+  data: CreatePurchaseRequest,
+): Promise<ApiResponse<null>> => {
+  const res = await axios.post<ApiResponse<null>>(
+    `${API_BASE_URL}${PURCHASE_ENDPOINTS.PURCHASE_REQUISITIONS}`,
+    data,
+  );
+  return res.data;
 };
 
 // 발주서 목록

@@ -1,9 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PurchaseRequestItem } from '@/app/purchase/types/PurchaseRequestItemType';
+import {
+  PurchaseRequestItem,
+  PurchaseRequestPayload,
+} from '@/app/purchase/types/PurchaseRequestItemType';
 import { PURCHASE_REQUEST_TABLE_HEADERS, SUPPLIERS } from '@/app/purchase/constants';
 import { PurchaseRequestItemProps } from '@/app/purchase/types/PurchaseRequestModalType';
+import IconButton from '@/app/components/common/IconButton';
+import Button from '@/app/components/common/Button';
+import { useMutation } from '@tanstack/react-query';
+import { createPurchaseRequest } from '@/app/purchase/api/purchase.api';
 
 export default function PurchaseRequestModal({ onClose }: PurchaseRequestItemProps) {
   const [requestItems, setRequestItems] = useState<PurchaseRequestItem[]>([
@@ -19,6 +26,34 @@ export default function PurchaseRequestModal({ onClose }: PurchaseRequestItemPro
       notes: '',
     },
   ]);
+
+  const { mutate: submitPurchaseRequest, isPending } = useMutation({
+    mutationFn: createPurchaseRequest,
+    onSuccess: (data) => {
+      console.log('구매 요청 성공: ', data);
+      alert(`총 ${requestItems.length}개 품목의 구매 요청이 성공적으로 제출되었습니다.`);
+      onClose();
+
+      setRequestItems([
+        {
+          id: '1',
+          itemName: '',
+          quantity: '',
+          unit: '',
+          estimatedPrice: '',
+          supplier: '',
+          dueDate: '',
+          purpose: '',
+          notes: '',
+        },
+      ]);
+    },
+
+    onError: (error) => {
+      console.log('구매 요청 실패, ', error);
+      alert(`구매 요청 중 오류가 발생했습니다. ${error}`);
+    },
+  });
 
   const calculateItemTotal = (quantity: string, price: string): number => {
     const qty = parseFloat(quantity) || 0;
@@ -78,21 +113,41 @@ export default function PurchaseRequestModal({ onClose }: PurchaseRequestItemPro
       return;
     }
 
-    alert(`총 ${requestItems.length}개 품목의 구매 요청이 성공적으로 제출되었습니다.`);
-    onClose();
-    setRequestItems([
-      {
-        id: '1',
-        itemName: '',
-        quantity: '',
-        unit: '',
-        estimatedPrice: '',
-        supplier: '',
-        dueDate: '',
-        purpose: '',
-        notes: '',
-      },
-    ]);
+    // alert(`총 ${requestItems.length}개 품목의 구매 요청이 성공적으로 제출되었습니다.`);
+    // onClose();
+    // setRequestItems([
+    //   {
+    //     id: '1',
+    //     itemName: '',
+    //     quantity: '',
+    //     unit: '',
+    //     estimatedPrice: '',
+    //     supplier: '',
+    //     dueDate: '',
+    //     purpose: '',
+    //     notes: '',
+    //   },
+    // ]);
+    // API 요청 데이터 구성 (실제 API 스펙에 맞게 수정 필요)
+    const purchaseRequestData: PurchaseRequestPayload = {
+      requesterId: 1,
+      items: requestItems.map((item) => ({
+        itemName: item.itemName,
+        quantity: parseFloat(item.quantity),
+        uomName: item.unit,
+        expectedUnitPrice: parseFloat(item.estimatedPrice),
+        expectedTotalPrice: calculateItemTotal(item.quantity, item.estimatedPrice),
+        preferredVendorName: item.supplier,
+        desiredDeliveryDate: item.dueDate,
+        purpose: item.purpose,
+        note: item.notes,
+      })),
+    };
+
+    console.log('구매 요청 데이터:', purchaseRequestData);
+
+    // React Query mutation 실행
+    submitPurchaseRequest(purchaseRequestData);
   };
 
   return (
@@ -134,14 +189,7 @@ export default function PurchaseRequestModal({ onClose }: PurchaseRequestItemPro
           <div>
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-lg font-semibold text-gray-900">구매 품목 목록</h4>
-              <button
-                type="button"
-                onClick={addRequestItem}
-                className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"
-              >
-                <i className="ri-add-line"></i>
-                <span>품목 추가</span>
-              </button>
+              <IconButton label="품목 추가" icon="ri-add-line" onClick={addRequestItem} />
             </div>
 
             {/* 구매 요청 작성 입력 테이블 */}
@@ -290,19 +338,12 @@ export default function PurchaseRequestModal({ onClose }: PurchaseRequestItemPro
 
           {/* 버튼 */}
           <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer whitespace-nowrap"
-            >
-              취소
-            </button>
-            <button
+            <Button label="취소" variant="whiteOutline" onClick={onClose} />
+            <Button
+              label={isPending ? '제출 중...' : '구매 요청 제출'}
               type="submit"
-              className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap"
-            >
-              구매 요청 제출
-            </button>
+              disabled={isPending}
+            />
           </div>
         </form>
       </div>
