@@ -25,7 +25,7 @@ export interface Quote {
   quotationDate: string;
   dueDate: string;
   totalAmount: number;
-  statusLabel: QuoteStatus;
+  statusCode: QuoteStatus;
 }
 
 export interface QuoteFormItem {
