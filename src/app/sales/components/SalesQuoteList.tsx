@@ -6,12 +6,13 @@ import QuoteDetailModal from './QuoteDetailModal';
 import { useQuery } from '@tanstack/react-query';
 import { getQuoteList } from '@/app/sales/service';
 import { useDebounce } from 'use-debounce';
+import QuoteReviewModal from './QuoteReviewModal';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<QuoteStatus>('ALL');
   const [showQuoteModal, setShowQuoteModal] = useState(false);
-  const [showNewQuoteModal, setShowNewQuoteModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
   const [selectedQuotes, setSelectedQuotes] = useState<number[]>([]);
 
   const [selectedQuoteId, setSelectedQuoteId] = useState<number>(0);
@@ -231,7 +232,7 @@ const SalesQuoteList = () => {
           </div>
 
           <button
-            onClick={() => setShowNewQuoteModal(true)}
+            onClick={() => setShowReviewModal(true)}
             className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"
           >
             <i className="ri-add-line"></i>
@@ -413,6 +414,13 @@ const SalesQuoteList = () => {
           $selectedQuoteId={selectedQuoteId}
           $getStatusColor={getStatusColor}
           $getStatusText={getStatusText}
+        />
+
+        <QuoteReviewModal
+          $isOpen={showReviewModal}
+          $onClose={() => {
+            setShowReviewModal(false);
+          }}
         />
       </div>
     </div>
