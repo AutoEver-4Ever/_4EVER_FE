@@ -18,6 +18,7 @@ const CustomerList = () => {
   const [selectedCustomerId, setSelectedCustomerId] = useState<number>(0);
   const [showCustomerModal, setShowCustomerModal] = useState(false);
   const [debouncedSearchTerm] = useDebounce(searchTerm, 200);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleCustomerRegisterClick = () => {
     setShowCustomerModal(true);
@@ -29,12 +30,12 @@ const CustomerList = () => {
 
   const queryParams = useMemo(
     () => ({
-      page: 0,
-      size: 10,
+      page: currentPage - 1,
+      size: 8,
       status: statusFilter || 'ALL',
       keyword: debouncedSearchTerm || '',
     }),
-    [statusFilter, debouncedSearchTerm],
+    [currentPage, statusFilter, debouncedSearchTerm],
   );
   const {
     data: customerRes,
@@ -58,6 +59,34 @@ const CustomerList = () => {
   const handleEditClick = (customer: CustomerDetail) => {
     setEditFormData({ ...customer });
     setShowEditModal(true);
+  };
+
+  const totalPages = pageInfo?.totalPages ?? 1;
+
+  const maxVisible = 5;
+
+  const getPageRange = () => {
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      const start = Math.max(1, currentPage - 2);
+      const end = Math.min(totalPages, start + maxVisible - 1);
+
+      if (start > 1) {
+        pages.push(1);
+        if (start > 2) pages.push('...');
+      }
+
+      for (let i = start; i <= end; i++) pages.push(i);
+
+      if (end < totalPages) {
+        if (end < totalPages - 1) pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+    return pages;
   };
   return (
     <div className="bg-white rounded-lg border border-gray-200 mt-6">
@@ -202,31 +231,48 @@ const CustomerList = () => {
             <div className="text-sm text-gray-700">
               총 <span className="font-medium">{pageInfo?.totalElements}</span>명의 고객
             </div>
-            <div className="flex items-center space-x-2">
-              <button className="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
-                이전
-              </button>
-              {Array.from({ length: pageInfo?.totalPages || 1 }, (_, index) => (
-                <button
-                  key={index}
-                  className={`px-3 py-1 rounded-md text-sm cursor-pointer ${
-                    pageInfo?.number === index
-                      ? 'bg-blue-600 text-white'
-                      : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-                  }`}
-                >
-                  {index + 1}
-                </button>
-              ))}
 
+            <div className="flex justify-center items-center space-x-2 mt-6">
               <button
-                disabled={pageInfo?.hasNext}
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => prev - 1)}
                 className={`px-3 py-1 border rounded-md text-sm transition-colors ${
-                  !pageInfo?.hasNext
+                  currentPage === 1
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
                 }`}
-                // className="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
+              >
+                이전
+              </button>
+
+              {getPageRange().map((p, index) =>
+                p === '...' ? (
+                  <span key={index} className="px-2 text-gray-400">
+                    ...
+                  </span>
+                ) : (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentPage(p as number)}
+                    className={`px-3 py-1 rounded-md text-sm ${
+                      currentPage === p
+                        ? 'bg-blue-600 text-white'
+                        : 'border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ),
+              )}
+
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((prev) => prev + 1)}
+                className={`px-3 py-1 border rounded-md text-sm transition-colors ${
+                  currentPage === totalPages
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
+                }`}
               >
                 다음
               </button>
