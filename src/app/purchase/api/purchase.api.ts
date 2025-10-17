@@ -86,6 +86,22 @@ export const fetchPurchaseReqList = async (
   return res.data.data;
 };
 
+// 구매 요청 승인
+export const postApporvePurchaseReq = async (poId: number) => {
+  const res = await axios.post<ApiResponse<null>>(
+    `${API_BASE_URL}${PURCHASE_ENDPOINTS.PURCHASE_ORDER_APPROVE(poId)}`,
+  );
+  return res.data;
+};
+
+// 구매 요청 반려
+export const postRejectPurchaseReq = async (poId: number) => {
+  const res = await axios.post<ApiResponse<null>>(
+    `${API_BASE_URL}${PURCHASE_ENDPOINTS.PURCHASE_ORDER_REJECT(poId)}`,
+  );
+  return res.data;
+};
+
 // 구매 요청 상세정보
 export const fetchPurchaseReqDetail = async (
   purchaseId: number,
@@ -150,7 +166,7 @@ export const fetchSupplierList = async (
   const { page = 0, size = 10, category, status, searchKeyword } = params;
 
   const res = await axios.get<ApiResponse<SupplierListResponse>>(
-    `${API_BASE_URL}${PURCHASE_ENDPOINTS.VENDORS}`,
+    `${API_BASE_URL}${PURCHASE_ENDPOINTS.SUPPLIER}`,
     {
       params: {
         page,
@@ -167,7 +183,7 @@ export const fetchSupplierList = async (
 // 공급업체 상세정보
 export const fetchSupplierDetail = async (supplierId: number): Promise<SupplierDetailResponse> => {
   const res = await axios.get<ApiResponse<SupplierDetailResponse>>(
-    `${API_BASE_URL}${PURCHASE_ENDPOINTS.VENDOR_DETAIL(supplierId)}`,
+    `${API_BASE_URL}${PURCHASE_ENDPOINTS.SUPPLIER_DETAIL(supplierId)}`,
   );
 
   // console.log(res.data.data);

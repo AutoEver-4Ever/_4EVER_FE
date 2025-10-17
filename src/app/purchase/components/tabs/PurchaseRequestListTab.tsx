@@ -1,10 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import PurchaseRequestModal from '@/app/purchase/components/modals/PurchaseRequestModal';
 import PurchaseRequestDetailModal from '@/app/purchase/components/modals/PurchaseRequestDetailModal';
-import { fetchPurchaseReqList } from '@/app/purchase/api/purchase.api';
+import {
+  fetchPurchaseReqList,
+  postApporvePurchaseReq,
+  postRejectPurchaseReq,
+} from '@/app/purchase/api/purchase.api';
 import { PURCHASE_LIST_TABLE_HEADERS, PURCHASE_REQ_STATUS } from '@/app/purchase/constants';
 import IconButton from '@/app/components/common/IconButton';
 import Dropdown from '@/app/components/common/Dropdown';
@@ -48,6 +52,8 @@ export default function PurchaseRequestListTab() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
+  const queryClient = useQueryClient();
+
   // React Query로 요청 목록 가져오기
   const {
     data: requestData,
@@ -63,6 +69,30 @@ export default function PurchaseRequestListTab() {
         createdFrom: startDate,
         createdTo: endDate,
       }),
+  });
+
+  // 승인 mutation
+  const { mutate: approvePurchaseRequest } = useMutation({
+    mutationFn: (poId: number) => postApporvePurchaseReq(poId),
+    onSuccess: () => {
+      alert('승인 완료되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['purchaseRequest'] }); // 목록 새로고침
+    },
+    onError: (error) => {
+      alert(`승인 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+
+  // 반려 mutation
+  const { mutate: rejectpurchaseRequest } = useMutation({
+    mutationFn: (poId: number) => postRejectPurchaseReq(poId),
+    onSuccess: () => {
+      alert('반려 처리되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['purchaseReqeust"'] });
+    },
+    onError: (error) => {
+      alert(`승인 중 오류가 발생했습니다. ${error}`);
+    },
   });
 
   if (isLoading) return <p>불러오는 중...</p>;
@@ -108,6 +138,18 @@ export default function PurchaseRequestListTab() {
   const handleCloseDetail = () => {
     setShowDetailModal(false);
     setSelectedRequestId(-1);
+  };
+
+  const handleApprove = (poId: number) => {
+    if (confirm('해당 요청을 승인하시겠습니까?')) {
+      approvePurchaseRequest(poId);
+    }
+  };
+
+  const handleReject = (poId: number) => {
+    if (confirm('해당 요청을 반려하시겠습니까?')) {
+      rejectpurchaseRequest(poId);
+    }
   };
 
   return (
@@ -174,13 +216,31 @@ export default function PurchaseRequestListTab() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">
-                    <button
-                      onClick={() => handleViewDetail(request)}
-                      className="w-8 h-8 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded cursor-pointer"
-                      title="상세보기"
-                    >
-                      <i className="ri-eye-line"></i>
-                    </button>
+                    <div className="flex items-center justify-center space-x-2">
+                      <button
+                        onClick={() => handleViewDetail(request)}
+                        className="w-8 h-8 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded cursor-pointer"
+                        title="상세보기"
+                      >
+                        <i className="ri-eye-line"></i>
+                      </button>
+                      <>
+                        <button
+                          onClick={() => handleApprove(request.id)}
+                          className="text-green-600 hover:text-green-900 cursor-pointer"
+                          title="승인"
+                        >
+                          <i className="ri-check-line"></i>
+                        </button>
+                        <button
+                          onClick={() => handleReject(request.id)}
+                          className="text-red-600 hover:text-red-900 cursor-pointer"
+                          title="반려"
+                        >
+                          <i className="ri-close-line"></i>
+                        </button>
+                      </>
+                    </div>
                   </td>
                 </tr>
               ))}

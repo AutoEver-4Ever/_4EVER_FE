@@ -50,7 +50,6 @@ export default function PurchaseRequestModal({ onClose }: PurchaseRequestItemPro
     },
 
     onError: (error) => {
-      console.log('구매 요청 실패, ', error);
       alert(`구매 요청 중 오류가 발생했습니다. ${error}`);
     },
   });
@@ -113,22 +112,6 @@ export default function PurchaseRequestModal({ onClose }: PurchaseRequestItemPro
       return;
     }
 
-    // alert(`총 ${requestItems.length}개 품목의 구매 요청이 성공적으로 제출되었습니다.`);
-    // onClose();
-    // setRequestItems([
-    //   {
-    //     id: '1',
-    //     itemName: '',
-    //     quantity: '',
-    //     unit: '',
-    //     estimatedPrice: '',
-    //     supplier: '',
-    //     dueDate: '',
-    //     purpose: '',
-    //     notes: '',
-    //   },
-    // ]);
-    // API 요청 데이터 구성 (실제 API 스펙에 맞게 수정 필요)
     const purchaseRequestData: PurchaseRequestPayload = {
       requesterId: 1,
       items: requestItems.map((item) => ({
