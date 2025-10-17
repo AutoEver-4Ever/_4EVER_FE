@@ -68,7 +68,7 @@ const QuoteDetailModal = ({
 
             <div className="space-y-6">
               {/* 견적서 헤더 */}
-              <div className="bg-blue-50 rounded-lg p-6">
+              <div className="bg-white rounded-lg p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900 mb-4">견적 정보</h4>
@@ -134,13 +134,13 @@ const QuoteDetailModal = ({
                     </thead>
                     <tbody>
                       <tr className="border-b">
-                        <td className="px-4 py-3 text-sm">{data!.items.productName}</td>
-                        <td className="px-4 py-3 text-sm text-center">{data!.items.quantity}</td>
+                        <td className="px-4 py-3 text-sm">{data!.items[0].productName}</td>
+                        <td className="px-4 py-3 text-sm text-center">{data!.items[0].quantity}</td>
                         <td className="px-4 py-3 text-sm text-right">
-                          ₩{data!.items.unitPrice.toLocaleString()}
+                          ₩{data!.items[0].unitPrice.toLocaleString()}
                         </td>
                         <td className="px-4 py-3 text-sm text-right">
-                          ₩{data!.items.amount.toLocaleString()}
+                          ₩{data!.items[0].amount.toLocaleString()}
                         </td>
                       </tr>
                       {/* <tr className="border-b">

@@ -1,94 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import CustomerDetailModal from '@/app/sales/components/CustomerDetailModal';
 import NewCustomerModal from '@/app/sales/components/NewCustomerModal';
-import { SalesCustomerDetailType } from '@/app/sales/types/SalesCustomerDetailType';
-import { SalesCustomerListType } from '@/app/sales/types/SalesCustomerListType';
+import { CustomerQueryParams } from '@/app/sales/types/SalesCustomerListType';
 import CustomerEditModal from './CustomerEditModal';
+import { useQuery } from '@tanstack/react-query';
+import { getCustomerList } from '../service';
+import { useDebounce } from 'use-debounce';
+import { CustomerDetail } from '../types/SalesCustomerDetailType';
+
+type statusType = 'ALL' | 'ACTIVE' | 'DEACTIVE';
 const CustomerList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState<'전체' | '활성' | '비활성'>('전체');
+  const [statusFilter, setStatusFilter] = useState<statusType>('ALL');
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [selectedCustomerId, setSelectedCustomerId] = useState('');
+  const [selectedCustomerId, setSelectedCustomerId] = useState<number>(0);
   const [showCustomerModal, setShowCustomerModal] = useState(false);
-  const [customers, setCustomers] = useState<SalesCustomerListType[]>([
-    {
-      id: 'C-001',
-      name: '삼성전자',
-      manager: {
-        name: '김철수',
-        email: 'kim@samsung.com',
-        mobile: '010-1234-5678',
-      },
-      address: '서울시 강남구 테헤란로 123',
-      dealInfo: {
-        totalOrders: 45,
-        totalAmount: '₩1,250,000,000',
-      },
-      status: '활성',
-    },
-    {
-      id: 'C-002',
-      name: 'LG화학',
-      manager: {
-        name: '박영희',
-        email: 'park@lgchem.com',
-        mobile: '010-2345-6789',
-      },
-      address: '서울시 영등포구 여의도동 456',
-      dealInfo: {
-        totalOrders: 32,
-        totalAmount: '₩890,000,000',
-      },
-      status: '활성',
-    },
-    {
-      id: 'C-003',
-      name: '현대자동차',
-      manager: {
-        name: '이민수',
-        email: 'lee@hyundai.com',
-        mobile: '010-3456-7890',
-      },
-      address: '서울시 서초구 양재동 789',
-      dealInfo: {
-        totalOrders: 28,
-        totalAmount: '₩720,000,000',
-      },
-      status: '활성',
-    },
-    {
-      id: 'C-004',
-      name: '대한철강',
-      manager: {
-        name: '최정호',
-        email: 'choi@dksteel.com',
-        mobile: '010-4567-8901',
-      },
-      address: '경기도 안산시 단원구 123',
-      dealInfo: {
-        totalOrders: 18,
-        totalAmount: '₩420,000,000',
-      },
-      status: '활성',
-    },
-    {
-      id: 'C-005',
-      name: '한국금속',
-      manager: {
-        name: '김수진',
-        email: 'kim@kmetal.com',
-        mobile: '010-5678-9012',
-      },
-      address: '인천시 남동구 구월동 456',
-      dealInfo: {
-        totalOrders: 12,
-        totalAmount: '₩180,000,000',
-      },
-      status: '비활성',
-    },
-  ]);
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 200);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const handleCustomerRegisterClick = () => {
     setShowCustomerModal(true);
   };
@@ -97,27 +28,65 @@ const CustomerList = () => {
     return status === '활성' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
   };
 
-  const filteredCustomers = customers.filter((customer) => {
-    const matchesSearch =
-      customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.manager.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.id.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesStatus = selectedStatus === '전체' ? true : customer.status === selectedStatus;
-
-    return matchesSearch && matchesStatus;
+  const queryParams = useMemo(
+    () => ({
+      page: currentPage - 1,
+      size: 10,
+      status: statusFilter || 'ALL',
+      keyword: debouncedSearchTerm || '',
+    }),
+    [currentPage, statusFilter, debouncedSearchTerm],
+  );
+  const {
+    data: customerRes,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['customerList', queryParams],
+    queryFn: ({ queryKey }) => getCustomerList(queryKey[1] as CustomerQueryParams),
   });
 
-  const handleViewClick = (id: string) => {
+  const customers = customerRes?.data ?? [];
+  const pageInfo = customerRes?.pageData;
+
+  const handleViewClick = (id: number) => {
     setSelectedCustomerId(id);
     setShowDetailModal(true);
   };
 
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editFormData, setEditFormData] = useState<SalesCustomerDetailType | null>(null);
-  const handleEditClick = (customer: SalesCustomerDetailType) => {
+  const [editFormData, setEditFormData] = useState<CustomerDetail | null>(null);
+  const handleEditClick = (customer: CustomerDetail) => {
     setEditFormData({ ...customer });
     setShowEditModal(true);
+  };
+
+  const totalPages = pageInfo?.totalPages ?? 1;
+
+  const maxVisible = 5;
+
+  const getPageRange = () => {
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      const start = Math.max(1, currentPage - 2);
+      const end = Math.min(totalPages, start + maxVisible - 1);
+
+      if (start > 1) {
+        pages.push(1);
+        if (start > 2) pages.push('...');
+      }
+
+      for (let i = start; i <= end; i++) pages.push(i);
+
+      if (end < totalPages) {
+        if (end < totalPages - 1) pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+    return pages;
   };
   return (
     <div className="bg-white rounded-lg border border-gray-200 mt-6">
@@ -150,13 +119,13 @@ const CustomerList = () => {
           </div>
           <div className="flex items-center space-x-2">
             <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value as '전체' | '활성' | '비활성')}
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as statusType)}
               className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
             >
-              <option value="전체">전체</option>
-              <option value="활성">활성</option>
-              <option value="비활성">비활성</option>
+              <option value="ALL">전체</option>
+              <option value="ACTIVE">활성</option>
+              <option value="DEACTIVE">비활성</option>
             </select>
           </div>
         </div>
@@ -164,103 +133,153 @@ const CustomerList = () => {
 
       {/* 테이블 */}
       <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                고객정보
-              </th>
+        {isError ? (
+          <div className="flex flex-col items-center justify-center h-64 space-y-3 text-red-600">
+            <i className="ri-error-warning-line text-4xl" />
+            <p className="font-medium">고객 목록을 불러오는 중 오류가 발생했습니다.</p>
+          </div>
+        ) : isLoading ? (
+          <div className="flex flex-col items-center justify-center h-64 space-y-3">
+            <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <p className="text-gray-600 text-sm font-medium">고객 목록을 불러오는 중입니다...</p>
+          </div>
+        ) : (
+          <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  고객정보
+                </th>
 
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                연락처
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                주소
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                거래실적
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                상태
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                작업
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filteredCustomers.map((customer) => (
-              <tr key={customer.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">{customer.name}</div>
-                      <div className="text-xs text-gray-500">{customer.id}</div>
-                    </div>
-                  </div>
-                </td>
-
-                <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900">{customer.manager.name}</div>
-                  <div className="text-xs text-gray-500">{customer.manager.mobile}</div>
-                  <div className="text-xs text-gray-500">{customer.manager.email}</div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900 max-w-xs truncate">{customer.address}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">
-                    {customer.dealInfo.totalAmount}
-                  </div>
-                  <div className="text-xs text-gray-500">{customer.dealInfo.totalOrders}건</div>
-                </td>
-
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(customer.status)}`}
-                  >
-                    {customer.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => handleViewClick(customer.id)}
-                      className="text-blue-600 hover:text-blue-800 cursor-pointer"
-                      title="상세보기"
-                    >
-                      <i className="ri-eye-line"></i>
-                    </button>
-                  </div>
-                </td>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  연락처
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  주소
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  거래실적
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  상태
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  작업
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {customers.map((customer) => (
+                <tr key={customer.customerId} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {customer.companyName}
+                        </div>
+                        <div className="text-xs text-gray-500">{customer.customerCode}</div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900">{customer.contactPerson}</div>
+                    <div className="text-xs text-gray-500">{customer.phone}</div>
+                    <div className="text-xs text-gray-500">{customer.email}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900 max-w-xs truncate">
+                      {customer.address}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">
+                      ₩{customer.transactionAmount.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-gray-500">{customer.orderCount}건</div>
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(customer.status)}`}
+                    >
+                      {customer.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleViewClick(customer.customerId)}
+                        className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                        title="상세보기"
+                      >
+                        <i className="ri-eye-line"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* 페이지네이션 */}
-      <div className="px-6 py-4 border-t border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-700">
-            총 <span className="font-medium">{filteredCustomers.length}</span>명의 고객
-          </div>
-          <div className="flex items-center space-x-2">
-            <button className="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
-              이전
-            </button>
-            <button className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm cursor-pointer">
-              1
-            </button>
-            <button className="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
-              2
-            </button>
-            <button className="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
-              다음
-            </button>
+      {isError || isLoading ? null : (
+        <div className="px-6 py-4 border-t border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-700">
+              총 <span className="font-medium">{pageInfo?.totalElements}</span>명의 고객
+            </div>
+
+            <div className="flex justify-center items-center space-x-2 mt-6">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => prev - 1)}
+                className={`px-3 py-1 border rounded-md text-sm transition-colors ${
+                  currentPage === 1
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
+                }`}
+              >
+                이전
+              </button>
+
+              {getPageRange().map((p, index) =>
+                p === '...' ? (
+                  <span key={index} className="px-2 text-gray-400">
+                    ...
+                  </span>
+                ) : (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentPage(p as number)}
+                    className={`px-3 py-1 rounded-md text-sm ${
+                      currentPage === p
+                        ? 'bg-blue-600 text-white'
+                        : 'border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ),
+              )}
+
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((prev) => prev + 1)}
+                className={`px-3 py-1 border rounded-md text-sm transition-colors ${
+                  currentPage === totalPages
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
+                }`}
+              >
+                다음
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* 고객 상세보기 모달 */}
       <CustomerDetailModal

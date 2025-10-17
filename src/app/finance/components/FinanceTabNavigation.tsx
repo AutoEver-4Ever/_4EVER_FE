@@ -1,22 +1,18 @@
 'use client';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import SalesOrderList from '@/app/sales/components/SalesOrderList';
-import SalesCustomerList from '@/app/sales/components/SalesCustomerList';
-import SalesChart from '@/app/sales/components/SalesChart';
-import SalesQuoteList from '@/app/sales/components/SalesQuoteList';
+// import ArVoucherList from './ArVoucherList';
+import VoucherList from './VoucherList';
 
-const SalesTabNavigation = () => {
+const FinanceTabNavigation = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialTab = searchParams.get('tab') || 'quotes';
+  const initialTab = searchParams.get('purchase') || 'sales';
   const [activeTab, setActiveTab] = useState(initialTab);
 
   const tabs = [
-    { id: 'quotes', name: '견적 관리', icon: 'ri-file-text-line' },
-    { id: 'orders', name: '주문 관리', icon: 'ri-shopping-cart-line' },
-    { id: 'customers', name: '고객 관리', icon: 'ri-user-3-line' },
-    { id: 'analytics', name: '매출 분석', icon: 'ri-bar-chart-line' },
+    { id: 'sales', name: '매출 전표 관리', icon: 'ri-money-dollar-circle-line' },
+    { id: 'purchase', name: '매입 전표 관리', icon: 'ri-shopping-cart-line' },
   ];
 
   const handleClick = (tabId: string) => {
@@ -26,7 +22,7 @@ const SalesTabNavigation = () => {
     router.replace(`?${params.toString()}`, { scroll: false });
   };
   return (
-    <div className="mb-6 mt-6">
+    <div className="mt-8 mb-6">
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           {tabs.map((tab) => (
@@ -46,14 +42,12 @@ const SalesTabNavigation = () => {
         </nav>
       </div>
 
-      <div className="space-y-6">
-        {activeTab === 'quotes' && <SalesQuoteList />}
-        {activeTab === 'orders' && <SalesOrderList />}
-        {activeTab === 'customers' && <SalesCustomerList />}
-        {activeTab === 'analytics' && <SalesChart />}
+      <div className="space-y-8">
+        {/* {activeTab === 'sales' && <VoucherList />} */}
+        {/* {activeTab === 'purchase' && <VoucherList />} */}
+        <VoucherList />
       </div>
     </div>
   );
 };
-
-export default SalesTabNavigation;
+export default FinanceTabNavigation;

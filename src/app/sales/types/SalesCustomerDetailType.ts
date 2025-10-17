@@ -1,12 +1,14 @@
-export interface SalesCustomerDetailType {
-  id: string;
-  name: string;
-  ceo: string;
+export interface CustomerDetail {
+  customerId: number;
+  customerCode: string;
+  companyName: string;
   businessNumber: string;
-  status: string;
-  dealInfo: DealInfo;
-  manager: Manager;
+  ceoName: string;
+  statusCode: string;
   contact: Contact;
+  manager: Manager;
+  transaction: Transaction;
+  note: string;
 }
 
 export interface Contact {
@@ -17,12 +19,11 @@ export interface Contact {
 
 export interface Manager {
   name: string;
-  email: string;
   mobile: string;
+  email: string;
 }
 
-export interface DealInfo {
-  totalOrders: string;
-  totalAmount: string;
-  notes: string;
+export interface Transaction {
+  totalOrders: number;
+  totalAmount: number;
 }
