@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { TabNavigationProps } from '@/app/purchase/types/TabNavigationType';
+import { TabNavigationProps } from '@/app/(private)/purchase/types/TabNavigationType';
 
 export default function TabNavigation({ tabs }: TabNavigationProps) {
   const router = useRouter();
