@@ -11,7 +11,11 @@ import {
   PurchaseReqDetailResponse,
   PurchaseReqListResponse,
 } from '@/app/purchase/types/PurchaseReqType';
-import { SupplierDetailResponse, SupplierListResponse } from '@/app/purchase/types/SupplierType';
+import {
+  CreateSupplierRequest,
+  SupplierDetailResponse,
+  SupplierListResponse,
+} from '@/app/purchase/types/SupplierType';
 
 interface PaginationParams {
   page?: number;
@@ -204,4 +208,15 @@ export const fetchSupplierDetail = async (supplierId: number): Promise<SupplierD
 
   // console.log(res.data.data);
   return res.data.data;
+};
+
+// 공급업체 등록
+export const createSupplyRequest = async (
+  data: CreateSupplierRequest,
+): Promise<ApiResponse<null>> => {
+  const res = await axios.post<ApiResponse<null>>(
+    `${API_BASE_URL}${PURCHASE_ENDPOINTS.SUPPLIER}`,
+    data,
+  );
+  return res.data;
 };

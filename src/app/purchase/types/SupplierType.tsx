@@ -1,17 +1,25 @@
-import { Material } from '@/app/purchase/types/MaterialType';
 import { Page } from '@/types/Page';
 import { SupplierStatus } from '@/app/purchase/constants';
 
-export interface SupplierRequest {
-  id: string;
-  name: string;
-  category: string;
-  managerName: string;
-  managerPhone: string;
-  email: string;
-  deliveryDays: string;
-  address: string;
-  materials: Material[];
+// 자재 정보
+export interface Material {
+  materialName: string; // 제품명
+  uomCode: string; // 단위
+  unitPrice: number; // 단가
+}
+
+// 공급업체 입력
+export interface CreateSupplierRequest {
+  supplierInfo: {
+    supplierName: string;
+    supplierEmail: string;
+    supplierBaseAddress: string;
+    supplierDetailAddress?: string | null;
+    category: string;
+    deliveryLeadTime: number;
+  };
+  managerInfo: ManagerInfo;
+  materialList: Material[];
 }
 
 // 공급업체 정보

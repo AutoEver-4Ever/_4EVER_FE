@@ -42,6 +42,7 @@ export default function Dropdown<T extends string = string>({
     <div ref={dropdownRef} className={`relative inline-block ${className}`}>
       {/* 버튼 */}
       <button
+        type="button"
         onClick={() => setOpen(!open)}
         className="pl-4 pr-1.5 py-1.5 bg-white text-gray-700 border border-gray-400 text-sm rounded-lg font-medium focus:outline-none transition hover:bg-gray-100 cursor-pointer"
       >

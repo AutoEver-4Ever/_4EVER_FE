@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import SupplierAddModal from '@/app/purchase/components/modals/SupplierAddModal';
 import SupplierDetailModal from '@/app/purchase/components/modals/SupplierDetailModal';
-import { SupplierInfo, SupplierListResponse } from '@/app/purchase/types/SupplierType';
+import { SupplierListResponse } from '@/app/purchase/types/SupplierType';
 import IconButton from '@/app/components/common/IconButton';
 import { fetchSupplierList } from '@/app/purchase/api/purchase.api';
 import Dropdown from '@/app/components/common/Dropdown';
@@ -86,15 +86,6 @@ export default function SupplierListTab() {
     setShowSupplierDetailModal(false);
     setSelectedSupplierId('');
   };
-
-  // const handleAddSupplier = async (newSupplierData: Partial<SupplierResponse>) => {
-  //   // TODO: 실제 API 호출로 공급업체 등록
-  //   // await createSupplier(newSupplierData);
-
-  //   setShowAddSupplierModal(false);
-  //   refetch();
-  //   alert('공급업체가 성공적으로 등록되었습니다.');
-  // };
 
   const getStatusBadge = (status: string) => {
     const baseClasses = 'px-2 py-1 rounded-full text-xs font-medium';
@@ -283,13 +274,7 @@ export default function SupplierListTab() {
         )}
       </div>
 
-      {/* {showAddSupplierModal && (
-        <SupplierAddModal
-          onClose={() => setShowAddSupplierModal(false)}
-          onAddSupplier={handleAddSupplier}
-          categories={categories}
-        />
-      )} */}
+      {showAddSupplierModal && <SupplierAddModal onClose={() => setShowAddSupplierModal(false)} />}
 
       {showSupplierDetailModal && (
         <SupplierDetailModal
