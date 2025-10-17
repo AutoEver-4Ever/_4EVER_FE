@@ -75,9 +75,9 @@ export default function SupplierAddModal({ onClose }: AddSupplierModalProps) {
     setMaterialList([
       ...materialList,
       {
-        productName: '',
-        unit: '',
-        unitPrice: '',
+        materialName: '',
+        uomCode: '',
+        unitPrice: 0,
       },
     ]);
   };
@@ -150,7 +150,7 @@ export default function SupplierAddModal({ onClose }: AddSupplierModalProps) {
   };
 
   const filledMaterialCount = materialList.filter(
-    (m) => m.productName && m.unit && m.unitPrice,
+    (m) => m.materialName && m.uomCode && m.unitPrice,
   ).length;
 
   return (
