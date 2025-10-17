@@ -6,10 +6,11 @@ module.exports = {
       // type + optional scope + subject + required trailing issue number in parentheses
       // e.g. "feat(scope): subject (#123)"
       // subject는 소문자/숫자/공백/일부 구두점/한글만 허용(대문자 차단)
-      headerPattern: /^(feat|fix|refac|test|chore|docs)(?:\(([a-z0-9_-]+)\))?: ([a-z0-9 가-힣_\-,:()\[\]]+) \(#\d+\)$/u,
+      headerPattern:
+        /^(feat|fix|refac|test|chore|docs)(?:\(([a-z0-9_-]+)\))?: ([a-z0-9 가-힣_\-,:()\[\]]+) \(#\d+\)$/u,
       headerPatternFlags: 'u',
-      headerCorrespondence: ['type', 'scope', 'subject']
-    }
+      headerCorrespondence: ['type', 'scope', 'subject'],
+    },
   },
   rules: {
     'header-max-length': [2, 'always', 72],
@@ -22,6 +23,6 @@ module.exports = {
     'subject-max-length': [2, 'always', 50],
     'subject-full-stop': [2, 'never', '.'],
     // 허용 타입을 명시(프로젝트 사용 패턴 반영)
-    'type-enum': [2, 'always', ['feat', 'fix', 'refac', 'test', 'chore', 'docs']]
-  }
+    'type-enum': [2, 'always', ['feat', 'fix', 'refac', 'test', 'chore', 'docs']],
+  },
 };

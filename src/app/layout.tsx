@@ -29,10 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable}`}>
-        <Header />
-        <Providers>
-          <main className="pt-16 min-h-screen bg-gray-50">{children}</main>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -58,4 +58,3 @@ module.exports = (report) => {
     return `❌ 커밋 메시지 포맷터 오류: ${e.message}\n`;
   }
 };
-
