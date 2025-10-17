@@ -87,17 +87,17 @@ export const fetchPurchaseReqList = async (
 };
 
 // 구매 요청 승인
-export const postApporvePurchaseReq = async (poId: number) => {
+export const postApporvePurchaseReq = async (prId: number) => {
   const res = await axios.post<ApiResponse<null>>(
-    `${API_BASE_URL}${PURCHASE_ENDPOINTS.PURCHASE_ORDER_APPROVE(poId)}`,
+    `${API_BASE_URL}${PURCHASE_ENDPOINTS.PURCHASE_REQUISITION_RELEASE(prId)}`,
   );
   return res.data;
 };
 
 // 구매 요청 반려
-export const postRejectPurchaseReq = async (poId: number) => {
+export const postRejectPurchaseReq = async (prId: number) => {
   const res = await axios.post<ApiResponse<null>>(
-    `${API_BASE_URL}${PURCHASE_ENDPOINTS.PURCHASE_ORDER_REJECT(poId)}`,
+    `${API_BASE_URL}${PURCHASE_ENDPOINTS.PURCHASE_REQUISITION_REJECT(prId)}`,
   );
   return res.data;
 };
@@ -145,6 +145,22 @@ export const fetchPurchaseOrderList = async (
   );
   // console.log(res.data.data);
   return res.data.data;
+};
+
+// 발주서 승인
+export const postApprovePurchaseOrder = async (poId: number) => {
+  const res = await axios.post<ApiResponse<null>>(
+    `${API_BASE_URL}${PURCHASE_ENDPOINTS.PURCHASE_ORDER_APPROVE(poId)}`,
+  );
+  return res.data;
+};
+
+// 발주서 반려
+export const postRejectPurchaseOrder = async (poId: number) => {
+  const res = await axios.post<ApiResponse<null>>(
+    `${API_BASE_URL}${PURCHASE_ENDPOINTS.PURCHASE_ORDER_REJECT(poId)}`,
+  );
+  return res.data;
 };
 
 // 발주서 상세정보

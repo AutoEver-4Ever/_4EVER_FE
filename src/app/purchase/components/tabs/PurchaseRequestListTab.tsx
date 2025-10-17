@@ -14,6 +14,7 @@ import IconButton from '@/app/components/common/IconButton';
 import Dropdown from '@/app/components/common/Dropdown';
 import { PurchaseReqListResponse, PurchaseReqResponse } from '@/app/purchase/types/PurchaseReqType';
 import DateRangePicker from '@/app/components/common/DateRangePicker';
+import { getQueryClient } from '@/lib/queryClient';
 
 const getStatusColor = (status: string): string => {
   switch (status) {
@@ -52,7 +53,7 @@ export default function PurchaseRequestListTab() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  const queryClient = useQueryClient();
+  const queryClient = getQueryClient();
 
   // React Query로 요청 목록 가져오기
   const {
@@ -73,25 +74,25 @@ export default function PurchaseRequestListTab() {
 
   // 승인 mutation
   const { mutate: approvePurchaseRequest } = useMutation({
-    mutationFn: (poId: number) => postApporvePurchaseReq(poId),
+    mutationFn: (prId: number) => postApporvePurchaseReq(prId),
     onSuccess: () => {
-      alert('승인 완료되었습니다.');
+      alert('구매 요청 승인 완료되었습니다.');
       queryClient.invalidateQueries({ queryKey: ['purchaseRequest'] }); // 목록 새로고침
     },
     onError: (error) => {
-      alert(`승인 중 오류가 발생했습니다. ${error}`);
+      alert(`구매 요청 승인 중 오류가 발생했습니다. ${error}`);
     },
   });
 
   // 반려 mutation
   const { mutate: rejectpurchaseRequest } = useMutation({
-    mutationFn: (poId: number) => postRejectPurchaseReq(poId),
+    mutationFn: (prId: number) => postRejectPurchaseReq(prId),
     onSuccess: () => {
       alert('반려 처리되었습니다.');
       queryClient.invalidateQueries({ queryKey: ['purchaseReqeust"'] });
     },
     onError: (error) => {
-      alert(`승인 중 오류가 발생했습니다. ${error}`);
+      alert(`반려 중 오류가 발생했습니다. ${error}`);
     },
   });
 
@@ -140,15 +141,15 @@ export default function PurchaseRequestListTab() {
     setSelectedRequestId(-1);
   };
 
-  const handleApprove = (poId: number) => {
+  const handleApprove = (prId: number) => {
     if (confirm('해당 요청을 승인하시겠습니까?')) {
-      approvePurchaseRequest(poId);
+      approvePurchaseRequest(prId);
     }
   };
 
-  const handleReject = (poId: number) => {
+  const handleReject = (prId: number) => {
     if (confirm('해당 요청을 반려하시겠습니까?')) {
-      rejectpurchaseRequest(poId);
+      rejectpurchaseRequest(prId);
     }
   };
 

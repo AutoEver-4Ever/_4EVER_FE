@@ -172,7 +172,12 @@ export default function PurchaseRequestModal({ onClose }: PurchaseRequestItemPro
           <div>
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-lg font-semibold text-gray-900">구매 품목 목록</h4>
-              <IconButton label="품목 추가" icon="ri-add-line" onClick={addRequestItem} />
+              <IconButton
+                type="button"
+                label="품목 추가"
+                icon="ri-add-line"
+                onClick={addRequestItem}
+              />
             </div>
 
             {/* 구매 요청 작성 입력 테이블 */}

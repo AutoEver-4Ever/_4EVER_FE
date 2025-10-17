@@ -4,11 +4,16 @@ import { useState } from 'react';
 import PurchaseOrderDetailModal from '@/app/purchase/components/modals/PurchaseOrderDetailModal';
 import PurchaseOrderTable from '@/app/purchase/components/sections/PurchaseOrderTableSection';
 import { PurchaseOrder } from '@/app/purchase/types/PurchaseOrderType';
-import { useQuery } from '@tanstack/react-query';
-import { fetchPurchaseOrderList } from '../../api/purchase.api';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  fetchPurchaseOrderList,
+  postApprovePurchaseOrder,
+  postRejectPurchaseOrder,
+} from '@/app/purchase/api/purchase.api';
 import { PURCHASE_ORDER_STATUS, PurchaseOrderStatus } from '@/app/purchase/constants';
 import Dropdown from '@/app/components/common/Dropdown';
 import DateRangePicker from '@/app/components/common/DateRangePicker';
+import { getQueryClient } from '@/lib/queryClient';
 
 type SortField = 'orderDate' | 'deliveryDate' | '';
 type SortDirection = 'asc' | 'desc';
@@ -47,6 +52,8 @@ export default function PurchaseOrderListTab() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
+  const queryClient = getQueryClient();
+
   const {
     data: orderData,
     isLoading,
@@ -61,22 +68,46 @@ export default function PurchaseOrderListTab() {
       }),
   });
 
+  // 승인 mutation
+  const { mutate: approvePurchaseOrder } = useMutation({
+    mutationFn: (poId: number) => postApprovePurchaseOrder(poId),
+    onSuccess: () => {
+      alert('발주서 승인 완료되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['purchase-order-detail'] });
+    },
+    onError: (error) => {
+      alert(`발주서 승인 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+
+  const { mutate: rejectPurhcaseOrder } = useMutation({
+    mutationFn: (poId: number) => postRejectPurchaseOrder(poId),
+    onSuccess: () => {
+      alert('반려 처리되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['purchaseReqeust"'] });
+    },
+    onError: (error) => {
+      alert(`반려 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+
   if (isLoading) return <p>불러오는 중...</p>;
   if (isError || !orderData) return <p>데이터를 불러오지 못했습니다.</p>;
 
   const orders = orderData.content || [];
   const pageInfo = orderData.page;
 
-  // 발주서 승인 핸들러
-  const handleApprove = (orderId: number): void => {
-    alert('발주서가 승인되었습니다.');
+  const handleApprove = (poId: number) => {
+    if (confirm('해당 요청을 승인하시겠습니까?')) {
+      approvePurchaseOrder(poId);
+    }
   };
 
-  // 발주서 반려 핸들러
-  const handleReject = (orderId: number): void => {
-    alert('발주서가 반려되었습니다.');
+  const handleReject = (poId: number) => {
+    if (confirm('해당 요청을 반려하시겠습니까?')) {
+      rejectPurhcaseOrder(poId);
+    }
   };
-
   // 정렬 핸들러
   const handleSort = (field: SortField): void => {
     if (sortField === field) {
