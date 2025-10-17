@@ -2,11 +2,14 @@
 
 import { PURCHASE_ITEM_TABLE_HEADERS } from '@/app/purchase/constants';
 import { PurchaseRequestDetailModalProps } from '@/app/purchase/types/PurchaseRequestDetailModalType';
+import { useQuery } from '@tanstack/react-query';
+import { PurchaseReqDetailResponse } from '@/app/purchase/types/PurchaseReqType';
+import { fetchPurchaseReqDetail } from '../../api/purchase.api';
 
 // 상태별 색상
 const getStatusColor = (status: string): string => {
   switch (status) {
-    case 'approved': // 승인
+    case 'APPROVED': // 승인
       return 'bg-green-100 text-green-700';
     case 'pending':
       return 'bg-yellow-100 text-yellow-700';
@@ -36,12 +39,21 @@ const getStatusText = (status: string): string => {
 };
 
 export default function PurchaseRequestDetailModal({
-  isOpen,
-  request,
+  purchaseId,
   onClose,
 }: PurchaseRequestDetailModalProps) {
-  if (!isOpen || !request) return null;
+  const {
+    data: request,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<PurchaseReqDetailResponse>({
+    queryKey: ['purchase-req-detail'],
+    queryFn: () => fetchPurchaseReqDetail(purchaseId),
+  });
 
+  if (isLoading || !request) return <div>로딩 중...</div>;
+  if (isError) return <div>에러 발생: {error?.message}</div>;
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
@@ -58,15 +70,15 @@ export default function PurchaseRequestDetailModal({
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">요청번호</label>
-                <div className="text-lg font-semibold text-gray-900">{request.id}</div>
+                <div className="text-lg font-semibold text-gray-900">{request.prNumber}</div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">요청자</label>
-                <div className="text-gray-900">{request.requester}</div>
+                <div className="text-gray-900">{request.requesterName}</div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">부서</label>
-                <div className="text-gray-900">{request.department}</div>
+                <div className="text-gray-900">{request.departmentName}</div>
               </div>
             </div>
             <div className="space-y-4">
@@ -76,7 +88,7 @@ export default function PurchaseRequestDetailModal({
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">희망 납기일</label>
-                <div className="text-gray-900">{request.dueDate}</div>
+                <div className="text-gray-900">{request.desiredDeliveryDate}</div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
@@ -94,13 +106,13 @@ export default function PurchaseRequestDetailModal({
             <label className="block text-sm font-medium text-gray-700 mb-3">주문 자재 목록</label>
             <div className="overflow-x-auto">
               <table className="w-full border border-gray-300 rounded-lg">
-                {/* 테이블 헤더: 품목명, 수량, 단위, 단가 */}
+                {/* 테이블 헤더: 품목명, 수량, 단위, 단가, 금액 */}
                 <thead className="bg-gray-50">
                   <tr>
                     {PURCHASE_ITEM_TABLE_HEADERS.map((header) => (
                       <th
                         key={header}
-                        className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b border-gray-300"
+                        className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b border-gray-300"
                       >
                         {header}
                       </th>
@@ -110,21 +122,23 @@ export default function PurchaseRequestDetailModal({
                 {/* 테이블 바디 */}
                 <tbody>
                   {request.items.map((item, index) => (
-                    <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
-                      <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
+                    <tr
+                      key={index}
+                      className="border-b text-center border-gray-200 hover:bg-gray-50"
+                    >
+                      <td className="px-4 py-3 text-sm text-gray-900">{item.itemName}</td>
+                      <td className="px-4 py-3 text-sm text-gray-900">{item.uomCode}</td>
                       <td className="px-4 py-3 text-sm text-gray-900">{item.quantity}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900">{item.unit}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900">₩{item.price}</td>
+                      <td className="px-4 py-3 text-sm text-gray-900">₩{item.unitPrice}</td>
+                      <td className="px-4 py-3 text-sm text-gray-900">₩{item.amount}</td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot className="bg-gray-50">
-                  <tr>
-                    <td colSpan={3} className="px-4 py-3 text-right font-medium text-gray-900">
-                      총 금액
-                    </td>
-                    <td className="px-4 py-3 text-right font-medium text-green-600">
-                      {request.totalAmount}
+                  <tr className="text-center">
+                    <td colSpan={5} className="px-4 py-3 text-right font-medium">
+                      <span className="text-sm text-gray-700 pr-5">총 금액</span>
+                      <span className="text-xl text-green-600 pr-7">{request.totalAmount}</span>
                     </td>
                   </tr>
                 </tfoot>

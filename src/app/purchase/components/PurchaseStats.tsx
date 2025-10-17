@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { fetchPurchaseStats } from '@/app/purchase/api/purchase.api';
 import { mapPurchaseStatsToCards } from '@/app/purchase/services/purchase.service';
-import { Period } from '@/app/purchase/types/PurchaseStatsType';
+import { Period } from '@/app/purchase/constants';
 import { PURCHASE_STAT_PERIODS } from '@/app/purchase/constants';
 import SlidingNavBar from '@/app/components/common/SlidingNavBar';
 

@@ -1,7 +1,7 @@
-import { SupplierResponse } from '@/app/purchase/types/SupplierType';
+import { SupplierDetailResponse } from '@/app/purchase/types/SupplierType';
 
 interface ReadSupplierProps {
-  supplier: SupplierResponse;
+  supplier: SupplierDetailResponse;
   onClose: () => void;
   onEdit: () => void;
 }
@@ -15,6 +15,7 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
       : `${baseClasses} bg-red-100 text-red-800`;
   };
 
+  const { supplierInfo, managerInfo } = supplier;
   return (
     <>
       {/* 기본 정보 */}
@@ -24,21 +25,41 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <p className="text-sm text-gray-600 mb-1">업체 ID</p>
-              <p className="text-base font-medium text-gray-900">{supplier.id}</p>
+              <p className="text-base font-medium text-gray-900">{supplierInfo.supplierCode}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">업체명</p>
-              <p className="text-base font-medium text-gray-900">{supplier.name}</p>
+              <p className="text-base font-medium text-gray-900">{supplierInfo.supplierName}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">카테고리</p>
-              <p className="text-base font-medium text-gray-900">{supplier.category}</p>
+              <p className="text-base font-medium text-gray-900">{supplierInfo.category}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">상태</p>
-              <span className={getStatusBadge(supplier.status)}>
-                {getStatusText(supplier.status)}
+              <span className={getStatusBadge(supplierInfo.supplierStatus)}>
+                {getStatusText(supplierInfo.supplierStatus)}
               </span>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1">이메일</p>
+              <p className="text-base font-medium text-gray-900">{supplierInfo.supplierEmail}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1">연락처</p>
+              <p className="text-base font-medium text-gray-900">{supplierInfo.supplierPhone}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1">주소</p>
+              <p className="text-base font-medium text-gray-900">
+                {supplierInfo.supplierBaseAddress} {supplierInfo.supplierDetailAddress}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1">배송기간</p>
+              <p className="text-base font-medium text-gray-900">
+                {supplierInfo.deliveryLeadTime}일
+              </p>
             </div>
           </div>
         </div>
@@ -49,37 +70,22 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <p className="text-sm text-gray-600 mb-1">담당자명</p>
-              <p className="text-base font-medium text-gray-900">{supplier.managerName}</p>
+              <p className="text-base font-medium text-gray-900">{managerInfo.managerName}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">담당자 전화번호</p>
-              <p className="text-base font-medium text-gray-900">{supplier.managerPhone}</p>
+              <p className="text-base font-medium text-gray-900">{managerInfo.managerPhone}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">담당자 이메일</p>
               <p className="text-base font-medium text-gray-900 break-all">
-                {supplier.managerEmail}
+                {managerInfo.managerEmail}
               </p>
             </div>
           </div>
         </div>
 
-        {/* 배송 정보 */}
-        <div className="border-b border-gray-200 pb-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">배송 정보</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <p className="text-sm text-gray-600 mb-1">주소</p>
-              <p className="text-base font-medium text-gray-900">{supplier.address}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600 mb-1">배송 기간</p>
-              <p className="text-base font-medium text-gray-900">{supplier.deliveryDays}일</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 자재 목록 */}
+        {/* 자재 목록
         {supplier.materials && (
           <div>
             <h4 className="text-lg font-semibold text-gray-900 mb-4">자재 목록</h4>
@@ -87,7 +93,7 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
               <thead className="bg-gray-50">
                 <tr>
                   <th className="border px-3 py-2 text-left">제품명</th>
-                  <th className="border px-3 py-2 text-left">사양</th>
+                  <th className="border px-3 py-2 text-left">단위</th>
                   <th className="border px-3 py-2 text-left">단가</th>
                 </tr>
               </thead>
@@ -95,14 +101,14 @@ export default function SupplierTableSection({ supplier, onClose, onEdit }: Read
                 {supplier.materials.map((m) => (
                   <tr key={m.id} className="odd:bg-white even:bg-gray-50">
                     <td className="border px-3 py-2">{m.productName}</td>
-                    <td className="border px-3 py-2">{m.spec}</td>
+                    <td className="border px-3 py-2">{m.unit}</td>
                     <td className="border px-3 py-2">{m.unitPrice}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* 버튼 */}

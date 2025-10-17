@@ -1,19 +1,25 @@
 'use client';
 
 import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import PurchaseRequestModal from '@/app/purchase/components/modals/PurchaseRequestModal';
 import PurchaseRequestDetailModal from '@/app/purchase/components/modals/PurchaseRequestDetailModal';
-import { PurchaseRequestResult } from '@/app/purchase/types/PurchaseRequestResultType';
-import { PURCHASE_LIST_TABLE_HEADERS } from '@/app/purchase/constants';
+import {
+  fetchPurchaseReqList,
+  postApporvePurchaseReq,
+  postRejectPurchaseReq,
+} from '@/app/purchase/api/purchase.api';
+import { PURCHASE_LIST_TABLE_HEADERS, PURCHASE_REQ_STATUS } from '@/app/purchase/constants';
 import IconButton from '@/app/components/common/IconButton';
 import Dropdown from '@/app/components/common/Dropdown';
+import { PurchaseReqListResponse, PurchaseReqResponse } from '@/app/purchase/types/PurchaseReqType';
+import DateRangePicker from '@/app/components/common/DateRangePicker';
+import { getQueryClient } from '@/lib/queryClient';
 
 const getStatusColor = (status: string): string => {
   switch (status) {
-    case 'approved':
+    case 'APPROVED':
       return 'bg-green-100 text-green-700';
-    case 'pending':
-      return 'bg-yellow-100 text-yellow-700';
     case 'waiting':
       return 'bg-blue-100 text-blue-700';
     case 'rejected':
@@ -25,10 +31,8 @@ const getStatusColor = (status: string): string => {
 
 const getStatusText = (status: string): string => {
   switch (status) {
-    case 'approved':
+    case 'APPROVED':
       return '승인';
-    case 'pending':
-      return '대기';
     case 'waiting':
       return '대기';
     case 'rejected':
@@ -39,168 +43,147 @@ const getStatusText = (status: string): string => {
 };
 
 export default function PurchaseRequestListTab() {
-  const [selectedStatus, setSelectedStatus] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [selectedStatus, setSelectedStatus] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize] = useState(10);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState<PurchaseRequestResult | null>(null); // 선택된 구매 요청
+  const [selectedRequestId, setSelectedRequestId] = useState<number>(-1);
 
-  const [requests, setRequests] = useState<PurchaseRequestResult[]>([
-    {
-      id: 'PR-2024-001',
-      requester: '김철수',
-      department: '생산팀',
-      requestDate: '2024-01-15',
-      dueDate: '2024-01-25',
-      totalAmount: '₩2,500,000',
-      status: 'approved',
-      items: [
-        { name: '강판', quantity: '500', unit: 'EA', price: '5,000' },
-        { name: '볼트', quantity: '100', unit: 'EA', price: '500' },
-      ],
-    },
-    {
-      id: 'PR-2024-002',
-      requester: '이영희',
-      department: '품질팀',
-      requestDate: '2024-01-16',
-      dueDate: '2024-01-26',
-      totalAmount: '₩1,800,000',
-      status: 'pending',
-      items: [{ name: '알루미늄', quantity: '200', unit: 'EA', price: '9,000' }],
-    },
-    {
-      id: 'PR-2024-003',
-      requester: '박민수',
-      department: '조립팀',
-      requestDate: '2024-01-17',
-      dueDate: '2024-01-27',
-      totalAmount: '₩350,000',
-      status: 'waiting',
-      items: [{ name: '볼트', quantity: '1000', unit: 'EA', price: '350' }],
-    },
-    {
-      id: 'PR-2024-004',
-      requester: '최지영',
-      department: '용접팀',
-      requestDate: '2024-01-18',
-      dueDate: '2024-01-28',
-      totalAmount: '₩750,000',
-      status: 'rejected',
-      items: [{ name: '용접봉', quantity: '50', unit: '박스', price: '15,000' }],
-    },
-  ]);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
-  const filteredRequests =
-    selectedStatus === 'all'
-      ? requests
-      : requests.filter((request) => request.status === selectedStatus);
+  const queryClient = getQueryClient();
 
-  // 페이지네이션 계산
-  const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentRequests = filteredRequests.slice(startIndex, endIndex);
+  // React Query로 요청 목록 가져오기
+  const {
+    data: requestData,
+    isLoading,
+    isError,
+  } = useQuery<PurchaseReqListResponse>({
+    queryKey: ['purchaseRequests', currentPage, pageSize, selectedStatus, startDate, endDate],
+    queryFn: () =>
+      fetchPurchaseReqList({
+        page: currentPage,
+        size: pageSize,
+        status: selectedStatus || undefined,
+        createdFrom: startDate,
+        createdTo: endDate,
+      }),
+  });
+
+  // 승인 mutation
+  const { mutate: approvePurchaseRequest } = useMutation({
+    mutationFn: (prId: number) => postApporvePurchaseReq(prId),
+    onSuccess: () => {
+      alert('구매 요청 승인 완료되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['purchaseRequest'] }); // 목록 새로고침
+    },
+    onError: (error) => {
+      alert(`구매 요청 승인 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+
+  // 반려 mutation
+  const { mutate: rejectpurchaseRequest } = useMutation({
+    mutationFn: (prId: number) => postRejectPurchaseReq(prId),
+    onSuccess: () => {
+      alert('반려 처리되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['purchaseReqeust"'] });
+    },
+    onError: (error) => {
+      alert(`반려 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+
+  if (isLoading) return <p>불러오는 중...</p>;
+  if (isError || !requestData) return <p>데이터를 불러오지 못했습니다.</p>;
+
+  const requests = requestData.content || [];
+  const pageInfo = requestData.page;
+
+  const isFirstPage = currentPage === 0;
+  const isLastPage = pageInfo ? currentPage === pageInfo.totalPages - 1 : true;
+
+  const getStatusValue = (): string => {
+    const item = PURCHASE_REQ_STATUS.find((s) => s.key === selectedStatus);
+    return item?.value || '전체 상태';
+  };
+
+  const handleStatusChange = (status: string): void => {
+    setSelectedStatus(status);
+    setCurrentPage(0);
+  };
 
   const handlePageChange = (page: number): void => {
     setCurrentPage(page);
   };
 
   const handlePrevPage = (): void => {
-    if (currentPage > 1) {
+    if (pageInfo && currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
   };
 
   const handleNextPage = (): void => {
-    if (currentPage < totalPages) {
+    if (pageInfo && currentPage < pageInfo.totalPages - 1) {
       setCurrentPage(currentPage + 1);
     }
   };
 
-  const handleStatusChange = (status: string): void => {
-    setSelectedStatus(status);
-    setCurrentPage(1);
-  };
-
-  const handleApprove = (requestId: string): void => {
-    setRequests(
-      requests.map((request) =>
-        request.id === requestId ? { ...request, status: 'approved' } : request,
-      ),
-    );
-    alert('구매 요청이 승인되었습니다.');
-  };
-
-  const handleReject = (requestId: string): void => {
-    setRequests(
-      requests.map((request) =>
-        request.id === requestId ? { ...request, status: 'rejected' } : request,
-      ),
-    );
-    alert('구매 요청이 반려되었습니다.');
-  };
-
-  const handleViewDetail = (request: PurchaseRequestResult): void => {
-    setSelectedRequest(request);
+  const handleViewDetail = (request: PurchaseReqResponse): void => {
+    setSelectedRequestId(request.id);
     setShowDetailModal(true);
   };
 
-  const statusItems = [
-    { label: '전체 상태', value: 'all' },
-    { label: '대기', value: 'waiting' },
-    { label: '승인', value: 'approved' },
-    { label: '반려', value: 'rejected' },
-  ];
+  const handleCloseDetail = () => {
+    setShowDetailModal(false);
+    setSelectedRequestId(-1);
+  };
 
-  const getStatusLabel = (): string => {
-    const item = statusItems.find((s) => s.value === selectedStatus);
-    return item?.label || '전체 상태';
+  const handleApprove = (prId: number) => {
+    if (confirm('해당 요청을 승인하시겠습니까?')) {
+      approvePurchaseRequest(prId);
+    }
+  };
+
+  const handleReject = (prId: number) => {
+    if (confirm('해당 요청을 반려하시겠습니까?')) {
+      rejectpurchaseRequest(prId);
+    }
   };
 
   return (
     <>
-      <div className="bg-white rounded-lg border border-gray-200">
-        {/* 필터 */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">구매 요청 목록</h3>
-            <div className="flex items-center space-x-4">
-              {/* <select
-                value={selectedStatus}
-                onChange={(e) => handleStatusChange(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-8"
-              >
-                <option value="all">전체 상태</option>
-                <option value="waiting">대기</option>
-                <option value="approved">승인</option>
-                <option value="rejected">반려</option>
-              </select> */}
+      <div className="bg-white rounded-lg shadow">
+        {/* 필터 헤더 */}
+        <div className="p-6 border-b border-gray-200 flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-gray-900">구매 요청 목록</h3>
+          <div className="flex items-center space-x-4">
+            <DateRangePicker
+              startDate={startDate}
+              onStartDateChange={setStartDate}
+              endDate={endDate}
+              onEndDateChange={setEndDate}
+            />
+            <Dropdown
+              label={getStatusValue()}
+              items={PURCHASE_REQ_STATUS}
+              onChange={handleStatusChange}
+            />
 
-              <Dropdown
-                label={getStatusLabel()}
-                items={statusItems}
-                onChange={(value) => {
-                  setSelectedStatus(value);
-                  setCurrentPage(1);
-                }}
-              />
-
-              {/* 구매 요청 작성 버튼 */}
-              <IconButton
-                label=" 구매 요청 작성"
-                icon="ri-add-line"
-                onClick={() => setShowRequestModal(true)}
-              />
-            </div>
+            {/* 구매 요청 작성 버튼 */}
+            <IconButton
+              label="구매 요청 작성"
+              icon="ri-add-line"
+              onClick={() => setShowRequestModal(true)}
+            />
           </div>
         </div>
 
-        {/* 구매 품목 목록 테이블 */}
+        {/* 테이블 */}
         <div className="overflow-x-auto">
           <table className="w-full">
-            {/* 테이블 헤더: 요청번호, 요청자, 요청일, 총금액, 상태, 작업 */}
             <thead className="bg-gray-50">
               <tr>
                 {PURCHASE_LIST_TABLE_HEADERS.map((header) => (
@@ -213,133 +196,130 @@ export default function PurchaseRequestListTab() {
                 ))}
               </tr>
             </thead>
-            {/* 테이블 바디 */}
             <tbody className="bg-white divide-y divide-gray-200">
-              {currentRequests.map((request) => (
-                <tr
-                  key={request.id}
-                  className="hover:bg-gray-50 transition-colors duration-200 text-center"
-                >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{request.id}</div>
-                    <div className="text-sm text-gray-500">{request.department}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{request.requester}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {request.requestDate}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {request.dueDate}
-                  </td>
+              {requests.map((request) => (
+                <tr key={request.id} className="hover:bg-gray-50 text-center">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {request.totalAmount}
+                    <div className="flex flex-col">
+                      <span>{request.prNumber}</span>
+                      <span>{request.departmentName}</span>
+                    </div>
                   </td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{request.requesterName}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{request.requestDate}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{request.desiredDeliveryDate}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{request.totalAmount}원</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(request.status)}`}
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor('APPROVED')}`}
                     >
-                      {getStatusText(request.status)}
+                      {getStatusText('APPROVED')}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex justify-center items-center space-x-2">
-                      {/* 상세보기(눈 아이콘) */}
+                  <td className="px-6 py-4 text-sm text-gray-500">
+                    <div className="flex items-center justify-center space-x-2">
                       <button
                         onClick={() => handleViewDetail(request)}
-                        className="text-blue-600 hover:text-blue-900 cursor-pointer"
+                        className="w-8 h-8 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded cursor-pointer"
                         title="상세보기"
                       >
                         <i className="ri-eye-line"></i>
                       </button>
-                      {request.status === 'pending' || request.status === 'waiting' ? (
-                        <>
-                          {/* 승인(체크 아이콘) */}
-                          <button
-                            onClick={() => handleApprove(request.id)}
-                            className="text-green-600 hover:text-green-900 cursor-pointer"
-                            title="승인"
-                          >
-                            <i className="ri-check-line"></i>
-                          </button>
-                          {/* 반려(x 아이콘) */}
-                          <button
-                            onClick={() => handleReject(request.id)}
-                            className="text-red-600 hover:text-red-900 cursor-pointer"
-                            title="반려"
-                          >
-                            <i className="ri-close-line"></i>
-                          </button>
-                        </>
-                      ) : null}
+                      <>
+                        <button
+                          onClick={() => handleApprove(request.id)}
+                          className="text-green-600 hover:text-green-900 cursor-pointer"
+                          title="승인"
+                        >
+                          <i className="ri-check-line"></i>
+                        </button>
+                        <button
+                          onClick={() => handleReject(request.id)}
+                          className="text-red-600 hover:text-red-900 cursor-pointer"
+                          title="반려"
+                        >
+                          <i className="ri-close-line"></i>
+                        </button>
+                      </>
                     </div>
                   </td>
                 </tr>
               ))}
+              {requests.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500 text-sm">
+                    구매 요청이 없습니다.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
 
         {/* 페이지네이션 */}
-        <div className="px-6 py-4 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-700">
-              총 <span className="font-medium">{filteredRequests.length}</span>건 ({startIndex + 1}-
-              {Math.min(endIndex, filteredRequests.length)} 표시)
+        {pageInfo && (
+          <div className="p-6 flex items-center justify-between border-t border-gray-200">
+            <div className="text-sm text-gray-600">
+              총 {pageInfo.totalElements}건 ({pageInfo.size * currentPage + 1}-
+              {Math.min(pageInfo.size * (currentPage + 1), pageInfo.totalElements)} 표시)
             </div>
             <div className="flex items-center space-x-2">
               <button
                 onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className={`px-3 py-1 border border-gray-300 rounded-md text-sm cursor-pointer ${
-                  currentPage === 1
+                disabled={isFirstPage}
+                className={`px-3 py-1 border border-gray-300 rounded-lg text-sm ${
+                  isFirstPage
                     ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    : 'text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 이전
               </button>
 
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              {Array.from({ length: pageInfo.totalPages }, (_, i) => i).map((page) => (
                 <button
                   key={page}
                   onClick={() => handlePageChange(page)}
-                  className={`px-3 py-1 rounded-md text-sm cursor-pointer ${
+                  className={`px-3 py-1 rounded-lg text-sm font-medium ${
                     currentPage === page
                       ? 'bg-blue-600 text-white'
-                      : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                      : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
                   }`}
                 >
-                  {page}
+                  {page + 1}
                 </button>
               ))}
 
               <button
                 onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-                className={`px-3 py-1 border border-gray-300 rounded-md text-sm cursor-pointer ${
-                  currentPage === totalPages
+                disabled={isLastPage}
+                className={`px-3 py-1 border border-gray-300 rounded-lg text-sm ${
+                  isLastPage
                     ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    : 'text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 다음
               </button>
             </div>
           </div>
-        </div>
+        )}
       </div>
-
       {/* 구매 요청 작성 모달 */}
-      <PurchaseRequestModal isOpen={showRequestModal} onClose={() => setShowRequestModal(false)} />
+      {showRequestModal && (
+        <PurchaseRequestModal
+          onClose={() => setShowRequestModal(false)}
+          // onSubmit={() => {
+          //   setShowRequestModal(false);
+          //   refetch();
+          // }}
+        />
+      )}
 
-      {/* 구매 요청 상세 정보 모달 */}
-      <PurchaseRequestDetailModal
-        isOpen={showDetailModal}
-        request={selectedRequest}
-        onClose={() => setShowDetailModal(false)}
-      />
+      {/* 구매 요청 상세 모달 */}
+      {showDetailModal && (
+        <PurchaseRequestDetailModal purchaseId={selectedRequestId} onClose={handleCloseDetail} />
+      )}
     </>
   );
 }
