@@ -10,6 +10,7 @@ export default function Button({
   variant = 'primary',
   size = 'md',
   className,
+  ...props
 }: ButtonProps) {
   const base = 'rounded-lg font-semibold focus:outline-none transition cursor-pointer';
   const variants = {
@@ -18,12 +19,14 @@ export default function Button({
     outline: 'border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-50',
   };
   const sizes = {
-    sm: 'px-3 py-1 text-sm',
+    sm: 'px-3 py-1.5 text-sm',
     md: 'px-4 py-2 text-base',
     lg: 'px-5 py-3 text-lg',
   };
 
   return (
-    <button className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}>{label}</button>
+    <button className={`${base} ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
+      {label}
+    </button>
   );
 }
