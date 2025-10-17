@@ -1,7 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { CreateSupplierRequest, ManagerInfo, Material } from '@/app/(private)/purchase/types/SupplierType';
+import {
+  CreateSupplierRequest,
+  ManagerInfo,
+  Material,
+} from '@/app/(private)/purchase/types/SupplierType';
 import Button from '@/app/components/common/Button';
 import IconButton from '@/app/components/common/IconButton';
 import Dropdown from '@/app/components/common/Dropdown';

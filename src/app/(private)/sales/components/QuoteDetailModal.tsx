@@ -1,4 +1,7 @@
-import { QuoteDetailModalProps, QuoteDetail } from '@/app/(private)/sales/types/QuoteDetailModalType';
+import {
+  QuoteDetailModalProps,
+  QuoteDetail,
+} from '@/app/(private)/sales/types/QuoteDetailModalType';
 import { useQuery } from '@tanstack/react-query';
 import { getQuoteDetail } from '../service';
 import { useEffect, useState } from 'react';

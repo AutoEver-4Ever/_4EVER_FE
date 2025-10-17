@@ -1,7 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { CustomerData, NewCustomerModalProps } from '@/app/(private)/sales/types/NewCustomerModalType';
+import {
+  CustomerData,
+  NewCustomerModalProps,
+} from '@/app/(private)/sales/types/NewCustomerModalType';
 import { useMutation } from '@tanstack/react-query';
 import { postCustomer } from '@/app/(private)/sales/service';
 const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCustomerModalProps) => {

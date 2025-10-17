@@ -1,7 +1,11 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { QuoteStatus, Quote, QuoteQueryParams } from '@/app/(private)/sales/types/SalesQuoteListType';
+import {
+  QuoteStatus,
+  Quote,
+  QuoteQueryParams,
+} from '@/app/(private)/sales/types/SalesQuoteListType';
 import QuoteDetailModal from './QuoteDetailModal';
 import { useQuery } from '@tanstack/react-query';
 import { getQuoteList } from '@/app/(private)/sales/service';
