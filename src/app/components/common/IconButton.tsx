@@ -20,8 +20,9 @@ export default function IconButton({
     secondary: 'bg-gray-200 text-gray-600 hover:bg-gray-300',
     outline: 'border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-50',
   };
+
   const sizes = {
-    sm: 'px-3 py-0.5 text-sm',
+    sm: 'px-3 py-1.5 text-sm',
     md: 'px-4 py-1.5 text-base',
     lg: 'px-5 py-2.5 text-lg',
   };
