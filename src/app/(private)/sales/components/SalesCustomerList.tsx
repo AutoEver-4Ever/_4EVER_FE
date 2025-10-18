@@ -10,6 +10,7 @@ import { getCustomerList } from '../service';
 import { useDebounce } from 'use-debounce';
 import { CustomerDetail } from '../types/SalesCustomerDetailType';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
+import { CUSTOMER_LIST_TABLE_HEADERS } from '@/app/(private)/sales/constant';
 
 type statusType = 'ALL' | 'ACTIVE' | 'DEACTIVE';
 const CustomerList = () => {
@@ -148,25 +149,14 @@ const CustomerList = () => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  고객정보
-                </th>
-
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  연락처
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  주소
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  거래실적
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  상태
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  작업
-                </th>
+                {CUSTOMER_LIST_TABLE_HEADERS.map((header) => (
+                  <th
+                    key={header}
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">

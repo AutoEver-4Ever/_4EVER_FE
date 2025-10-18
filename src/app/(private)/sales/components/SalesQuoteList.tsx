@@ -12,6 +12,7 @@ import { getQuoteList } from '@/app/(private)/sales/service';
 import { useDebounce } from 'use-debounce';
 import QuoteReviewModal from './QuoteReviewModal';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
+import { QUOTE_LIST_TABLE_HEADERS } from '@/app/(private)/sales/constant';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -262,38 +263,25 @@ const SalesQuoteList = () => {
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left">
-                    <input
-                      type="checkbox"
-                      checked={selectedQuotes.length === quotes.length && quotes.length > 0}
-                      onChange={handleSelectAll}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    견적번호
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    고객명
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    담당자
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    견적일자
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    납기일
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    견적금액
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    상태
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    작업
-                  </th>
+                  {QUOTE_LIST_TABLE_HEADERS.map((header) =>
+                    header === '선택' ? (
+                      <th key={header} className="px-6 py-3 text-left">
+                        <input
+                          type="checkbox"
+                          checked={selectedQuotes.length === quotes.length && quotes.length > 0}
+                          onChange={handleSelectAll}
+                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        />
+                      </th>
+                    ) : (
+                      <th
+                        key={header}
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        {header}
+                      </th>
+                    ),
+                  )}
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
