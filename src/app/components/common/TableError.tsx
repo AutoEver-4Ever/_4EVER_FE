@@ -5,7 +5,7 @@ interface TableErrorProps {
   $message: string;
 }
 
-const TableLoading = ({ $isError, $message }: TableErrorProps) => {
+const TableError = ({ $isError, $message }: TableErrorProps) => {
   return (
     <>
       {$isError && (
@@ -18,4 +18,4 @@ const TableLoading = ({ $isError, $message }: TableErrorProps) => {
   );
 };
 
-export default TableLoading;
+export default TableError;
