@@ -2,8 +2,8 @@ export type Period = 'week' | 'month' | 'quarter' | 'year';
 
 // 각 지표의 기본 구조
 export interface Stat {
-  value: number;
-  delta_rate: number;
+  value: number; // 값
+  delta_rate: number; // 변화율
 }
 
 // 지표 api 응답 데이터 구조
