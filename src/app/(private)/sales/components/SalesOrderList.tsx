@@ -6,6 +6,8 @@ import { Order, OrderQueryParams } from '@/app/(private)/sales/types/SalesOrderL
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
 import { getOrderList } from '../service';
+import TableError from '@/app/components/common/TableError';
+import TableLoading from '@/app/components/common/TableLoading';
 
 type statusType =
   | 'ALL'
@@ -178,87 +180,77 @@ const SalesOrderList = () => {
 
       {/* 테이블 */}
       <div className="overflow-x-auto">
-        {isError ? (
-          <div className="flex flex-col items-center justify-center h-64 space-y-3 text-red-600">
-            <i className="ri-error-warning-line text-4xl" />
-            <p className="font-medium">고객 목록을 불러오는 중 오류가 발생했습니다.</p>
-          </div>
-        ) : isLoading ? (
-          <div className="flex flex-col items-center justify-center h-64 space-y-3">
-            <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-            <p className="text-gray-600 text-sm font-medium">고객 목록을 불러오는 중입니다...</p>
-          </div>
-        ) : (
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  주문번호
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  고객정보
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  주문일
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  납기일
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  주문금액
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  상태
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  작업
-                </th>
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                주문번호
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                고객정보
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                주문일
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                납기일
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                주문금액
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                상태
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                작업
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {orders.map((order) => (
+              <tr key={order.soId} className="hover:bg-gray-50 transition-colors duration-200">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">{order.soNumber}</div>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="text-sm font-medium text-gray-900">{order.customerName}</div>
+                  <div className="text-sm text-gray-500">
+                    {order.manager.managerName} · {order.manager.managerPhone}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {order.orderDate}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {order.deliveryDate}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  ₩{order.totalAmount.toLocaleString()}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span
+                    className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
+                      order.statusCode,
+                    )}`}
+                  >
+                    {getStatusText(order.statusCode)}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button
+                    onClick={() => handleViewOrder(order.soId)}
+                    className="text-blue-600 hover:text-blue-900 cursor-pointer"
+                    title="상세보기"
+                  >
+                    <i className="ri-eye-line"></i>
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {orders.map((order) => (
-                <tr key={order.soId} className="hover:bg-gray-50 transition-colors duration-200">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{order.soNumber}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">{order.customerName}</div>
-                    <div className="text-sm text-gray-500">
-                      {order.manager.managerName} · {order.manager.managerPhone}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {order.orderDate}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {order.deliveryDate}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    ₩{order.totalAmount.toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
-                        order.statusCode,
-                      )}`}
-                    >
-                      {getStatusText(order.statusCode)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button
-                      onClick={() => handleViewOrder(order.soId)}
-                      className="text-blue-600 hover:text-blue-900 cursor-pointer"
-                      title="상세보기"
-                    >
-                      <i className="ri-eye-line"></i>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+            ))}
+          </tbody>
+        </table>
+        <TableError $isError={isError} $message="고객 목록을 불러오는 중 오류가 발생했습니다." />
+        <TableLoading $isLoading={isLoading} $message="고객 목록을 불러오는 중입니다..." />
       </div>
       {/* 페이지네이션 */}
       {isError || isLoading ? null : (

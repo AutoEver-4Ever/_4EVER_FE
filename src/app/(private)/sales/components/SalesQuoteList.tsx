@@ -11,6 +11,8 @@ import { useQuery } from '@tanstack/react-query';
 import { getQuoteList } from '@/app/(private)/sales/service';
 import { useDebounce } from 'use-debounce';
 import QuoteReviewModal from './QuoteReviewModal';
+import TableError from '@/app/components/common/TableError';
+import TableLoading from '@/app/components/common/TableLoading';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -248,106 +250,99 @@ const SalesQuoteList = () => {
       {/* 견적 목록 */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="overflow-x-auto">
-          {isError ? (
-            <div className="flex flex-col items-center justify-center h-64 space-y-3 text-red-600">
-              <i className="ri-error-warning-line text-4xl" />
-              <p className="font-medium">견적서 목록을 불러오는 중 오류가 발생했습니다.</p>
-            </div>
-          ) : isLoading ? (
-            <div className="flex flex-col items-center justify-center h-64 space-y-3">
-              <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-              <p className="text-gray-600 text-sm font-medium">견적서를 불러오는 중입니다...</p>
-            </div>
-          ) : (
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left">
+          <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left">
+                  <input
+                    type="checkbox"
+                    checked={selectedQuotes.length === quotes.length && quotes.length > 0}
+                    onChange={handleSelectAll}
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  견적번호
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  고객명
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  담당자
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  견적일자
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  납기일
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  견적금액
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  상태
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  작업
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {quotes.map((quote) => (
+                <tr key={quote.quotationId} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <input
                       type="checkbox"
-                      checked={selectedQuotes.length === quotes.length && quotes.length > 0}
-                      onChange={handleSelectAll}
+                      checked={selectedQuotes.includes(quote.quotationId)}
+                      onChange={() => handleCheckboxChange(quote.quotationId)}
                       className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    견적번호
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    고객명
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    담당자
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    견적일자
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    납기일
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    견적금액
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    상태
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    작업
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {quotes.map((quote) => (
-                  <tr key={quote.quotationId} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <input
-                        type="checkbox"
-                        checked={selectedQuotes.includes(quote.quotationId)}
-                        onChange={() => handleCheckboxChange(quote.quotationId)}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {quote.quotationCode}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {quote.customerName}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {quote.ownerName}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {quote.quotationDate}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {quote.dueDate}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {quote.totalAmount.toLocaleString()}원
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(quote.statusCode)}`}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {quote.quotationCode}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {quote.customerName}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {quote.ownerName}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {quote.quotationDate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {quote.dueDate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {quote.totalAmount.toLocaleString()}원
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <span
+                      className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(quote.statusCode)}`}
+                    >
+                      {getStatusText(quote.statusCode)}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
+                    <div className="flex items-center justify-center space-x-2">
+                      <button
+                        onClick={() => handleViewQuote(quote)}
+                        className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                        title="상세보기"
                       >
-                        {getStatusText(quote.statusCode)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
-                      <div className="flex items-center justify-center space-x-2">
-                        <button
-                          onClick={() => handleViewQuote(quote)}
-                          className="text-blue-600 hover:text-blue-800 cursor-pointer"
-                          title="상세보기"
-                        >
-                          <i className="ri-eye-line"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+                        <i className="ri-eye-line"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <TableError
+            $isError={isError}
+            $message="견적서 목록을 불러오는 중 오류가 발생했습니다."
+          />
+          <TableLoading $isLoading={isLoading} $message="견적서를 불러오는 중입니다..." />
         </div>
         {/* 페이지네이션 */}
         {isError || isLoading ? null : (
