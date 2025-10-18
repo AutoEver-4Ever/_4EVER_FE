@@ -1,13 +1,13 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import CustomerDetailModal from '@/app/(private)/sales/components/CustomerDetailModal';
-import NewCustomerModal from '@/app/(private)/sales/components/NewCustomerModal';
+import CustomerDetailModal from '@/app/(private)/sales/components/modals/CustomerDetailModal';
+import NewCustomerModal from '@/app/(private)/sales/components/modals/NewCustomerModal';
 import {
   CustomerQueryParams,
   CustomerStatus,
 } from '@/app/(private)/sales/types/SalesCustomerListType';
-import CustomerEditModal from './CustomerEditModal';
+import CustomerEditModal from './modals/CustomerEditModal';
 import { useQuery } from '@tanstack/react-query';
 import { getCustomerList } from '../service';
 import { useDebounce } from 'use-debounce';

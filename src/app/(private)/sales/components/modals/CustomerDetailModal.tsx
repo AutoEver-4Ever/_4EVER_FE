@@ -4,7 +4,7 @@ import { CustomerDetailModalProps } from '@/app/(private)/sales/types/CustomerDe
 import { useEffect, useState } from 'react';
 import { CustomerDetail } from '@/app/(private)/sales/types/SalesCustomerDetailType';
 import CustomerEditModal from './CustomerEditModal';
-import { getCustomerDetail } from '../service';
+import { getCustomerDetail } from '../../service';
 import { useQuery } from '@tanstack/react-query';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
 

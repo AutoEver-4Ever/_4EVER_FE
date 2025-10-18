@@ -1,6 +1,6 @@
 'use client';
 
-import NewOrderModal from '@/app/(private)/sales/components/NewOrderModal';
+import NewOrderModal from '@/app/(private)/sales/components/modals/NewOrderModal';
 import Link from 'next/link';
 import { useState } from 'react';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import SalesOrderDetailModal from '@/app/(private)/sales/components/SalesOrderDetailModal';
+import SalesOrderDetailModal from '@/app/(private)/sales/components/modals/SalesOrderDetailModal';
 import {
   Order,
   OrderQueryParams,

@@ -61,3 +61,5 @@ export const CUSTOMER_LIST_TABLE_HEADERS = [
   '상태',
   '작업',
 ] as const;
+
+
