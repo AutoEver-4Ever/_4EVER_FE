@@ -9,8 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getCustomerList } from '../service';
 import { useDebounce } from 'use-debounce';
 import { CustomerDetail } from '../types/SalesCustomerDetailType';
-import TableError from '@/app/components/common/TableError';
-import TableLoading from '@/app/components/common/TableLoading';
+import TableStatusBox from '@/app/components/common/TableStatusBox';
 
 type statusType = 'ALL' | 'ACTIVE' | 'DEACTIVE';
 const CustomerList = () => {
@@ -90,6 +89,10 @@ const CustomerList = () => {
     }
     return pages;
   };
+
+  // if (isLoading)
+  //   return <TableStatusBox $type="loading" $message="고객 목록을 불러오는 중입니다..." />;
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 mt-6">
       {/* 헤더 */}
@@ -135,83 +138,91 @@ const CustomerList = () => {
 
       {/* 테이블 */}
       <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                고객정보
-              </th>
+        {isLoading ? (
+          <TableStatusBox $type="loading" $message="고객 목록을 불러오는 중입니다..." />
+        ) : isError ? (
+          <TableStatusBox $type="error" $message="고객 목록을 불러오는 중 오류가 발생했습니다." />
+        ) : !customers || customers.length === 0 ? (
+          <TableStatusBox $type="empty" $message="고객 정보가 없습니다." />
+        ) : (
+          <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  고객정보
+                </th>
 
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                연락처
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                주소
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                거래실적
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                상태
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                작업
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {customers.map((customer) => (
-              <tr key={customer.customerId} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">
-                        {customer.companyName}
-                      </div>
-                      <div className="text-xs text-gray-500">{customer.customerCode}</div>
-                    </div>
-                  </div>
-                </td>
-
-                <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900">{customer.contactPerson}</div>
-                  <div className="text-xs text-gray-500">{customer.phone}</div>
-                  <div className="text-xs text-gray-500">{customer.email}</div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900 max-w-xs truncate">{customer.address}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">
-                    ₩{customer.transactionAmount.toLocaleString()}
-                  </div>
-                  <div className="text-xs text-gray-500">{customer.orderCount}건</div>
-                </td>
-
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(customer.status)}`}
-                  >
-                    {customer.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => handleViewClick(customer.customerId)}
-                      className="text-blue-600 hover:text-blue-800 cursor-pointer"
-                      title="상세보기"
-                    >
-                      <i className="ri-eye-line"></i>
-                    </button>
-                  </div>
-                </td>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  연락처
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  주소
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  거래실적
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  상태
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  작업
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <TableError $isError={isError} $message="고객 목록을 불러오는 중 오류가 발생했습니다." />
-        <TableLoading $isLoading={isLoading} $message="고객 목록을 불러오는 중입니다..." />
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {customers.map((customer) => (
+                <tr key={customer.customerId} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {customer.companyName}
+                        </div>
+                        <div className="text-xs text-gray-500">{customer.customerCode}</div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900">{customer.contactPerson}</div>
+                    <div className="text-xs text-gray-500">{customer.phone}</div>
+                    <div className="text-xs text-gray-500">{customer.email}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900 max-w-xs truncate">
+                      {customer.address}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">
+                      ₩{customer.transactionAmount.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-gray-500">{customer.orderCount}건</div>
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(customer.status)}`}
+                    >
+                      {customer.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleViewClick(customer.customerId)}
+                        className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                        title="상세보기"
+                      >
+                        <i className="ri-eye-line"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* 페이지네이션 */}
