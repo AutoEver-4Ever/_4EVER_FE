@@ -1,3 +1,4 @@
+// 공통 api response
 export interface ApiResponse<T> {
   status: number;
   success: boolean;
