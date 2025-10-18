@@ -8,6 +8,7 @@ import {
 } from '@/app/(private)/sales/types/SalesQuoteListType';
 import { useState } from 'react';
 import { NewQuoteModalProps } from '@/app/(private)/sales/types/NewQuoteModalType';
+import { NEW_QUOTE_PRODUCT_TABLE_HEADERS } from '@/app/(private)/sales/constant';
 
 const NewQuoteModal = ({ $showNewQuoteModal, $setShowNewQuoteModal }: NewQuoteModalProps) => {
   const [newQuoteData, setNewQuoteData] = useState<QuoteFormData>({
@@ -247,24 +248,14 @@ const NewQuoteModal = ({ $showNewQuoteModal, $setShowNewQuoteModal }: NewQuoteMo
                     </colgroup>
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b border-gray-200 ">
-                          제품명
-                        </th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b border-gray-200 ">
-                          사양
-                        </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b border-gray-200 ">
-                          수량
-                        </th>
-                        <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b border-gray-200 ">
-                          단가
-                        </th>
-                        <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b border-gray-200 ">
-                          금액
-                        </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b border-gray-200 ">
-                          작업
-                        </th>
+                        {NEW_QUOTE_PRODUCT_TABLE_HEADERS.map((header) => (
+                          <th
+                            key={header}
+                            className="px-4 py-3 text-sm font-medium text-gray-700 border-b border-gray-200 text-center"
+                          >
+                            {header}
+                          </th>
+                        ))}
                       </tr>
                     </thead>
                     <tbody>

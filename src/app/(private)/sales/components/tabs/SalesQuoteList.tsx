@@ -1,17 +1,21 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   QuoteStatus,
   Quote,
   QuoteQueryParams,
 } from '@/app/(private)/sales/types/SalesQuoteListType';
-import QuoteDetailModal from './QuoteDetailModal';
+import QuoteDetailModal from '../modals/QuoteDetailModal';
 import { useQuery } from '@tanstack/react-query';
-import { getQuoteList } from '@/app/(private)/sales/service';
+import { getQuoteList } from '@/app/(private)/sales/sales.service';
 import { useDebounce } from 'use-debounce';
-import QuoteReviewModal from './QuoteReviewModal';
+import QuoteReviewModal from '../modals/QuoteReviewModal';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
+import { QUOTE_LIST_TABLE_HEADERS } from '@/app/(private)/sales/constant';
+import { QUOTE_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
+import { getQuoteStatusColor, getQuoteStatusText } from '../../utils';
+import Pagination from '@/app/components/common/Pagination';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -43,8 +47,6 @@ const SalesQuoteList = () => {
     data: quoteRes,
     isLoading,
     isError,
-    isFetching,
-    isRefetching,
   } = useQuery({
     queryKey: ['quoteList', queryParams],
     queryFn: ({ queryKey }) => getQuoteList(queryKey[1] as QuoteQueryParams),
@@ -53,80 +55,6 @@ const SalesQuoteList = () => {
 
   const quotes = quoteRes?.data ?? [];
   const pageInfo = quoteRes?.pageData;
-
-  useEffect(() => {
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'auto';
-    }
-
-    window.addEventListener('load', () => {
-      const savedY = sessionStorage.getItem('scrollY');
-      if (savedY) window.scrollTo(0, parseInt(savedY));
-    });
-
-    window.addEventListener('scroll', () => {
-      sessionStorage.setItem('scrollY', String(window.scrollY));
-    });
-
-    return () => {
-      window.removeEventListener('scroll', () => {});
-      window.removeEventListener('load', () => {});
-    };
-  }, []);
-
-  // useEffect(() => {
-  //   console.log(
-  //     `%c[Query 상태]%c isFetching=${isFetching}, isRefetching=${isRefetching}, isLoading=${isLoading}`,
-  //     'color: orange; font-weight: bold;',
-  //     'color: white; background: #222; padding: 2px 4px; border-radius: 3px;',
-  //   );
-  // }, [isFetching, isRefetching, isLoading]);
-
-  const getStatusColor = (status: QuoteStatus) => {
-    switch (status) {
-      case 'PENDING':
-        return 'bg-gray-100 text-gray-800';
-      case 'REVIEW':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'APPROVED':
-        return 'bg-green-100 text-green-800';
-      case 'ALL':
-        return 'bg-red-100 text-red-800';
-      case '승인':
-        return 'bg-green-100 text-green-800';
-      case '검토':
-        return 'bg-yellow-100 text-yellow-800';
-      case '대기':
-        return 'bg-gray-100 text-gray-800';
-      case '반려':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStatusText = (status: QuoteStatus) => {
-    switch (status) {
-      case 'PENDING':
-        return '대기';
-      case 'REVIEW':
-        return '검토';
-      case 'APPROVED':
-        return '승인';
-      case 'REJECTED':
-        return '반려';
-      case '승인':
-        return '승인';
-      case '검토':
-        return '검토';
-      case '대기':
-        return '대기';
-      case '반려':
-        return '반려';
-      default:
-        return status;
-    }
-  };
 
   const handleViewQuote = (quote: Quote) => {
     setSelectedQuoteId(quote.quotationId);
@@ -155,31 +83,6 @@ const SalesQuoteList = () => {
   };
 
   const totalPages = pageInfo?.totalPages ?? 1;
-
-  const maxVisible = 5;
-  const getPageRange = () => {
-    const pages: (number | string)[] = [];
-
-    if (totalPages <= maxVisible) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else {
-      const start = Math.max(1, currentPage - 2);
-      const end = Math.min(totalPages, start + maxVisible - 1);
-
-      if (start > 1) {
-        pages.push(1);
-        if (start > 2) pages.push('...');
-      }
-
-      for (let i = start; i <= end; i++) pages.push(i);
-
-      if (end < totalPages) {
-        if (end < totalPages - 1) pages.push('...');
-        pages.push(totalPages);
-      }
-    }
-    return pages;
-  };
 
   return (
     <div className="space-y-6 mt-6">
@@ -228,11 +131,11 @@ const SalesQuoteList = () => {
               }
               className="bg-white px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
             >
-              <option value="ALL">전체 상태</option>
-              <option value="PENDING">대기</option>
-              <option value="REVIEW">검토</option>
-              <option value="APPROVED">승인</option>
-              <option value="REJECTED">반려</option>
+              {QUOTE_STATUS_OPTIONS.map(({ key, value }) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -262,38 +165,25 @@ const SalesQuoteList = () => {
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left">
-                    <input
-                      type="checkbox"
-                      checked={selectedQuotes.length === quotes.length && quotes.length > 0}
-                      onChange={handleSelectAll}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    견적번호
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    고객명
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    담당자
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    견적일자
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    납기일
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    견적금액
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    상태
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    작업
-                  </th>
+                  {QUOTE_LIST_TABLE_HEADERS.map((header) =>
+                    header === '선택' ? (
+                      <th key={header} className="px-6 py-3 text-left">
+                        <input
+                          type="checkbox"
+                          checked={selectedQuotes.length === quotes.length && quotes.length > 0}
+                          onChange={handleSelectAll}
+                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        />
+                      </th>
+                    ) : (
+                      <th
+                        key={header}
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        {header}
+                      </th>
+                    ),
+                  )}
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -327,9 +217,9 @@ const SalesQuoteList = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <span
-                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(quote.statusCode)}`}
+                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getQuoteStatusColor(quote.statusCode)}`}
                       >
-                        {getStatusText(quote.statusCode)}
+                        {getQuoteStatusText(quote.statusCode)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
@@ -351,59 +241,12 @@ const SalesQuoteList = () => {
         </div>
         {/* 페이지네이션 */}
         {isError || isLoading ? null : (
-          <div className="px-6 py-4 border-t border-gray-200">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-700">
-                총 <span className="font-medium">{pageInfo?.totalElements}</span>명의 고객
-              </div>
-
-              <div className="flex justify-center items-center space-x-2 mt-6">
-                <button
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((prev) => prev - 1)}
-                  className={`px-3 py-1 border rounded-md text-sm transition-colors ${
-                    currentPage === 1
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
-                      : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
-                  }`}
-                >
-                  이전
-                </button>
-
-                {getPageRange().map((p, index) =>
-                  p === '...' ? (
-                    <span key={index} className="px-2 text-gray-400">
-                      ...
-                    </span>
-                  ) : (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentPage(p as number)}
-                      className={`px-3 py-1 rounded-md text-sm ${
-                        currentPage === p
-                          ? 'bg-blue-600 text-white'
-                          : 'border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  ),
-                )}
-
-                <button
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((prev) => prev + 1)}
-                  className={`px-3 py-1 border rounded-md text-sm transition-colors ${
-                    currentPage === totalPages
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
-                      : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
-                  }`}
-                >
-                  다음
-                </button>
-              </div>
-            </div>
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalElements={pageInfo?.totalElements}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         )}
 
         {/* 신규 견적서 작성 모달 */}
@@ -412,20 +255,22 @@ const SalesQuoteList = () => {
           $setShowNewQuoteModal={setShowNewQuoteModal}
         /> */}
         {/* 견적서 상세보기 모달 */}
-        <QuoteDetailModal
-          $showQuoteModal={showQuoteModal}
-          $setShowQuoteModal={setShowQuoteModal}
-          $selectedQuoteId={selectedQuoteId}
-          $getStatusColor={getStatusColor}
-          $getStatusText={getStatusText}
-        />
+        {showQuoteModal && (
+          <QuoteDetailModal
+            $onClose={() => {
+              setShowQuoteModal(false);
+            }}
+            $selectedQuoteId={selectedQuoteId}
+          />
+        )}
 
-        <QuoteReviewModal
-          $isOpen={showReviewModal}
-          $onClose={() => {
-            setShowReviewModal(false);
-          }}
-        />
+        {showReviewModal && (
+          <QuoteReviewModal
+            $onClose={() => {
+              setShowReviewModal(false);
+            }}
+          />
+        )}
       </div>
     </div>
   );

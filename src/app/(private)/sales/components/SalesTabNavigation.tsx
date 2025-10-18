@@ -1,10 +1,10 @@
 'use client';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import SalesOrderList from '@/app/(private)/sales/components/SalesOrderList';
-import SalesCustomerList from '@/app/(private)/sales/components/SalesCustomerList';
-import SalesChart from '@/app/(private)/sales/components/SalesChart';
-import SalesQuoteList from '@/app/(private)/sales/components/SalesQuoteList';
+import SalesOrderList from '@/app/(private)/sales/components/tabs/SalesOrderList';
+import SalesCustomerList from '@/app/(private)/sales/components/tabs/SalesCustomerList';
+import SalesChart from '@/app/(private)/sales/components/tabs/SalesChart';
+import SalesQuoteList from '@/app/(private)/sales/components/tabs/SalesQuoteList';
 
 const SalesTabNavigation = () => {
   const router = useRouter();

@@ -1,9 +1,8 @@
+import { OrderStatus } from '@/app/(private)/sales/types/SalesOrderListType';
+
 export interface SalesOrderDetailProps {
-  $showOrderDetailModal: boolean;
-  $setShowOrderDetailModal: (show: boolean) => void;
+  $onClose: () => void;
   $selectedOrderId: number;
-  $getStatusColor: (status: string) => string;
-  $getStatusText: (status: string) => string;
 }
 
 export interface OrderDetail {
@@ -12,7 +11,7 @@ export interface OrderDetail {
     soNumber: string;
     orderDate: string;
     deliveryDate: string;
-    statusCode: string;
+    statusCode: OrderStatus;
     totalAmount: number;
   };
   customer: {

@@ -1,26 +1,25 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import SalesOrderDetailModal from '@/app/(private)/sales/components/SalesOrderDetailModal';
-import { Order, OrderQueryParams } from '@/app/(private)/sales/types/SalesOrderListType';
+import SalesOrderDetailModal from '@/app/(private)/sales/components/modals/SalesOrderDetailModal';
+import {
+  Order,
+  OrderQueryParams,
+  OrderStatus,
+} from '@/app/(private)/sales/types/SalesOrderListType';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
-import { getOrderList } from '../service';
+import { getOrderList } from '../../sales.service';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
-
-type statusType =
-  | 'ALL'
-  | 'MATERIAL_PREPARATION'
-  | 'IN_PRODUCTION'
-  | 'READY_FOR_SHIPMENT'
-  | 'DELIVERING'
-  | 'DELIVERED';
+import { ORDER_LIST_TABLE_HEADERS, ORDER_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
+import { getOrderStatusText, getOrderStatusColor } from '@/app/(private)/sales/utils';
+import Pagination from '@/app/components/common/Pagination';
 
 const SalesOrderList = () => {
   const [showOrderDetailModal, setShowOrderDetailModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<statusType>('ALL');
+  const [statusFilter, setStatusFilter] = useState<OrderStatus>('ALL');
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -50,41 +49,6 @@ const SalesOrderList = () => {
   const orders = orderRes?.data ?? [];
   const pageInfo = orderRes?.pageData;
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'IN_PRODUCTION':
-        return 'bg-blue-100 text-blue-700';
-      case 'MATERIAL_PREPARATION':
-        return 'bg-green-100 text-green-700';
-      case 'READY_FOR_SHIPMENT':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'DELIVERING':
-        return 'bg-purple-100 text-purple-700';
-      case 'DELIVERED':
-        return 'bg-gray-100 text-gray-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'IN_PRODUCTION':
-        return '생산중';
-      case 'MATERIAL_PREPARATION':
-        return '자재 준비중';
-      case 'READY_FOR_SHIPMENT':
-        return '출하 준비 완료';
-      case 'DELIVERING':
-        return '배송중';
-      case 'DELIVERED':
-        return '배송완료';
-
-      default:
-        return status;
-    }
-  };
-
   const handleViewOrder = (id: number) => {
     setSelectedOrderId(id);
     setShowOrderDetailModal(true);
@@ -93,29 +57,6 @@ const SalesOrderList = () => {
   const totalPages = pageInfo?.totalPages ?? 1;
 
   const maxVisible = 5;
-  const getPageRange = () => {
-    const pages: (number | string)[] = [];
-
-    if (totalPages <= maxVisible) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else {
-      const start = Math.max(1, currentPage - 2);
-      const end = Math.min(totalPages, start + maxVisible - 1);
-
-      if (start > 1) {
-        pages.push(1);
-        if (start > 2) pages.push('...');
-      }
-
-      for (let i = start; i <= end; i++) pages.push(i);
-
-      if (end < totalPages) {
-        if (end < totalPages - 1) pages.push('...');
-        pages.push(totalPages);
-      }
-    }
-    return pages;
-  };
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 mt-6">
@@ -164,15 +105,15 @@ const SalesOrderList = () => {
           <select
             value={statusFilter}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              setStatusFilter(e.target.value as statusType)
+              setStatusFilter(e.target.value as OrderStatus)
             }
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-8"
           >
-            <option value="ALL">전체 상태</option>
-            <option value="IN_PRODUCTION">생산중</option>
-            <option value="READY_FOR_SHIPMENT">출하 준비 완료</option>
-            <option value="DELIVERING">배송중</option>
-            <option value="DELIVERED">배송완료</option>
+            {ORDER_STATUS_OPTIONS.map(({ key, value }) => (
+              <option key={key} value={key}>
+                {value}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -189,27 +130,14 @@ const SalesOrderList = () => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  주문번호
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  고객정보
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  주문일
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  납기일
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  주문금액
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  상태
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  작업
-                </th>
+                {ORDER_LIST_TABLE_HEADERS.map((header) => (
+                  <th
+                    key={header}
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -235,11 +163,11 @@ const SalesOrderList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
+                      className={`px-2 py-1 text-xs font-medium rounded-full ${getOrderStatusColor(
                         order.statusCode,
                       )}`}
                     >
-                      {getStatusText(order.statusCode)}
+                      {getOrderStatusText(order.statusCode)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -259,68 +187,21 @@ const SalesOrderList = () => {
       </div>
       {/* 페이지네이션 */}
       {isError || isLoading ? null : (
-        <div className="px-6 py-4 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-700">
-              총 <span className="font-medium">{pageInfo?.totalElements}</span>명의 고객
-            </div>
-
-            <div className="flex justify-center items-center space-x-2 mt-6">
-              <button
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((prev) => prev - 1)}
-                className={`px-3 py-1 border rounded-md text-sm transition-colors ${
-                  currentPage === 1
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
-                    : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
-                }`}
-              >
-                이전
-              </button>
-
-              {getPageRange().map((p, index) =>
-                p === '...' ? (
-                  <span key={index} className="px-2 text-gray-400">
-                    ...
-                  </span>
-                ) : (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentPage(p as number)}
-                    className={`px-3 py-1 rounded-md text-sm ${
-                      currentPage === p
-                        ? 'bg-blue-600 text-white'
-                        : 'border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
-                    }`}
-                  >
-                    {p}
-                  </button>
-                ),
-              )}
-
-              <button
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((prev) => prev + 1)}
-                className={`px-3 py-1 border rounded-md text-sm transition-colors ${
-                  currentPage === totalPages
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
-                    : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
-                }`}
-              >
-                다음
-              </button>
-            </div>
-          </div>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalElements={pageInfo?.totalElements}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       )}
-
-      <SalesOrderDetailModal
-        $showOrderDetailModal={showOrderDetailModal}
-        $setShowOrderDetailModal={setShowOrderDetailModal}
-        $selectedOrderId={selectedOrderId}
-        $getStatusColor={getStatusColor}
-        $getStatusText={getStatusText}
-      />
+      {showOrderDetailModal && (
+        <SalesOrderDetailModal
+          $onClose={() => {
+            setShowOrderDetailModal(false);
+          }}
+          $selectedOrderId={selectedOrderId}
+        />
+      )}
     </div>
   );
 };

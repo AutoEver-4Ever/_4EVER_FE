@@ -47,6 +47,5 @@ export interface CreateCustomerResponse {
 }
 
 export interface NewCustomerModalProps {
-  $showCustomerModal: boolean;
-  $setShowCustomerModal: React.Dispatch<React.SetStateAction<boolean>>;
+  $onClose: () => void;
 }

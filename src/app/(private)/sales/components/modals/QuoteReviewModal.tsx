@@ -2,37 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { INVENTORY_NEED_TABLE_HEADERS } from '@/app/(private)/sales/constant';
+import {
+  InventoryItem,
+  Quote,
+  QuoteReviewModalProps,
+  StockCheckResult,
+} from '@/app/(private)/sales/types/QuoteReviewModalType';
 
-interface Quote {
-  id: string;
-  customer: string;
-  contact: string;
-  date: string;
-  deliveryDate: string;
-  amount: number;
-  status: string;
-}
-
-interface InventoryItem {
-  product: string;
-  currentStock: number;
-  requiredStock: number;
-  available: boolean;
-}
-
-interface StockCheckResult {
-  hasStock: boolean;
-  items: InventoryItem[];
-  checkDate: string;
-  deliveryPossible: boolean;
-}
-
-interface QuoteReviewModalProps {
-  $isOpen: boolean;
-  $onClose: () => void;
-}
-
-const QuoteReviewModal = ({ $isOpen, $onClose }: QuoteReviewModalProps) => {
+const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
   const [isChecking, setIsChecking] = useState(false);
   const [stockCheckResult, setStockCheckResult] = useState<StockCheckResult | null>(null);
 
@@ -75,8 +53,6 @@ const QuoteReviewModal = ({ $isOpen, $onClose }: QuoteReviewModalProps) => {
     );
     $onClose();
   };
-
-  if (!$isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -194,18 +170,14 @@ const QuoteReviewModal = ({ $isOpen, $onClose }: QuoteReviewModalProps) => {
                   <table className="w-full border border-gray-300 rounded-lg">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
-                          제품명
-                        </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
-                          필요 수량
-                        </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
-                          현재 재고
-                        </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
-                          상태
-                        </th>
+                        {INVENTORY_NEED_TABLE_HEADERS.map((header) => (
+                          <th
+                            key={header}
+                            className="px-4 py-3 text-sm font-medium text-gray-700 border-b text-center"
+                          >
+                            {header}
+                          </th>
+                        ))}
                       </tr>
                     </thead>
                     <tbody>

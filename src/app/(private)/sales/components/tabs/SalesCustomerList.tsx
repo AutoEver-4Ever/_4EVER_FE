@@ -1,20 +1,28 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import CustomerDetailModal from '@/app/(private)/sales/components/CustomerDetailModal';
-import NewCustomerModal from '@/app/(private)/sales/components/NewCustomerModal';
-import { CustomerQueryParams } from '@/app/(private)/sales/types/SalesCustomerListType';
-import CustomerEditModal from './CustomerEditModal';
+import CustomerDetailModal from '@/app/(private)/sales/components/modals/CustomerDetailModal';
+import NewCustomerModal from '@/app/(private)/sales/components/modals/NewCustomerModal';
+import {
+  CustomerQueryParams,
+  CustomerStatus,
+} from '@/app/(private)/sales/types/SalesCustomerListType';
+import CustomerEditModal from '../modals/CustomerEditModal';
 import { useQuery } from '@tanstack/react-query';
-import { getCustomerList } from '../service';
+import { getCustomerList } from '../../sales.service';
 import { useDebounce } from 'use-debounce';
-import { CustomerDetail } from '../types/SalesCustomerDetailType';
+import { CustomerDetail } from '../../types/SalesCustomerDetailType';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
+import {
+  CUSTOMER_LIST_TABLE_HEADERS,
+  CUSTOMER_STATUS_OPTIONS,
+} from '@/app/(private)/sales/constant';
+import { getCustomerStatusColor } from '@/app/(private)/sales/utils';
+import Pagination from '@/app/components/common/Pagination';
 
-type statusType = 'ALL' | 'ACTIVE' | 'DEACTIVE';
 const CustomerList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<statusType>('ALL');
+  const [statusFilter, setStatusFilter] = useState<CustomerStatus>('ALL');
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState<number>(0);
   const [showCustomerModal, setShowCustomerModal] = useState(false);
@@ -23,10 +31,6 @@ const CustomerList = () => {
 
   const handleCustomerRegisterClick = () => {
     setShowCustomerModal(true);
-  };
-
-  const getStatusColor = (status: string) => {
-    return status === '활성' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
   };
 
   const queryParams = useMemo(
@@ -64,35 +68,6 @@ const CustomerList = () => {
 
   const totalPages = pageInfo?.totalPages ?? 1;
 
-  const maxVisible = 5;
-
-  const getPageRange = () => {
-    const pages: (number | string)[] = [];
-
-    if (totalPages <= maxVisible) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else {
-      const start = Math.max(1, currentPage - 2);
-      const end = Math.min(totalPages, start + maxVisible - 1);
-
-      if (start > 1) {
-        pages.push(1);
-        if (start > 2) pages.push('...');
-      }
-
-      for (let i = start; i <= end; i++) pages.push(i);
-
-      if (end < totalPages) {
-        if (end < totalPages - 1) pages.push('...');
-        pages.push(totalPages);
-      }
-    }
-    return pages;
-  };
-
-  // if (isLoading)
-  //   return <TableStatusBox $type="loading" $message="고객 목록을 불러오는 중입니다..." />;
-
   return (
     <div className="bg-white rounded-lg border border-gray-200 mt-6">
       {/* 헤더 */}
@@ -125,12 +100,16 @@ const CustomerList = () => {
           <div className="flex items-center space-x-2">
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as statusType)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setStatusFilter(e.target.value as CustomerStatus)
+              }
               className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
             >
-              <option value="ALL">전체</option>
-              <option value="ACTIVE">활성</option>
-              <option value="DEACTIVE">비활성</option>
+              {CUSTOMER_STATUS_OPTIONS.map(({ key, value }) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -148,25 +127,14 @@ const CustomerList = () => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  고객정보
-                </th>
-
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  연락처
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  주소
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  거래실적
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  상태
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  작업
-                </th>
+                {CUSTOMER_LIST_TABLE_HEADERS.map((header) => (
+                  <th
+                    key={header}
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -202,7 +170,7 @@ const CustomerList = () => {
 
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(customer.status)}`}
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getCustomerStatusColor(customer.status)}`}
                     >
                       {customer.status}
                     </span>
@@ -227,84 +195,36 @@ const CustomerList = () => {
 
       {/* 페이지네이션 */}
       {isError || isLoading ? null : (
-        <div className="px-6 py-4 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-700">
-              총 <span className="font-medium">{pageInfo?.totalElements}</span>명의 고객
-            </div>
-
-            <div className="flex justify-center items-center space-x-2 mt-6">
-              <button
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((prev) => prev - 1)}
-                className={`px-3 py-1 border rounded-md text-sm transition-colors ${
-                  currentPage === 1
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
-                    : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
-                }`}
-              >
-                이전
-              </button>
-
-              {getPageRange().map((p, index) =>
-                p === '...' ? (
-                  <span key={index} className="px-2 text-gray-400">
-                    ...
-                  </span>
-                ) : (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentPage(p as number)}
-                    className={`px-3 py-1 rounded-md text-sm ${
-                      currentPage === p
-                        ? 'bg-blue-600 text-white'
-                        : 'border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
-                    }`}
-                  >
-                    {p}
-                  </button>
-                ),
-              )}
-
-              <button
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((prev) => prev + 1)}
-                className={`px-3 py-1 border rounded-md text-sm transition-colors ${
-                  currentPage === totalPages
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
-                    : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
-                }`}
-              >
-                다음
-              </button>
-            </div>
-          </div>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalElements={pageInfo?.totalElements}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       )}
 
       {/* 고객 상세보기 모달 */}
-      <CustomerDetailModal
-        $showDetailModal={showDetailModal}
-        $setShowDetailModal={setShowDetailModal}
-        $selectedCustomerId={selectedCustomerId}
-        $getStatusColor={getStatusColor}
-        $setShowEditModal={setShowEditModal}
-        $setEditFormData={setEditFormData}
-      />
+      {showDetailModal && (
+        <CustomerDetailModal
+          $setShowDetailModal={setShowDetailModal}
+          $selectedCustomerId={selectedCustomerId}
+          $setShowEditModal={setShowEditModal}
+          $setEditFormData={setEditFormData}
+        />
+      )}
 
       {/* 고객 수정 모달 */}
-      <CustomerEditModal
-        $showEditModal={showEditModal}
-        $setShowEditModal={setShowEditModal}
-        $editFormData={editFormData}
-        $setEditFormData={setEditFormData}
-        $setShowDetailModal={setShowDetailModal}
-      />
+      {showEditModal && (
+        <CustomerEditModal
+          $onClose={() => setShowEditModal(false)}
+          $editFormData={editFormData}
+          $setEditFormData={setEditFormData}
+          $setShowDetailModal={setShowDetailModal}
+        />
+      )}
+
       {/* 신규 고객 추가 모달 */}
-      <NewCustomerModal
-        $showCustomerModal={showCustomerModal}
-        $setShowCustomerModal={setShowCustomerModal}
-      />
+      {showCustomerModal && <NewCustomerModal $onClose={() => setShowCustomerModal(false)} />}
     </div>
   );
 };

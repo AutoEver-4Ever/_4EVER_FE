@@ -1,14 +1,4 @@
-export type QuoteStatus =
-  | 'ALL'
-  | 'APPROVED'
-  | 'REVIEW'
-  | 'PENDING'
-  | 'REJECTED'
-  | '전체'
-  | '승인'
-  | '검토'
-  | '대기'
-  | '반려';
+export type QuoteStatus = 'ALL' | 'APPROVED' | 'REVIEW' | 'PENDING' | 'REJECTED';
 
 export interface QuoteItem {
   product: string;
