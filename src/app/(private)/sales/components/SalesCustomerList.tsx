@@ -96,9 +96,6 @@ const CustomerList = () => {
     return pages;
   };
 
-  // if (isLoading)
-  //   return <TableStatusBox $type="loading" $message="고객 목록을 불러오는 중입니다..." />;
-
   return (
     <div className="bg-white rounded-lg border border-gray-200 mt-6">
       {/* 헤더 */}

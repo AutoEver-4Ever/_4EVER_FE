@@ -3,35 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { INVENTORY_NEED_TABLE_HEADERS } from '@/app/(private)/sales/constant';
-
-interface Quote {
-  id: string;
-  customer: string;
-  contact: string;
-  date: string;
-  deliveryDate: string;
-  amount: number;
-  status: string;
-}
-
-interface InventoryItem {
-  product: string;
-  currentStock: number;
-  requiredStock: number;
-  available: boolean;
-}
-
-interface StockCheckResult {
-  hasStock: boolean;
-  items: InventoryItem[];
-  checkDate: string;
-  deliveryPossible: boolean;
-}
-
-interface QuoteReviewModalProps {
-  $isOpen: boolean;
-  $onClose: () => void;
-}
+import {
+  InventoryItem,
+  Quote,
+  QuoteReviewModalProps,
+  StockCheckResult,
+} from '@/app/(private)/sales/types/QuoteReviewModalType';
 
 const QuoteReviewModal = ({ $isOpen, $onClose }: QuoteReviewModalProps) => {
   const [isChecking, setIsChecking] = useState(false);

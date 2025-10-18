@@ -20,23 +20,6 @@ const SalesStats = ({ $selectedPeriod }: SalesStatsProps) => {
   const stats = data[$selectedPeriod];
 
   // const mockStats = [
-  //   {
-  //     title: '이번 달 매출',
-  //     value: '₩485,200,000',
-  //     change: '+12.5%',
-  //     changeType: 'increase',
-  //     icon: 'ri-money-dollar-circle-line',
-  //     color: 'blue',
-  //   },
-  //   {
-  //     title: '신규 주문',
-  //     value: '₩485,200,000',
-  //     change: '+12.5%',
-  //     changeType: 'increase',
-  //     icon: 'ri-shopping-cart-line',
-  //     color: 'green',
-  //   },
-  // ];
 
   return (
     <div className="space-y-4">
