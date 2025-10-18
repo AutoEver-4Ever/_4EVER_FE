@@ -1,5 +1,8 @@
 import { Tab } from '@/app/(private)/purchase/types/TabNavigationType';
 import { TableHeader } from '@/app/(private)/purchase/types/TableHeader';
+import PurchaseRequestListTab from '@/app/(private)/purchase/components/tabs/PurchaseRequestListTab';
+import PurchaseOrderListTab from '@/app/(private)/purchase/components/tabs/PurchaseOrderListTab';
+import SupplierListTab from '@/app/(private)/purchase/components/tabs/SupplierListTab';
 import { KeyValueItem } from '@/types/CommonType';
 
 export type Period = 'week' | 'month' | 'quarter' | 'year';
@@ -7,6 +10,14 @@ export type SupplierCategory = 'ALL' | 'MATERIAL' | 'PARTS' | 'ETC';
 export type SupplierStatus = 'ALL' | 'ACTIVE' | 'INACTIVE';
 export type PurchaseOrderStatus = 'ALL' | 'APPROVED' | 'PENDING' | 'REJECTED' | 'DELIVERED';
 export type PurchaseReqStatus = 'ALL' | 'APPROVED' | 'PENDING' | 'REJECTED';
+
+// 구매 기간 필터링
+export const STAT_PERIODS: KeyValueItem<Period>[] = [
+  { key: 'week', value: '이번 주' },
+  { key: 'month', value: '이번 달' },
+  { key: 'quarter', value: '이번 분기' },
+  { key: 'year', value: '연도별' },
+];
 
 // 구매 상태 필터링
 export const PURCHASE_REQ_STATUS: KeyValueItem<PurchaseReqStatus>[] = [
@@ -23,17 +34,6 @@ export const PURCHASE_ORDER_STATUS: KeyValueItem<PurchaseOrderStatus>[] = [
   { key: 'PENDING', value: '대기' },
   { key: 'REJECTED', value: '반려' },
   { key: 'DELIVERED', value: '배송중' },
-];
-import PurchaseRequestListTab from './components/tabs/PurchaseRequestListTab';
-import PurchaseOrderListTab from './components/tabs/PurchaseOrderListTab';
-import SupplierListTab from './components/tabs/SupplierListTab';
-
-// 구매 기간 필터링
-export const PURCHASE_STAT_PERIODS: KeyValueItem<Period>[] = [
-  { key: 'week', value: '이번 주' },
-  { key: 'month', value: '이번 달' },
-  { key: 'quarter', value: '이번 분기' },
-  { key: 'year', value: '연도별' },
 ];
 
 // 공급 카테고리 필터링

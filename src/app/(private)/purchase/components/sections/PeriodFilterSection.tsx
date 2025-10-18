@@ -1,10 +1,10 @@
 import { PeriodFilterProps } from '@/app/(private)/purchase/types/PeriodFilterType';
-import { PURCHASE_STAT_PERIODS } from '@/app/(private)/purchase/constants';
+import { STAT_PERIODS } from '@/app/(private)/purchase/constants';
 
 export default function PeriodFilterSection({ selectedPeriod, onPeriodChange }: PeriodFilterProps) {
   return (
     <div className="inline-flex gap-1 items-center bg-white rounded-lg border border-gray-300 p-1">
-      {PURCHASE_STAT_PERIODS.map((period) => (
+      {STAT_PERIODS.map((period) => (
         <button
           key={period.key}
           onClick={() => onPeriodChange(period.key)}
