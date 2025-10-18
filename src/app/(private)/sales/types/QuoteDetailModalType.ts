@@ -1,8 +1,7 @@
 import { Quote, QuoteStatus } from '@/app/(private)/sales/types/SalesQuoteListType';
 
 export interface QuoteDetailModalProps {
-  $showQuoteModal: boolean;
-  $setShowQuoteModal: React.Dispatch<React.SetStateAction<boolean>>;
+  $onClose: () => void;
   $selectedQuoteId: number;
 }
 

@@ -326,18 +326,22 @@ const SalesQuoteList = () => {
           $setShowNewQuoteModal={setShowNewQuoteModal}
         /> */}
         {/* 견적서 상세보기 모달 */}
-        <QuoteDetailModal
-          $showQuoteModal={showQuoteModal}
-          $setShowQuoteModal={setShowQuoteModal}
-          $selectedQuoteId={selectedQuoteId}
-        />
+        {showQuoteModal && (
+          <QuoteDetailModal
+            $onClose={() => {
+              setShowQuoteModal(false);
+            }}
+            $selectedQuoteId={selectedQuoteId}
+          />
+        )}
 
-        <QuoteReviewModal
-          $isOpen={showReviewModal}
-          $onClose={() => {
-            setShowReviewModal(false);
-          }}
-        />
+        {showReviewModal && (
+          <QuoteReviewModal
+            $onClose={() => {
+              setShowReviewModal(false);
+            }}
+          />
+        )}
       </div>
     </div>
   );

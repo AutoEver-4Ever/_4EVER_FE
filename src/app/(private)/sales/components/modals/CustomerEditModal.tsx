@@ -11,8 +11,7 @@ import { useEffect } from 'react';
 import { CustomerStatus } from '../../types/SalesCustomerListType';
 
 const CustomerEditModal = ({
-  $showEditModal,
-  $setShowEditModal,
+  $onClose,
   $editFormData,
   $setEditFormData,
   $setShowDetailModal,
@@ -34,7 +33,7 @@ const CustomerEditModal = ({
     };
 
     alert('고객 정보가 성공적으로 수정되었습니다.');
-    $setShowEditModal(false);
+    $onClose();
     $setEditFormData(null);
   };
 
@@ -88,13 +87,13 @@ const CustomerEditModal = ({
   };
   return (
     <>
-      {$showEditModal && $editFormData && (
+      {$editFormData && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold text-gray-900">고객 정보 수정</h3>
               <button
-                onClick={() => $setShowEditModal(false)}
+                onClick={$onClose}
                 className="text-gray-400 hover:text-gray-600 cursor-pointer"
               >
                 <i className="ri-close-line text-2xl"></i>
@@ -328,7 +327,7 @@ const CustomerEditModal = ({
                   type="button"
                   onClick={() => {
                     $setShowDetailModal(true);
-                    $setShowEditModal(false);
+                    $onClose();
                   }}
                   className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium cursor-pointer whitespace-nowrap"
                 >

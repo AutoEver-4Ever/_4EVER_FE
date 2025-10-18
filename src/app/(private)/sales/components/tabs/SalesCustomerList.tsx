@@ -276,27 +276,27 @@ const CustomerList = () => {
       )}
 
       {/* 고객 상세보기 모달 */}
-      <CustomerDetailModal
-        $showDetailModal={showDetailModal}
-        $setShowDetailModal={setShowDetailModal}
-        $selectedCustomerId={selectedCustomerId}
-        $setShowEditModal={setShowEditModal}
-        $setEditFormData={setEditFormData}
-      />
+      {showDetailModal && (
+        <CustomerDetailModal
+          $setShowDetailModal={setShowDetailModal}
+          $selectedCustomerId={selectedCustomerId}
+          $setShowEditModal={setShowEditModal}
+          $setEditFormData={setEditFormData}
+        />
+      )}
 
       {/* 고객 수정 모달 */}
-      <CustomerEditModal
-        $showEditModal={showEditModal}
-        $setShowEditModal={setShowEditModal}
-        $editFormData={editFormData}
-        $setEditFormData={setEditFormData}
-        $setShowDetailModal={setShowDetailModal}
-      />
+      {showEditModal && (
+        <CustomerEditModal
+          $onClose={() => setShowEditModal(false)}
+          $editFormData={editFormData}
+          $setEditFormData={setEditFormData}
+          $setShowDetailModal={setShowDetailModal}
+        />
+      )}
+
       {/* 신규 고객 추가 모달 */}
-      <NewCustomerModal
-        $showCustomerModal={showCustomerModal}
-        $setShowCustomerModal={setShowCustomerModal}
-      />
+      {showCustomerModal && <NewCustomerModal $onClose={() => setShowCustomerModal(false)} />}
     </div>
   );
 };

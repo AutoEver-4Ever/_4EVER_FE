@@ -10,7 +10,7 @@ import {
   StockCheckResult,
 } from '@/app/(private)/sales/types/QuoteReviewModalType';
 
-const QuoteReviewModal = ({ $isOpen, $onClose }: QuoteReviewModalProps) => {
+const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
   const [isChecking, setIsChecking] = useState(false);
   const [stockCheckResult, setStockCheckResult] = useState<StockCheckResult | null>(null);
 
@@ -53,8 +53,6 @@ const QuoteReviewModal = ({ $isOpen, $onClose }: QuoteReviewModalProps) => {
     );
     $onClose();
   };
-
-  if (!$isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

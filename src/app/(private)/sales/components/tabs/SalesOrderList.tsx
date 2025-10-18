@@ -263,12 +263,14 @@ const SalesOrderList = () => {
           </div>
         </div>
       )}
-
-      <SalesOrderDetailModal
-        $showOrderDetailModal={showOrderDetailModal}
-        $setShowOrderDetailModal={setShowOrderDetailModal}
-        $selectedOrderId={selectedOrderId}
-      />
+      {showOrderDetailModal && (
+        <SalesOrderDetailModal
+          $onClose={() => {
+            setShowOrderDetailModal(false);
+          }}
+          $selectedOrderId={selectedOrderId}
+        />
+      )}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import { CustomerDetail } from '@/app/(private)/sales/types/SalesCustomerDetailType';
 
 export interface CustomerDetailModalProps {
-  $showDetailModal: boolean;
   $setShowDetailModal: React.Dispatch<React.SetStateAction<boolean>>;
   $selectedCustomerId: number;
   $setShowEditModal: (show: boolean) => void;

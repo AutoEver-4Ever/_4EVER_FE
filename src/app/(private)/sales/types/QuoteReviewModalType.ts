@@ -23,6 +23,5 @@ export interface StockCheckResult {
 }
 
 export interface QuoteReviewModalProps {
-  $isOpen: boolean;
   $onClose: () => void;
 }

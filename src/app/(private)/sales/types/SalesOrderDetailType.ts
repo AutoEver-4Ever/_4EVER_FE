@@ -1,8 +1,7 @@
 import { OrderStatus } from '@/app/(private)/sales/types/SalesOrderListType';
 
 export interface SalesOrderDetailProps {
-  $showOrderDetailModal: boolean;
-  $setShowOrderDetailModal: (show: boolean) => void;
+  $onClose: () => void;
   $selectedOrderId: number;
 }
 
