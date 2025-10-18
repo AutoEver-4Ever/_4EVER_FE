@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { Period, SalesStatCard } from '@/app/(private)/sales/types/SalesStatsType';
-import { getSalesStats } from '@/app/(private)/sales/service';
+import { getSalesStats } from '@/app/(private)/sales/sales.service';
 
 interface SalesStatsProps {
   $selectedPeriod: Period;

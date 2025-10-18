@@ -9,7 +9,7 @@ import {
 } from '@/app/(private)/sales/types/SalesOrderListType';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
-import { getOrderList } from '../../service';
+import { getOrderList } from '../../sales.service';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
 import { ORDER_LIST_TABLE_HEADERS, ORDER_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
 import { getOrderStatusText, getOrderStatusColor } from '@/app/(private)/sales/utils';

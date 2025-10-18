@@ -5,7 +5,7 @@ import {
 } from '@/app/(private)/sales/types/SalesOrderDetailType';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { getOrderDetail } from '@/app/(private)/sales/service';
+import { getOrderDetail } from '@/app/(private)/sales/sales.service';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
 import { ORDER_DETAIL_TABLE_HEADERS } from '@/app/(private)/sales/constant';
 import { getOrderStatusText, getOrderStatusColor } from '@/app/(private)/sales/utils';

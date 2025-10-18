@@ -8,7 +8,7 @@ import {
 } from '@/app/(private)/sales/types/SalesQuoteListType';
 import QuoteDetailModal from '../modals/QuoteDetailModal';
 import { useQuery } from '@tanstack/react-query';
-import { getQuoteList } from '@/app/(private)/sales/service';
+import { getQuoteList } from '@/app/(private)/sales/sales.service';
 import { useDebounce } from 'use-debounce';
 import QuoteReviewModal from '../modals/QuoteReviewModal';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
