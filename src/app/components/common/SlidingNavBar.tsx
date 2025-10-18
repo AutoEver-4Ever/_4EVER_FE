@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { KeyValueItem } from '@/app/purchase/types/CommonType';
+import { KeyValueItem } from '@/types/CommonType';
 
 interface SlidingNavBarProps {
   items: KeyValueItem[];

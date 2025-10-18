@@ -1,0 +1,32 @@
+export interface OrderItem {
+  name: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+export type OrderStatus = 'PENDING' | 'DELIVERED' | 'CANCELLED';
+
+export interface Order {
+  soId: number;
+  soNumber: string;
+  customerName: string;
+  manager: {
+    managerName: string;
+    managerPhone: string;
+    managerEmail: string;
+  };
+  orderDate: string;
+  deliveryDate: string;
+  totalAmount: number;
+  statusCode: OrderStatus;
+}
+
+export interface OrderQueryParams {
+  start: string;
+  end: string;
+  keyword: string;
+  status: string;
+  page: number;
+  size: number;
+}

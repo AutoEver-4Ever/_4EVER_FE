@@ -2,7 +2,7 @@ import { useState } from 'react';
 import SlidingNavBar from '@/app/components/common/SlidingNavBar';
 import { Period, StatCardType } from '@/types/StatType';
 import StatList from '@/app/components/statCard/StatCardList';
-import { STAT_PERIODS } from '@/app/purchase/constants';
+import { STAT_PERIODS } from '@/app/(private)/purchase/constants';
 
 interface StatSectionProps {
   statsData: Record<Period, StatCardType[]>;
