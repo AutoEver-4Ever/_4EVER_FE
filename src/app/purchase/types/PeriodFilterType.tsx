@@ -1,4 +1,4 @@
-import { Period } from '@/app/purchase/types/PurchaseStatsType';
+import { Period } from '@/types/StatType';
 
 export interface PeriodFilterProps {
   // periods: KeyValueItem<Period>[];

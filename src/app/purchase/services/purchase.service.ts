@@ -1,11 +1,13 @@
 // services/purchase.ts
-import { PurchaseData } from '@/app/purchase/types/PurchaseStatsType';
-import { StatCard } from '@/types/StatCardType';
+import { PurchaseStatResponse } from '@/app/purchase/types/PurchaseStatsType';
+import { StatCardType } from '@/types/StatType';
 
-export const mapPurchaseStatsToCards = (data: PurchaseData): Record<string, StatCard[]> => {
+export const mapPurchaseStatsToCards = (
+  data: PurchaseStatResponse,
+): Record<string, StatCardType[]> => {
   return Object.entries(data).reduce(
     (acc, [period, stats]) => {
-      const cards: StatCard[] = [
+      const cards: StatCardType[] = [
         {
           title: '구매 요청',
           value: `${stats.purchase_request_count.value}건`,
@@ -36,6 +38,6 @@ export const mapPurchaseStatsToCards = (data: PurchaseData): Record<string, Stat
       acc[period] = cards;
       return acc;
     },
-    {} as Record<string, StatCard[]>,
+    {} as Record<string, StatCardType[]>,
   );
 };
