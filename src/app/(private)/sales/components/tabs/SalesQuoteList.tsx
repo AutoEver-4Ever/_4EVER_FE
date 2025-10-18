@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   QuoteStatus,
   Quote,
@@ -14,6 +14,7 @@ import QuoteReviewModal from '../modals/QuoteReviewModal';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
 import { QUOTE_LIST_TABLE_HEADERS } from '@/app/(private)/sales/constant';
 import { QUOTE_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
+import { getQuoteStatusColor, getQuoteStatusText } from '../../utils';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -53,37 +54,6 @@ const SalesQuoteList = () => {
 
   const quotes = quoteRes?.data ?? [];
   const pageInfo = quoteRes?.pageData;
-
-  const getStatusColor = (status: QuoteStatus) => {
-    switch (status) {
-      case 'PENDING':
-        return 'bg-gray-100 text-gray-800';
-      case 'REVIEW':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'APPROVED':
-        return 'bg-green-100 text-green-800';
-      case 'ALL':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStatusText = (status: QuoteStatus) => {
-    switch (status) {
-      case 'PENDING':
-        return '대기';
-      case 'REVIEW':
-        return '검토';
-      case 'APPROVED':
-        return '승인';
-      case 'REJECTED':
-        return '반려';
-
-      default:
-        return status;
-    }
-  };
 
   const handleViewQuote = (quote: Quote) => {
     setSelectedQuoteId(quote.quotationId);
@@ -271,9 +241,9 @@ const SalesQuoteList = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <span
-                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(quote.statusCode)}`}
+                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getQuoteStatusColor(quote.statusCode)}`}
                       >
-                        {getStatusText(quote.statusCode)}
+                        {getQuoteStatusText(quote.statusCode)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
@@ -360,8 +330,6 @@ const SalesQuoteList = () => {
           $showQuoteModal={showQuoteModal}
           $setShowQuoteModal={setShowQuoteModal}
           $selectedQuoteId={selectedQuoteId}
-          $getStatusColor={getStatusColor}
-          $getStatusText={getStatusText}
         />
 
         <QuoteReviewModal

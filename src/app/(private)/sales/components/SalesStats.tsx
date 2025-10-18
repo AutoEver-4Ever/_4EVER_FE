@@ -19,8 +19,6 @@ const SalesStats = ({ $selectedPeriod }: SalesStatsProps) => {
 
   const stats = data[$selectedPeriod];
 
-  // const mockStats = [
-
   return (
     <div className="space-y-4">
       {/* 통계 카드 */}

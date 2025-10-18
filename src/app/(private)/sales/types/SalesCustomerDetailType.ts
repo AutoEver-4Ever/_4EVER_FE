@@ -1,10 +1,12 @@
+import { CustomerStatus } from '@/app/(private)/sales/types/SalesCustomerListType';
+
 export interface CustomerDetail {
   customerId: number;
   customerCode: string;
   companyName: string;
   businessNumber: string;
   ceoName: string;
-  statusCode: string;
+  statusCode: CustomerStatus;
   contact: Contact;
   manager: Manager;
   transaction: Transaction;

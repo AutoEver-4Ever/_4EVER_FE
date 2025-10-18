@@ -12,6 +12,7 @@ import { useDebounce } from 'use-debounce';
 import { getOrderList } from '../../service';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
 import { ORDER_LIST_TABLE_HEADERS, ORDER_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
+import { getOrderStatusText, getOrderStatusColor } from '@/app/(private)/sales/utils';
 
 const SalesOrderList = () => {
   const [showOrderDetailModal, setShowOrderDetailModal] = useState(false);
@@ -46,41 +47,6 @@ const SalesOrderList = () => {
 
   const orders = orderRes?.data ?? [];
   const pageInfo = orderRes?.pageData;
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'IN_PRODUCTION':
-        return 'bg-blue-100 text-blue-700';
-      case 'MATERIAL_PREPARATION':
-        return 'bg-green-100 text-green-700';
-      case 'READY_FOR_SHIPMENT':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'DELIVERING':
-        return 'bg-purple-100 text-purple-700';
-      case 'DELIVERED':
-        return 'bg-gray-100 text-gray-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'IN_PRODUCTION':
-        return '생산중';
-      case 'MATERIAL_PREPARATION':
-        return '자재 준비중';
-      case 'READY_FOR_SHIPMENT':
-        return '출하 준비 완료';
-      case 'DELIVERING':
-        return '배송중';
-      case 'DELIVERED':
-        return '배송완료';
-
-      default:
-        return status;
-    }
-  };
 
   const handleViewOrder = (id: number) => {
     setSelectedOrderId(id);
@@ -219,11 +185,11 @@ const SalesOrderList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
+                      className={`px-2 py-1 text-xs font-medium rounded-full ${getOrderStatusColor(
                         order.statusCode,
                       )}`}
                     >
-                      {getStatusText(order.statusCode)}
+                      {getOrderStatusText(order.statusCode)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -302,8 +268,6 @@ const SalesOrderList = () => {
         $showOrderDetailModal={showOrderDetailModal}
         $setShowOrderDetailModal={setShowOrderDetailModal}
         $selectedOrderId={selectedOrderId}
-        $getStatusColor={getStatusColor}
-        $getStatusText={getStatusText}
       />
     </div>
   );

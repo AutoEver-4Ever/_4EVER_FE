@@ -7,12 +7,12 @@ import CustomerEditModal from './CustomerEditModal';
 import { getCustomerDetail } from '../../service';
 import { useQuery } from '@tanstack/react-query';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
+import { getCustomerStatusColor, getCustomerStatusText } from '@/app/(private)/sales/utils';
 
 const CustomerDetailModal = ({
   $showDetailModal,
   $setShowDetailModal,
   $selectedCustomerId,
-  $getStatusColor,
   $setShowEditModal,
   $setEditFormData,
 }: CustomerDetailModalProps) => {
@@ -29,18 +29,6 @@ const CustomerDetailModal = ({
   useEffect(() => {
     setErrorModal(isError);
   }, [isError]);
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'ACTIVE':
-        return '활성';
-      case 'DEACTIVE':
-        return '비활성';
-
-      default:
-        return status;
-    }
-  };
 
   if (isLoading)
     return <ModalStatusBox $type="loading" $message="고객 상세 데이터를 불러오는 중입니다..." />;
@@ -86,9 +74,9 @@ const CustomerDetailModal = ({
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
                     <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${$getStatusColor(customer!.statusCode)}`}
+                      className={`px-2 py-1 rounded text-xs font-medium ${getCustomerStatusColor(customer!.statusCode)}`}
                     >
-                      {getStatusText(customer!.statusCode)}
+                      {getCustomerStatusText(customer!.statusCode)}
                     </span>
                   </div>
                 </div>

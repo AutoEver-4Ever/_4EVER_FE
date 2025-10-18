@@ -4,8 +4,6 @@ export interface QuoteDetailModalProps {
   $showQuoteModal: boolean;
   $setShowQuoteModal: React.Dispatch<React.SetStateAction<boolean>>;
   $selectedQuoteId: number;
-  $getStatusColor: (status: QuoteStatus) => string;
-  $getStatusText: (status: QuoteStatus) => string;
 }
 
 export interface QuoteDetail {

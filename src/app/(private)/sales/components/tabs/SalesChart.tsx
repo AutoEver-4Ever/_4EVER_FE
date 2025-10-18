@@ -18,6 +18,7 @@ import {
 } from 'recharts';
 import { getAnalytics } from '../../service';
 import { AnalyticsQueryParams, SalesAnalysis } from '@/app/(private)/sales/types/SalesChartType';
+import { formatCurrency } from '@/app/(private)/sales/utils';
 
 const SalesChart = () => {
   const today = new Date();
@@ -52,9 +53,6 @@ const SalesChart = () => {
   });
 
   const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#6B7280'];
-  const formatCurrency = (value: number) => {
-    return `₩${(value / 100000000).toFixed(1)}억`;
-  };
 
   // trend 주차별 매출 추이 데이터
   const weeklyData = useMemo(() => {

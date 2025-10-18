@@ -17,6 +17,7 @@ import {
   CUSTOMER_LIST_TABLE_HEADERS,
   CUSTOMER_STATUS_OPTIONS,
 } from '@/app/(private)/sales/constant';
+import { getCustomerStatusColor } from '@/app/(private)/sales/utils';
 
 const CustomerList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -29,10 +30,6 @@ const CustomerList = () => {
 
   const handleCustomerRegisterClick = () => {
     setShowCustomerModal(true);
-  };
-
-  const getStatusColor = (status: string) => {
-    return status === '활성' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
   };
 
   const queryParams = useMemo(
@@ -198,7 +195,7 @@ const CustomerList = () => {
 
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(customer.status)}`}
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getCustomerStatusColor(customer.status)}`}
                     >
                       {customer.status}
                     </span>
@@ -283,7 +280,6 @@ const CustomerList = () => {
         $showDetailModal={showDetailModal}
         $setShowDetailModal={setShowDetailModal}
         $selectedCustomerId={selectedCustomerId}
-        $getStatusColor={getStatusColor}
         $setShowEditModal={setShowEditModal}
         $setEditFormData={setEditFormData}
       />
