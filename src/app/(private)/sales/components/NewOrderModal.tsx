@@ -175,7 +175,6 @@ const NewOrderModal = ({ $showNewOrderModal, $setShowNewOrderModal }: NewOrderMo
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* <div className="bg-gray-50 p-4 rounded-lg">
               {/* 주문 품목 */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
