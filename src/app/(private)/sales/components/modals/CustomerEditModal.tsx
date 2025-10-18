@@ -8,6 +8,7 @@ import {
   Transaction,
 } from '@/app/(private)/sales/types/SalesCustomerDetailType';
 import { useEffect } from 'react';
+import { CustomerStatus } from '../../types/SalesCustomerListType';
 
 const CustomerEditModal = ({
   $showEditModal,
@@ -130,7 +131,7 @@ const CustomerEditModal = ({
                     <select
                       value={$editFormData.statusCode}
                       onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        updateEditFormData('statusCode', e.target.value)
+                        updateEditFormData('statusCode', e.target.value as CustomerStatus)
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg pr-8"
                     >
