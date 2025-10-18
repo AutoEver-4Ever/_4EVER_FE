@@ -1,11 +1,11 @@
 'use client';
 
-interface TableStatusProps {
+interface TableStatusBoxProps {
   $type: 'loading' | 'error' | 'empty';
   $message: string;
 }
 
-const TableStatusBox = ({ $type, $message }: TableStatusProps) => {
+const TableStatusBox = ({ $type, $message }: TableStatusBoxProps) => {
   if ($type === 'loading') {
     return (
       <div className="flex flex-col items-center justify-center h-64 space-y-3">
