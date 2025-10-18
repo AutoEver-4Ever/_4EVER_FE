@@ -7,11 +7,11 @@ import {
   CustomerQueryParams,
   CustomerStatus,
 } from '@/app/(private)/sales/types/SalesCustomerListType';
-import CustomerEditModal from './modals/CustomerEditModal';
+import CustomerEditModal from '../modals/CustomerEditModal';
 import { useQuery } from '@tanstack/react-query';
-import { getCustomerList } from '../service';
+import { getCustomerList } from '../../service';
 import { useDebounce } from 'use-debounce';
-import { CustomerDetail } from '../types/SalesCustomerDetailType';
+import { CustomerDetail } from '../../types/SalesCustomerDetailType';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
 import {
   CUSTOMER_LIST_TABLE_HEADERS,

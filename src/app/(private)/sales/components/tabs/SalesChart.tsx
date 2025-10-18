@@ -16,7 +16,7 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import { getAnalytics } from '../service';
+import { getAnalytics } from '../../service';
 import { AnalyticsQueryParams, SalesAnalysis } from '@/app/(private)/sales/types/SalesChartType';
 
 const SalesChart = () => {
