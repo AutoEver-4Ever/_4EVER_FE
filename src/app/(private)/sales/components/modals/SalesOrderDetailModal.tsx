@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { getOrderDetail } from '@/app/(private)/sales/service';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
+import { ORDER_DETAIL_TABLE_HEADERS } from '@/app/(private)/sales/constant';
 
 const SalesOrderDetailModal = ({
   $showOrderDetailModal,
@@ -131,21 +132,14 @@ const SalesOrderDetailModal = ({
                       <table className="w-full border border-gray-200 rounded-lg">
                         <thead className="bg-gray-50">
                           <tr>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                              제품명
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                              수량
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                              단위
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                              단가
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                              금액
-                            </th>
+                            {ORDER_DETAIL_TABLE_HEADERS.map((header) => (
+                              <th
+                                key={header}
+                                className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase border-b"
+                              >
+                                {header}
+                              </th>
+                            ))}
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">

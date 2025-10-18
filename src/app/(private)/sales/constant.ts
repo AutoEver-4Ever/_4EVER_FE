@@ -62,4 +62,21 @@ export const CUSTOMER_LIST_TABLE_HEADERS = [
   '작업',
 ] as const;
 
+// 견적서 신규 등록용 제품 테이블 헤더
+export const NEW_QUOTE_PRODUCT_TABLE_HEADERS = [
+  '제품명',
+  '사양',
+  '수량',
+  '단가',
+  '금액',
+  '작업',
+] as const;
 
+// 견적서 상세 모달 테이블 헤더
+export const QUOTE_DETAIL_TABLE_HEADERS = ['제품명', '수량', '단가', '금액'] as const;
+
+// 견적 요청 모달 재고 부족 테이블 헤더
+export const INVENTORY_NEED_TABLE_HEADERS = ['제품명', '필요 수량', '현재 재고', '상태'] as const;
+
+// 주문 상세 모달 테이블 헤더
+export const ORDER_DETAIL_TABLE_HEADERS = ['제품명', '수량', '단위', '단가', '금액'] as const;

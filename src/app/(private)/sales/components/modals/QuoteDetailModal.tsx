@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getQuoteDetail } from '../../service';
 import { useEffect, useState } from 'react';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
+import { QUOTE_DETAIL_TABLE_HEADERS } from '../../constant';
 
 const QuoteDetailModal = ({
   $showQuoteModal,
@@ -105,18 +106,14 @@ const QuoteDetailModal = ({
                   <table className="w-full border border-gray-300 rounded-lg">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
-                          제품명
-                        </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
-                          수량
-                        </th>
-                        <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b">
-                          단가
-                        </th>
-                        <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b">
-                          금액
-                        </th>
+                        {QUOTE_DETAIL_TABLE_HEADERS.map((header) => (
+                          <th
+                            key={header}
+                            className="px-4 py-3 text-sm font-medium text-gray-700 border-b text-center"
+                          >
+                            {header}
+                          </th>
+                        ))}
                       </tr>
                     </thead>
                     <tbody>

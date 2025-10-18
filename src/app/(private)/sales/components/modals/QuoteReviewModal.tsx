@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { INVENTORY_NEED_TABLE_HEADERS } from '@/app/(private)/sales/constant';
 
 interface Quote {
   id: string;
@@ -194,18 +195,14 @@ const QuoteReviewModal = ({ $isOpen, $onClose }: QuoteReviewModalProps) => {
                   <table className="w-full border border-gray-300 rounded-lg">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
-                          제품명
-                        </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
-                          필요 수량
-                        </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
-                          현재 재고
-                        </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
-                          상태
-                        </th>
+                        {INVENTORY_NEED_TABLE_HEADERS.map((header) => (
+                          <th
+                            key={header}
+                            className="px-4 py-3 text-sm font-medium text-gray-700 border-b text-center"
+                          >
+                            {header}
+                          </th>
+                        ))}
                       </tr>
                     </thead>
                     <tbody>
