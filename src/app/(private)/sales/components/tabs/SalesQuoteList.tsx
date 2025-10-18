@@ -156,7 +156,7 @@ const SalesQuoteList = () => {
               className="bg-white px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
             >
               {QUOTE_STATUS_OPTIONS.map(({ key, value }) => (
-                <option key={key} value={value}>
+                <option key={key} value={key}>
                   {value}
                 </option>
               ))}

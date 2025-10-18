@@ -132,7 +132,7 @@ const SalesOrderList = () => {
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-8"
           >
             {ORDER_STATUS_OPTIONS.map(({ key, value }) => (
-              <option key={key} value={value}>
+              <option key={key} value={key}>
                 {value}
               </option>
             ))}
