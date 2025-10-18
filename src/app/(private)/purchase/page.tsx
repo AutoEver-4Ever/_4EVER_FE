@@ -2,7 +2,7 @@ import Providers from '@/app/providers';
 import { getQueryClient } from '@/lib/queryClient';
 import { dehydrate } from '@tanstack/react-query';
 import { Suspense } from 'react';
-import { fetchPurchaseStats } from '@/app/purchase/api/purchase.api';
+import { fetchPurchaseStats } from '@/app/(private)/purchase/api/purchase.api';
 import { mapPurchaseStatsToCards } from '@/app/(private)/purchase/services/purchase.service';
 import { PURCHASE_TABS } from '@/app/(private)/purchase/constants';
 import PageHeader from '@/app/components/common/PageHeader';
