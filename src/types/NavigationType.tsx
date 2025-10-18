@@ -6,7 +6,3 @@ export interface Tab {
   icon?: string;
   component: ComponentType;
 }
-
-export interface TabNavigationProps {
-  tabs: Tab[];
-}

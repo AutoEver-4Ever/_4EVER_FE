@@ -74,13 +74,13 @@ const SalesQuoteList = () => {
     );
   };
 
-  const handleDeleteQuote = (quote: Quote) => {
-    if (
-      confirm(`견적서 ${quote.quotationId}를 정말 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)
-    ) {
-      alert(`견적서 ${quote.quotationId}가 삭제되었습니다.`);
-    }
-  };
+  // const handleDeleteQuote = (quote: Quote) => {
+  //   if (
+  //     confirm(`견적서 ${quote.quotationId}를 정말 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)
+  //   ) {
+  //     alert(`견적서 ${quote.quotationId}가 삭제되었습니다.`);
+  //   }
+  // };
 
   const totalPages = pageInfo?.totalPages ?? 1;
 

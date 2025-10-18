@@ -1,4 +1,4 @@
-import { Quote, QuoteStatus } from '@/app/(private)/sales/types/SalesQuoteListType';
+import { QuoteStatus } from '@/app/(private)/sales/types/SalesQuoteListType';
 
 export interface QuoteDetailModalProps {
   $onClose: () => void;

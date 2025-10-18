@@ -20,7 +20,7 @@ export default function QuickActions() {
       description: '새로운 견적서를 작성합니다',
       icon: 'ri-file-text-line',
       color: 'indigo',
-      href: '/bom',
+      href: '/production',
     },
     {
       title: '자재 구매 요청',
