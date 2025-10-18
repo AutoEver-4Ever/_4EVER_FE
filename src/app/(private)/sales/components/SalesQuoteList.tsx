@@ -11,6 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getQuoteList } from '@/app/(private)/sales/service';
 import { useDebounce } from 'use-debounce';
 import QuoteReviewModal from './QuoteReviewModal';
+import TableStatusBox from '@/app/components/common/TableStatusBox';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -248,16 +249,15 @@ const SalesQuoteList = () => {
       {/* 견적 목록 */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="overflow-x-auto">
-          {isError ? (
-            <div className="flex flex-col items-center justify-center h-64 space-y-3 text-red-600">
-              <i className="ri-error-warning-line text-4xl" />
-              <p className="font-medium">견적서 목록을 불러오는 중 오류가 발생했습니다.</p>
-            </div>
-          ) : isLoading ? (
-            <div className="flex flex-col items-center justify-center h-64 space-y-3">
-              <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-              <p className="text-gray-600 text-sm font-medium">견적서를 불러오는 중입니다...</p>
-            </div>
+          {isLoading ? (
+            <TableStatusBox $type="loading" $message="견적서 목록을 불러오는 중입니다..." />
+          ) : isError ? (
+            <TableStatusBox
+              $type="error"
+              $message="견적서 목록을 불러오는 중 오류가 발생했습니다."
+            />
+          ) : !quotes || quotes.length === 0 ? (
+            <TableStatusBox $type="empty" $message="등록된 견적서가 없습니다." />
           ) : (
             <table className="w-full">
               <thead className="bg-gray-50">

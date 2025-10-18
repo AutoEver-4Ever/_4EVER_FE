@@ -81,22 +81,6 @@ const NewCustomerModal = ({ $showCustomerModal, $setShowCustomerModal }: NewCust
     },
   });
 
-  // setCustomerData({
-  //   companyName: '',
-  //   businessNumber: '',
-  //   ceoName: '',
-  //   contactPhone: '',
-  //   contactEmail: '',
-  //   zipCode: '',
-  //   address: '',
-  //   detailAddress: '',
-  //   manager: {
-  //     name: '',
-  //     mobile: '',
-  //     email: '',
-  //   },
-  //   note: '',
-  // });
   return (
     <>
       {/* 고객 등록 모달 */}
