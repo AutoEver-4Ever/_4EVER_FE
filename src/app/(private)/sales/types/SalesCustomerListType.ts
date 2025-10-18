@@ -1,3 +1,4 @@
+export type CustomerStatus = 'ALL' | 'ACTIVE' | 'DEACTIVE';
 export interface SalesCustomer {
   customerId: number;
   customerCode: string;

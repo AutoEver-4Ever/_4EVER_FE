@@ -5,7 +5,13 @@ export interface OrderItem {
   totalPrice: number;
 }
 
-export type OrderStatus = 'PENDING' | 'DELIVERED' | 'CANCELLED';
+export type OrderStatus =
+  | 'ALL'
+  | 'MATERIAL_PREPARATION'
+  | 'IN_PRODUCTION'
+  | 'READY_FOR_SHIPMENT'
+  | 'DELIVERING'
+  | 'DELIVERED';
 
 export interface Order {
   soId: number;

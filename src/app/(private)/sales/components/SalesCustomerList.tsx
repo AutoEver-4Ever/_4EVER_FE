@@ -3,19 +3,24 @@
 import { useMemo, useState } from 'react';
 import CustomerDetailModal from '@/app/(private)/sales/components/CustomerDetailModal';
 import NewCustomerModal from '@/app/(private)/sales/components/NewCustomerModal';
-import { CustomerQueryParams } from '@/app/(private)/sales/types/SalesCustomerListType';
+import {
+  CustomerQueryParams,
+  CustomerStatus,
+} from '@/app/(private)/sales/types/SalesCustomerListType';
 import CustomerEditModal from './CustomerEditModal';
 import { useQuery } from '@tanstack/react-query';
 import { getCustomerList } from '../service';
 import { useDebounce } from 'use-debounce';
 import { CustomerDetail } from '../types/SalesCustomerDetailType';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
-import { CUSTOMER_LIST_TABLE_HEADERS } from '@/app/(private)/sales/constant';
+import {
+  CUSTOMER_LIST_TABLE_HEADERS,
+  CUSTOMER_STATUS_OPTIONS,
+} from '@/app/(private)/sales/constant';
 
-type statusType = 'ALL' | 'ACTIVE' | 'DEACTIVE';
 const CustomerList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<statusType>('ALL');
+  const [statusFilter, setStatusFilter] = useState<CustomerStatus>('ALL');
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState<number>(0);
   const [showCustomerModal, setShowCustomerModal] = useState(false);
@@ -126,12 +131,16 @@ const CustomerList = () => {
           <div className="flex items-center space-x-2">
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as statusType)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setStatusFilter(e.target.value as CustomerStatus)
+              }
               className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
             >
-              <option value="ALL">전체</option>
-              <option value="ACTIVE">활성</option>
-              <option value="DEACTIVE">비활성</option>
+              {CUSTOMER_STATUS_OPTIONS.map(({ key, value }) => (
+                <option key={key} value={value}>
+                  {value}
+                </option>
+              ))}
             </select>
           </div>
         </div>

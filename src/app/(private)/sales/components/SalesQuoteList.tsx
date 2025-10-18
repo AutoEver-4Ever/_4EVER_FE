@@ -13,6 +13,7 @@ import { useDebounce } from 'use-debounce';
 import QuoteReviewModal from './QuoteReviewModal';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
 import { QUOTE_LIST_TABLE_HEADERS } from '@/app/(private)/sales/constant';
+import { QUOTE_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,8 +45,6 @@ const SalesQuoteList = () => {
     data: quoteRes,
     isLoading,
     isError,
-    isFetching,
-    isRefetching,
   } = useQuery({
     queryKey: ['quoteList', queryParams],
     queryFn: ({ queryKey }) => getQuoteList(queryKey[1] as QuoteQueryParams),
@@ -54,34 +53,6 @@ const SalesQuoteList = () => {
 
   const quotes = quoteRes?.data ?? [];
   const pageInfo = quoteRes?.pageData;
-
-  useEffect(() => {
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'auto';
-    }
-
-    window.addEventListener('load', () => {
-      const savedY = sessionStorage.getItem('scrollY');
-      if (savedY) window.scrollTo(0, parseInt(savedY));
-    });
-
-    window.addEventListener('scroll', () => {
-      sessionStorage.setItem('scrollY', String(window.scrollY));
-    });
-
-    return () => {
-      window.removeEventListener('scroll', () => {});
-      window.removeEventListener('load', () => {});
-    };
-  }, []);
-
-  // useEffect(() => {
-  //   console.log(
-  //     `%c[Query 상태]%c isFetching=${isFetching}, isRefetching=${isRefetching}, isLoading=${isLoading}`,
-  //     'color: orange; font-weight: bold;',
-  //     'color: white; background: #222; padding: 2px 4px; border-radius: 3px;',
-  //   );
-  // }, [isFetching, isRefetching, isLoading]);
 
   const getStatusColor = (status: QuoteStatus) => {
     switch (status) {
@@ -92,14 +63,6 @@ const SalesQuoteList = () => {
       case 'APPROVED':
         return 'bg-green-100 text-green-800';
       case 'ALL':
-        return 'bg-red-100 text-red-800';
-      case '승인':
-        return 'bg-green-100 text-green-800';
-      case '검토':
-        return 'bg-yellow-100 text-yellow-800';
-      case '대기':
-        return 'bg-gray-100 text-gray-800';
-      case '반려':
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -116,14 +79,7 @@ const SalesQuoteList = () => {
         return '승인';
       case 'REJECTED':
         return '반려';
-      case '승인':
-        return '승인';
-      case '검토':
-        return '검토';
-      case '대기':
-        return '대기';
-      case '반려':
-        return '반려';
+
       default:
         return status;
     }
@@ -229,11 +185,11 @@ const SalesQuoteList = () => {
               }
               className="bg-white px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
             >
-              <option value="ALL">전체 상태</option>
-              <option value="PENDING">대기</option>
-              <option value="REVIEW">검토</option>
-              <option value="APPROVED">승인</option>
-              <option value="REJECTED">반려</option>
+              {QUOTE_STATUS_OPTIONS.map(({ key, value }) => (
+                <option key={key} value={value}>
+                  {value}
+                </option>
+              ))}
             </select>
           </div>
 

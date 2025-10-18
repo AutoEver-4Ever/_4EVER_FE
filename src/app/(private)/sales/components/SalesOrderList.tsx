@@ -2,26 +2,22 @@
 
 import { useMemo, useState } from 'react';
 import SalesOrderDetailModal from '@/app/(private)/sales/components/SalesOrderDetailModal';
-import { Order, OrderQueryParams } from '@/app/(private)/sales/types/SalesOrderListType';
+import {
+  Order,
+  OrderQueryParams,
+  OrderStatus,
+} from '@/app/(private)/sales/types/SalesOrderListType';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
 import { getOrderList } from '../service';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
-import { ORDER_LIST_TABLE_HEADERS } from '@/app/(private)/sales/constant';
-
-type statusType =
-  | 'ALL'
-  | 'MATERIAL_PREPARATION'
-  | 'IN_PRODUCTION'
-  | 'READY_FOR_SHIPMENT'
-  | 'DELIVERING'
-  | 'DELIVERED';
+import { ORDER_LIST_TABLE_HEADERS, ORDER_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
 
 const SalesOrderList = () => {
   const [showOrderDetailModal, setShowOrderDetailModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<statusType>('ALL');
+  const [statusFilter, setStatusFilter] = useState<OrderStatus>('ALL');
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -165,15 +161,15 @@ const SalesOrderList = () => {
           <select
             value={statusFilter}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              setStatusFilter(e.target.value as statusType)
+              setStatusFilter(e.target.value as OrderStatus)
             }
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-8"
           >
-            <option value="ALL">전체 상태</option>
-            <option value="IN_PRODUCTION">생산중</option>
-            <option value="READY_FOR_SHIPMENT">출하 준비 완료</option>
-            <option value="DELIVERING">배송중</option>
-            <option value="DELIVERED">배송완료</option>
+            {ORDER_STATUS_OPTIONS.map(({ key, value }) => (
+              <option key={key} value={value}>
+                {value}
+              </option>
+            ))}
           </select>
         </div>
       </div>
