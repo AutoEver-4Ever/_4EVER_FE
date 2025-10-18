@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 
-import { fetchPurchaseStats } from '@/app/purchase/api/purchase.api';
+import { fetchPurchaseStats } from '@/app/(private)/purchase/api/purchase.api';
 import { mapPurchaseStatsToCards } from '@/app/(private)/purchase/services/purchase.service';
 import StatSection from '@/app/components/statCard/StatSection';
 

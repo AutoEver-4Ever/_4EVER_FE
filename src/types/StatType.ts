@@ -1,3 +1,4 @@
+// 이번주, 이번달, 이번 분기, 연도별
 export type Period = 'week' | 'month' | 'quarter' | 'year';
 
 // 각 지표의 기본 구조
@@ -11,6 +12,7 @@ export type StatResponse<T> = {
   [key in Period]: T;
 };
 
+// stat card UI 출력 형식 >> 아이콘은 추후 넣을지 상의
 export interface StatCardType {
   title: string;
   value: string;
