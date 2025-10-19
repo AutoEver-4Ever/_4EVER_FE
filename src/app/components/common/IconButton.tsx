@@ -1,6 +1,6 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  label: string;
   icon: string;
+  label?: string;
   variant?: 'primary' | 'secondary' | 'outline';
   size?: 'sm' | 'md' | 'lg';
 }
@@ -10,38 +10,47 @@ export default function IconButton({
   icon,
   variant = 'primary',
   size = 'md',
-  className,
+  className = '',
   ...props
 }: ButtonProps) {
   const base =
-    'inline-flex items-center rounded-lg font-semibold focus:outline-none transition cursor-pointer';
+    'inline-flex items-center justify-center rounded-lg font-semibold focus:outline-none transition cursor-pointer';
+
   const variants = {
     primary: 'bg-blue-500 text-white hover:opacity-85',
-    secondary: 'bg-gray-200 text-gray-600 hover:bg-gray-300',
+    secondary: 'bg-gray-200 text-gray-500 hover:bg-gray-300',
     outline: 'border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-50',
+    whiteOutline: 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50',
   };
 
   const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-1.5 text-base',
-    lg: 'px-5 py-2.5 text-lg',
+    sm: { px: 'px-2', py: 'py-1', text: 'text-sm', square: 'w-8 h-8' },
+    md: { px: 'px-3', py: 'py-1.5', text: 'text-base', square: 'w-10 h-10' },
+    lg: { px: 'px-4', py: 'py-2', text: 'text-lg', square: 'w-12 h-12' },
   };
 
-  // 글자보다 한 단계 큰 아이콘 클래스 매핑
   const iconSizes = {
     sm: 'text-base',
     md: 'text-lg',
     lg: 'text-xl',
   };
 
+  // 아이콘만 있으면 정사각형
+  const isIconOnly = !label;
+
   return (
-    <button className={`${base} ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
-      {icon && (
-        <span className="pr-1">
-          <i className={`${icon} ${iconSizes[size]}`}></i>
-        </span>
-      )}
-      <span className="pr-1">{label}</span>
+    <button
+      className={`
+        ${base} 
+        ${variants[variant]} 
+        ${isIconOnly ? sizes[size].square : `${sizes[size].px} ${sizes[size].py}`} 
+        ${sizes[size].text} 
+        ${className}
+      `}
+      {...props}
+    >
+      <i className={`${icon} ${iconSizes[size]} ${label ? 'pr-1' : ''}`}></i>
+      {label && <span className="pr-1">{label}</span>}
     </button>
   );
 }
