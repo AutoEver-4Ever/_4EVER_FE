@@ -16,7 +16,7 @@ import TableStatusBox from '@/app/components/common/TableStatusBox';
 import {
   CUSTOMER_LIST_TABLE_HEADERS,
   CUSTOMER_STATUS_OPTIONS,
-} from '@/app/(private)/sales/constant';
+} from '@/app/(private)/sales/types/constant';
 import { getCustomerStatusColor } from '@/app/(private)/sales/utils';
 import Pagination from '@/app/components/common/Pagination';
 

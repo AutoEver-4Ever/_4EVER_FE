@@ -2,13 +2,23 @@ export interface FinanceStatsProps {
   $selectedPeriod: string;
 }
 
-export interface FinanceStats {
-  totalSales: number;
-  totalSalesChange: number;
-  totalPurchases: number;
-  totalPurchasesChange: number;
-  netProfit: number;
-  netProfitChange: number;
-  accountsReceivable: number;
-  accountsReceivableChange: number;
+interface PeriodData {}
+
+export type Period = 'week' | 'month' | 'quarter' | 'year';
+
+export interface FinanceStatCard {
+  title: string;
+  value: string;
+  change: string;
+  changeType: 'increase' | 'decrease';
+  icon: string;
+  iconBg: string;
+  iconColor: string;
+}
+
+export interface FinanceStatData {
+  week: PeriodData;
+  month: PeriodData;
+  quarter: PeriodData;
+  year: PeriodData;
 }

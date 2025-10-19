@@ -1,8 +1,20 @@
 'use client';
 
-import { FinanceStatsProps } from '@/app/(private)/finance/types/FinanceStatsType';
+import { FinanceStatCard, FinanceStatsProps } from '@/app/(private)/finance/types/FinanceStatsType';
+import { Period } from '@/types/StatType';
+import { useQuery } from '@tanstack/react-query';
+import { getPurchaseStatements } from '@/app/(private)/finance/finance.service';
 
 const FinanceStats = ({ $selectedPeriod }: FinanceStatsProps) => {
+  // const { data, isLoading, isError } = useQuery<Record<Period, FinanceStatCard[]>>({
+  //   queryKey: ['stats'],
+  //   queryFn: getPurchaseStatements,
+  //   staleTime: 1000,
+  // });
+  // if (isLoading) return <p>불러오는 중...</p>;
+  // if (isError || !data) return <p>데이터를 불러오지 못했습니다.</p>;
+
+  // const stats = data[$selectedPeriod];
   const stats = [
     {
       title: '총 매출 (AR)',
@@ -41,7 +53,6 @@ const FinanceStats = ({ $selectedPeriod }: FinanceStatsProps) => {
       iconBg: 'bg-orange-100',
     },
   ];
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((stat, index) => (
