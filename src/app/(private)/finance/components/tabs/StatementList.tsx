@@ -18,6 +18,7 @@ import {
 } from '@/app/(private)/finance/finance.service';
 import Pagination from '@/app/components/common/Pagination';
 import { useSearchParams } from 'next/navigation';
+import TableStatusBox from '@/app/components/common/TableStatusBox';
 
 const VoucherList = () => {
   const searchParams = useSearchParams();
@@ -89,7 +90,9 @@ const VoucherList = () => {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
           <i className="ri-shopping-cart-line text-blue-600 text-lg"></i>
-          <h2 className="text-lg font-semibold text-gray-900">매입 전표 목록</h2>
+          <h2 className="text-lg font-semibold text-gray-900">
+            {currentTab === 'sales' ? '매출 전표 목록' : '매입 전표 목록'}
+          </h2>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -124,75 +127,83 @@ const VoucherList = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-200">
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <input
-                  type="checkbox"
-                  disabled
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-              </th>
-              {VOUCHER_LIST_TABLE_HEADERS.map((header) => (
-                <th
-                  key={header}
-                  className="py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider text-left"
-                >
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {statements.map((statement) => (
-              <tr
-                key={statement.statementId}
-                className="hover:bg-gray-50 transition-colors duration-200"
-              >
-                <td className="py-3 px-4">
+        {isLoading ? (
+          <TableStatusBox $type="loading" $message="전표 목록을 불러오는 중입니다..." />
+        ) : isError ? (
+          <TableStatusBox $type="error" $message="전표 목록을 불러오는 중 오류가 발생했습니다." />
+        ) : !statements || statements.length === 0 ? (
+          <TableStatusBox $type="empty" $message="등록된 전표가 없습니다." />
+        ) : (
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-200">
+                <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   <input
                     type="checkbox"
-                    checked={selectedStatementId === statement.statementId}
-                    onChange={(e) => handleSelectVoucher(statement.statementId, e.target.checked)}
+                    disabled
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
-                </td>
-                <td className="py-3 px-4 text-sm font-medium text-gray-900">
-                  {statement.statementCode}
-                </td>
-                <td className="py-3 px-4 text-sm text-gray-900">
-                  {statement.connection.connectionName}
-                </td>
-                <td className="py-3 px-4 text-sm font-medium text-gray-900 text-right">
-                  ₩{statement.totalAmount.toLocaleString()}
-                </td>
-                <td className="py-3 px-4 text-sm text-gray-500">{statement.issueDate}</td>
-                <td className="py-3 px-4 text-sm text-gray-500">{statement.dueDate}</td>
-                <td className="py-3 px-4">
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${getChitStatusColor(statement.status)}`}
+                </th>
+                {VOUCHER_LIST_TABLE_HEADERS.map((header) => (
+                  <th
+                    key={header}
+                    className="py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider text-left"
                   >
-                    {getChitStatusText(statement.status)}
-                  </span>
-                </td>
-                <td className="py-3 px-4 text-sm text-blue-600 hover:text-blue-500 cursor-pointer">
-                  {statement.reference.referenceCode}
-                </td>
-                <td className="py-3 px-4 text-center">
-                  <div className="flex items-center justify-center space-x-2">
-                    <button
-                      onClick={() => handleViewDetail(statement.statementId)}
-                      className="text-blue-600 hover:text-blue-500 cursor-pointer"
-                    >
-                      <i className="ri-eye-line"></i>
-                    </button>
-                  </div>
-                </td>
+                    {header}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {statements.map((statement) => (
+                <tr
+                  key={statement.statementId}
+                  className="hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <td className="py-3 px-4">
+                    <input
+                      type="checkbox"
+                      checked={selectedStatementId === statement.statementId}
+                      onChange={(e) => handleSelectVoucher(statement.statementId, e.target.checked)}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                  </td>
+                  <td className="py-3 px-4 text-sm font-medium text-gray-900">
+                    {statement.statementCode}
+                  </td>
+                  <td className="py-3 px-4 text-sm text-gray-900">
+                    {statement.connection.connectionName}
+                  </td>
+                  <td className="py-3 px-4 text-sm font-medium text-gray-900 text-right">
+                    ₩{statement.totalAmount.toLocaleString()}
+                  </td>
+                  <td className="py-3 px-4 text-sm text-gray-500">{statement.issueDate}</td>
+                  <td className="py-3 px-4 text-sm text-gray-500">{statement.dueDate}</td>
+                  <td className="py-3 px-4">
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium ${getChitStatusColor(statement.status)}`}
+                    >
+                      {getChitStatusText(statement.status)}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-sm text-blue-600 hover:text-blue-500 cursor-pointer">
+                    {statement.reference.referenceCode}
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <div className="flex items-center justify-center space-x-2">
+                      <button
+                        onClick={() => handleViewDetail(statement.statementId)}
+                        className="text-blue-600 hover:text-blue-500 cursor-pointer"
+                      >
+                        <i className="ri-eye-line"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
       {/* 페이지네이션 */}
       {isError || isLoading ? null : (
