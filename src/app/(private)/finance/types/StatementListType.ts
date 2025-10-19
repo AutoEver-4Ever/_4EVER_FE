@@ -3,7 +3,7 @@
 
 export type StatementStatus = 'ALL' | 'UNPAID' | 'PENDING' | 'PAID';
 
-export interface StatementList {
+export interface StatementListRes {
   statementId: number;
   statementCode: string;
   connection: {

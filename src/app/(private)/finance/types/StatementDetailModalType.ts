@@ -4,7 +4,7 @@ export interface StatementDetailModalProps {
   $setSelectedStatementId: (id: number) => void;
 }
 
-export interface StatementDetail {
+export interface StatementDetailRes {
   statementId: number;
   statementCode: string;
   connection: {
