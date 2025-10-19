@@ -1,53 +1,17 @@
 'use client';
 
+import { getChitStatusColor, getChitStatusText } from '@/app/(private)/finance/utils';
+import { VOUCHER_DETAIL_TABLE_HEADERS } from '@/app/(private)/finance/constants';
 import {
-  VoucherDetailType,
-  VoucherItem,
-  VourcherDetailModalProps,
-} from '@/app/(private)/finance/types/VoucherDetailModalType';
-import { getChitStatusColor, getChitStatusText } from '../../utils';
-import { VOUCHER_DETAIL_TABLE_HEADERS } from '../../constants';
+  StatementDetail,
+  StatementDetailModalProps,
+} from '@/app/(private)/finance/types/StatementDetailModalType';
 
 const VourcherDetailModal = ({
   $setShowDetailModal,
   $selectedVoucherId,
   $setSelectedVoucherId,
-}: VourcherDetailModalProps) => {
-  const mockVouchers: VoucherDetailType = {
-    id: 1,
-    voucherId: 'AP-2024-001',
-    type: 'AP',
-    description: '강판 구매 - 대한철강',
-    amount: '₩5,000,000',
-    date: '2024-01-18',
-    dueDate: '2024-02-17',
-    status: 'unpaid',
-    reference: 'PO-2024-001',
-    vendor: '대한철강',
-    details: {
-      voucherType: '매입전표',
-      memo: '1월 생산용 강판 구매',
-      items: [
-        {
-          name: '강판 A급',
-          spec: '1200x2400x3mm',
-          quantity: 50,
-          unit: '매',
-          unitPrice: 80000,
-          amount: 4000000,
-        },
-        {
-          name: '강판 B급',
-          spec: '1000x2000x2mm',
-          quantity: 25,
-          unit: '매',
-          unitPrice: 40000,
-          amount: 1000000,
-        },
-      ],
-    },
-  };
-
+}: StatementDetailModalProps) => {
   const onClose = () => {
     $setSelectedVoucherId(0);
     $setShowDetailModal(false);

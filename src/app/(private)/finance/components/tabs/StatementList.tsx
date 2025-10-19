@@ -1,9 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import VourcherDetailModal from '../modals/VoucherDetailModal';
-import { getChitStatusColor, getChitStatusText } from '../../utils';
-import { VOUCHER_LIST_TABLE_HEADERS, VOUCHER_STATUS_OPTIONS } from '../../constants';
+import { getChitStatusColor, getChitStatusText } from '@/app/(private)/finance/utils';
+import {
+  VOUCHER_LIST_TABLE_HEADERS,
+  VOUCHER_STATUS_OPTIONS,
+} from '@/app/(private)/finance/constants';
+import StatementDetailModal from '@/app/(private)/finance/components/modals/StatementDetailModal';
 
 const VoucherList = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -289,7 +292,7 @@ const VoucherList = () => {
       </div>
       {/* 전표 상세 모달 */}
       {showDetailModal && (
-        <VourcherDetailModal
+        <StatementDetailModal
           $setShowDetailModal={setShowDetailModal}
           $selectedVoucherId={selectedVoucherId}
           $setSelectedVoucherId={setSelectedVoucherId}
