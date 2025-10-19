@@ -1,10 +1,7 @@
 export interface VourcherDetailModalProps {
-  $showDetailModal: boolean;
   $setShowDetailModal: (show: boolean) => void;
   $selectedVoucherId: number;
   $setSelectedVoucherId: (id: number) => void;
-  $getStatusColor: (status: string) => string;
-  $getStatusText: (status: string) => string;
 }
 
 // 현재 VoucherDetailModalType과 VoucherListType의 타입이 같음!

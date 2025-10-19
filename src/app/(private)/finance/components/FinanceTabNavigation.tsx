@@ -2,7 +2,7 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 // import ArVoucherList from './ArVoucherList';
-import VoucherList from './VoucherList';
+import VoucherList from './tabs/VoucherList';
 
 const FinanceTabNavigation = () => {
   const router = useRouter();
@@ -43,8 +43,6 @@ const FinanceTabNavigation = () => {
       </div>
 
       <div className="space-y-8">
-        {/* {activeTab === 'sales' && <VoucherList />} */}
-        {/* {activeTab === 'purchase' && <VoucherList />} */}
         <VoucherList />
       </div>
     </div>

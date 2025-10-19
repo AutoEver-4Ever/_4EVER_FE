@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import VourcherDetailModal from './VoucherDetailModal';
-import { VoucherDetailType } from '../types/VoucherDetailModalType';
+import VourcherDetailModal from '../modals/VoucherDetailModal';
+import { getChitStatusColor, getChitStatusText } from '../../utils';
 
 const VoucherList = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -116,32 +116,6 @@ const VoucherList = () => {
       },
     },
   ];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'unpaid':
-        return 'bg-red-100 text-red-700';
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'paid':
-        return 'bg-green-100 text-green-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'unpaid':
-        return '미납';
-      case 'pending':
-        return '확인대기';
-      case 'paid':
-        return '완납';
-      default:
-        return status;
-    }
-  };
 
   const handleViewDetail = (id: number) => {
     setShowDetailModal(true);
@@ -261,9 +235,9 @@ const VoucherList = () => {
                 <td className="py-3 px-4 text-sm text-gray-500">{voucher.dueDate}</td>
                 <td className="py-3 px-4">
                   <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(voucher.status)}`}
+                    className={`px-2 py-1 rounded text-xs font-medium ${getChitStatusColor(voucher.status)}`}
                   >
-                    {getStatusText(voucher.status)}
+                    {getChitStatusText(voucher.status)}
                   </span>
                 </td>
                 <td className="py-3 px-4 text-sm text-blue-600 hover:text-blue-500 cursor-pointer">
@@ -327,16 +301,14 @@ const VoucherList = () => {
           </button>
         </div>
       </div>
-
       {/* 전표 상세 모달 */}
-      <VourcherDetailModal
-        $showDetailModal={showDetailModal}
-        $setShowDetailModal={setShowDetailModal}
-        $selectedVoucherId={selectedVoucherId}
-        $setSelectedVoucherId={setSelectedVoucherId}
-        $getStatusColor={getStatusColor}
-        $getStatusText={getStatusText}
-      />
+      {showDetailModal && (
+        <VourcherDetailModal
+          $setShowDetailModal={setShowDetailModal}
+          $selectedVoucherId={selectedVoucherId}
+          $setSelectedVoucherId={setSelectedVoucherId}
+        />
+      )}
     </div>
   );
 };
