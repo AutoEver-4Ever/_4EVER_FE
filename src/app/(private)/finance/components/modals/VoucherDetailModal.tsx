@@ -6,7 +6,7 @@ import {
   VourcherDetailModalProps,
 } from '@/app/(private)/finance/types/VoucherDetailModalType';
 import { getChitStatusColor, getChitStatusText } from '../../utils';
-import { ITEM_LIST_TABLE_HEADERS } from '../../constants';
+import { VOUCHER_DETAIL_TABLE_HEADERS } from '../../constants';
 
 const VourcherDetailModal = ({
   $setShowDetailModal,
@@ -116,7 +116,7 @@ const VourcherDetailModal = ({
                 <table className="w-full border border-gray-300 rounded-lg">
                   <thead className="bg-gray-50">
                     <tr>
-                      {ITEM_LIST_TABLE_HEADERS.map((header) => (
+                      {VOUCHER_DETAIL_TABLE_HEADERS.map((header) => (
                         <th
                           key={header}
                           className={`px-4 py-3 text-sm font-medium text-gray-700 border-b ${

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import VourcherDetailModal from '../modals/VoucherDetailModal';
 import { getChitStatusColor, getChitStatusText } from '../../utils';
-import { VOUCHER_LIST_TABLE_HEADERS } from '../../constants';
+import { VOUCHER_LIST_TABLE_HEADERS, VOUCHER_STATUS_OPTIONS } from '../../constants';
 
 const VoucherList = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -152,15 +152,17 @@ const VoucherList = () => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <label className="text-sm text-gray-600">상태:</label>
+
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
               className="px-3 py-1 border border-gray-300 rounded-md text-sm cursor-pointer pr-8"
             >
-              <option value="all">전체</option>
-              <option value="unpaid">미납</option>
-              <option value="pending">확인대기</option>
-              <option value="paid">완납</option>
+              {VOUCHER_STATUS_OPTIONS.map(({ key, value }) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </select>
           </div>
 
