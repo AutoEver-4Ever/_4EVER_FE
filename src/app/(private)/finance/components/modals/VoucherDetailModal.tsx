@@ -6,6 +6,7 @@ import {
   VourcherDetailModalProps,
 } from '@/app/(private)/finance/types/VoucherDetailModalType';
 import { getChitStatusColor, getChitStatusText } from '../../utils';
+import { ITEM_LIST_TABLE_HEADERS } from '../../constants';
 
 const VourcherDetailModal = ({
   $setShowDetailModal,
@@ -115,22 +116,20 @@ const VourcherDetailModal = ({
                 <table className="w-full border border-gray-300 rounded-lg">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
-                        품목
-                      </th>
-
-                      <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
-                        수량
-                      </th>
-                      <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">
-                        단위
-                      </th>
-                      <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b">
-                        단가
-                      </th>
-                      <th className="px-4 py-3 text-right text-sm font-medium text-gray-700 border-b">
-                        금액
-                      </th>
+                      {ITEM_LIST_TABLE_HEADERS.map((header) => (
+                        <th
+                          key={header}
+                          className={`px-4 py-3 text-sm font-medium text-gray-700 border-b ${
+                            header === '품목'
+                              ? 'text-left'
+                              : header === '수량' || header === '단위'
+                                ? 'text-center'
+                                : 'text-right'
+                          }`}
+                        >
+                          {header}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>

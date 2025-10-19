@@ -1,7 +1,6 @@
 'use client';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-// import ArVoucherList from './ArVoucherList';
 import VoucherList from './tabs/VoucherList';
 
 const FinanceTabNavigation = () => {

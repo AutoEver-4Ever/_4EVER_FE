@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import VourcherDetailModal from '../modals/VoucherDetailModal';
 import { getChitStatusColor, getChitStatusText } from '../../utils';
+import { VOUCHER_LIST_TABLE_HEADERS } from '../../constants';
 
 const VoucherList = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -188,31 +189,14 @@ const VoucherList = () => {
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
               </th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                전표번호
-              </th>
-
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                거래처
-              </th>
-              <th className="text-right py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                금액
-              </th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                전표 발생일
-              </th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                만기일
-              </th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                상태
-              </th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                참조번호
-              </th>
-              <th className="text-center py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                작업
-              </th>
+              {VOUCHER_LIST_TABLE_HEADERS.map((header) => (
+                <th
+                  key={header}
+                  className="py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider text-left"
+                >
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
