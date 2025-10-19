@@ -11,6 +11,7 @@ import IconButton from '@/app/components/common/IconButton';
 import Button from '@/app/components/common/Button';
 import { useMutation } from '@tanstack/react-query';
 import { createPurchaseRequest } from '@/app/(private)/purchase/api/purchase.api';
+import DropdownInputModal from '@/app/components/common/DropdownInputModal';
 
 export default function PurchaseRequestModal({ onClose }: PurchaseRequestItemProps) {
   const [requestItems, setRequestItems] = useState<PurchaseRequestItem[]>([
@@ -273,22 +274,21 @@ export default function PurchaseRequestModal({ onClose }: PurchaseRequestItemPro
                         />
                       </td>
                       <td className="px-4 py-3">
-                        <input
-                          type="text"
-                          value={item.purpose}
-                          onChange={(e) => updateRequestItem(item.id, 'purpose', e.target.value)}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                        <DropdownInputModal
                           placeholder="사용 목적"
-                          required
+                          value={item.purpose}
+                          onSubmit={(value) => {
+                            updateRequestItem(item.id, 'purpose', value);
+                          }}
                         />
                       </td>
                       <td className="px-4 py-3">
-                        <input
-                          type="text"
-                          value={item.notes}
-                          onChange={(e) => updateRequestItem(item.id, 'notes', e.target.value)}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                        <DropdownInputModal
                           placeholder="비고"
+                          value={item.notes}
+                          onSubmit={(value) => {
+                            updateRequestItem(item.id, 'notes', value);
+                          }}
                         />
                       </td>
                       <td className="px-4 py-3 text-center">
