@@ -1,11 +1,11 @@
 // 전표 상태에 따른 색상
 export const getChitStatusColor = (status: string) => {
   switch (status) {
-    case 'unpaid':
+    case 'UNPAID':
       return 'bg-red-100 text-red-700';
-    case 'pending':
+    case 'PENDING':
       return 'bg-yellow-100 text-yellow-700';
-    case 'paid':
+    case 'PAID':
       return 'bg-green-100 text-green-700';
     default:
       return 'bg-gray-100 text-gray-700';
@@ -15,11 +15,11 @@ export const getChitStatusColor = (status: string) => {
 // 전표 상태에 따른 텍스트
 export const getChitStatusText = (status: string) => {
   switch (status) {
-    case 'unpaid':
+    case 'UNPAID':
       return '미납';
-    case 'pending':
+    case 'PENDING':
       return '확인대기';
-    case 'paid':
+    case 'PAID':
       return '완납';
     default:
       return status;

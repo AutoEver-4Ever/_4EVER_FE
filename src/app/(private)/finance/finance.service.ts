@@ -2,7 +2,7 @@ import axios from 'axios';
 import { FINANCE_ENDPOINTS, ApiResponse } from '@/app/api';
 import { PageType } from '@/app/(private)/sales/types/SalesCustomerListType';
 import { FinanceStatCard, FinanceStatData } from '@/app/(private)/finance/types/FinanceStatsType';
-import { StatementList } from './types/StatementListType';
+import { StatementList, StatementQueryParams } from './types/StatementListType';
 import { StatementDetail } from './types/StatementDetailModalType';
 
 // ----------------------- 통계 지표 -----------------------
@@ -58,20 +58,22 @@ export const getFinanceStatistics = async (): Promise<Record<string, FinanceStat
 };
 
 // ----------------------- 매입 전표(AP) -----------------------
-export const getPurchaseStatements = async (
-  params?: Record<string, string | number>,
+export const getPurchaseStatementsList = async (
+  params?: StatementQueryParams,
 ): Promise<{ data: StatementList[]; pageData: PageType }> => {
-  const query = new URLSearchParams(
-    Object.entries(params || {}).reduce((acc, [key, val]) => ({ ...acc, [key]: String(val) }), {}),
-  ).toString();
+  const query = new URLSearchParams({
+    ...(params?.status && { status: params.status }),
+    ...(params?.page && { page: String(params.page) }),
+    ...(params?.size && { size: String(params.size) }),
+  }).toString();
 
-  const res = await axios.get<ApiResponse<{ items: StatementList[]; page: PageType }>>(
+  const res = await axios.get<ApiResponse<{ content: StatementList[]; page: PageType }>>(
     `${FINANCE_ENDPOINTS.PURCHASE_STATEMENTS_LIST}?${query}`,
   );
-  return { data: res.data.data.items, pageData: res.data.data.page };
+  return { data: res.data.data.content, pageData: res.data.data.page };
 };
 
-export const getPurchaseStatementDetail = async (statementId: number): Promise<StatementDetail> => {
+export const getStatementDetail = async (statementId: number): Promise<StatementDetail> => {
   const res = await axios.get<ApiResponse<StatementDetail>>(
     FINANCE_ENDPOINTS.PURCHASE_STATEMENT_DETAIL(statementId),
   );
@@ -79,17 +81,19 @@ export const getPurchaseStatementDetail = async (statementId: number): Promise<S
 };
 
 // ----------------------- 매출 전표(AS) -----------------------
-export const getSalesStatements = async (
-  params?: Record<string, string | number>,
+export const getSalesStatementsList = async (
+  params?: StatementQueryParams,
 ): Promise<{ data: StatementList[]; pageData: PageType }> => {
-  const query = new URLSearchParams(
-    Object.entries(params || {}).reduce((acc, [key, val]) => ({ ...acc, [key]: String(val) }), {}),
-  ).toString();
+  const query = new URLSearchParams({
+    ...(params?.status && { status: params.status }),
+    ...(params?.page && { page: String(params.page) }),
+    ...(params?.size && { size: String(params.size) }),
+  }).toString();
 
-  const res = await axios.get<ApiResponse<{ items: StatementList[]; page: PageType }>>(
+  const res = await axios.get<ApiResponse<{ content: StatementList[]; page: PageType }>>(
     `${FINANCE_ENDPOINTS.SALES_STATEMENTS_LIST}?${query}`,
   );
-  return { data: res.data.data.items, pageData: res.data.data.page };
+  return { data: res.data.data.content, pageData: res.data.data.page };
 };
 
 export const getSalesStatementDetail = async (statementId: number): Promise<StatementDetail> => {

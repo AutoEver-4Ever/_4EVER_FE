@@ -1,147 +1,87 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { getChitStatusColor, getChitStatusText } from '@/app/(private)/finance/utils';
 import {
   VOUCHER_LIST_TABLE_HEADERS,
   VOUCHER_STATUS_OPTIONS,
 } from '@/app/(private)/finance/constants';
-import StatementDetailModal from '@/app/(private)/finance/components/modals/StatementDetailModal';
+// import StatementDetailModal from '@/app/(private)/finance/components/modals/StatementDetailModal';
+import {
+  StatementQueryParams,
+  StatementStatus,
+} from '@/app/(private)/finance/types/StatementListType';
+import { useQuery } from '@tanstack/react-query';
+import {
+  getPurchaseStatementsList,
+  getSalesStatementsList,
+} from '@/app/(private)/finance/finance.service';
+import Pagination from '@/app/components/common/Pagination';
+import { useSearchParams } from 'next/navigation';
 
 const VoucherList = () => {
-  const [selectedStatus, setSelectedStatus] = useState('all');
+  const searchParams = useSearchParams();
+  const currentTab = searchParams.get('tab') || 'sales';
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [selectedVoucherId, setSelectedVoucherId] = useState<number>(0);
+  const [selectedStatementId, setSelectedStatementId] = useState<number>(0);
 
+  const [statusFilter, setStatusFilter] = useState<StatementStatus>('ALL');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedVouchers, setSelectedVouchers] = useState<string[]>([]);
+  const [selectedStatements, setSelectedStatements] = useState<string[]>([]);
 
-  const vouchers = [
-    {
-      id: 1,
-      ProductId: 'AP-2024-001',
-      type: 'AP',
-      description: '강판 구매 - 대한철강',
-      amount: '₩5,000,000',
-      date: '2024-01-18',
-      dueDate: '2024-02-17',
-      status: 'unpaid',
-      reference: 'PO-2024-001',
-      vendor: '대한철강',
-      details: {
-        voucherType: '매입전표',
-        memo: '1월 생산용 강판 구매',
-        items: [
-          {
-            name: '강판 A급',
-            spec: '1200x2400x3mm',
-            quantity: 50,
-            unit: '매',
-            unitPrice: 80000,
-            amount: 4000000,
-          },
-          {
-            name: '강판 B급',
-            spec: '1000x2000x2mm',
-            quantity: 25,
-            unit: '매',
-            unitPrice: 40000,
-            amount: 1000000,
-          },
-        ],
-      },
-    },
-    {
-      id: 2,
-      ProductId: 'AP-2024-001',
-      type: 'AP',
-      description: '강판 구매 - 대한철강',
-      amount: '₩5,000,000',
-      date: '2024-01-18',
-      dueDate: '2024-02-17',
-      status: 'unpaid',
-      reference: 'PO-2024-001',
-      vendor: '대한철강',
-      details: {
-        voucherType: '매입전표',
-        memo: '1월 생산용 강판 구매',
-        items: [
-          {
-            name: '강판 A급',
-            spec: '1200x2400x3mm',
-            quantity: 50,
-            unit: '매',
-            unitPrice: 80000,
-            amount: 4000000,
-          },
-          {
-            name: '강판 B급',
-            spec: '1000x2000x2mm',
-            quantity: 25,
-            unit: '매',
-            unitPrice: 40000,
-            amount: 1000000,
-          },
-        ],
-      },
-    },
-    {
-      id: 3,
-      ProductId: 'AP-2024-001',
-      type: 'AP',
-      description: '강판 구매 - 대한철강',
-      amount: '₩5,000,000',
-      date: '2024-01-18',
-      dueDate: '2024-02-17',
-      status: 'unpaid',
-      reference: 'PO-2024-001',
-      vendor: '대한철강',
-      details: {
-        voucherType: '매입전표',
-        memo: '1월 생산용 강판 구매',
-        items: [
-          {
-            name: '강판 A급',
-            spec: '1200x2400x3mm',
-            quantity: 50,
-            unit: '매',
-            unitPrice: 80000,
-            amount: 4000000,
-          },
-          {
-            name: '강판 B급',
-            spec: '1000x2000x2mm',
-            quantity: 25,
-            unit: '매',
-            unitPrice: 40000,
-            amount: 1000000,
-          },
-        ],
-      },
-    },
+  const queryParams = useMemo(
+    () => ({
+      page: currentPage - 1,
+      size: 10,
+      status: statusFilter || 'ALL',
+    }),
+    [currentPage, statusFilter],
+  );
+
+  const queryFn =
+    currentTab === 'sales'
+      ? () => getSalesStatementsList(queryParams)
+      : () => getPurchaseStatementsList(queryParams);
+
+  const queryKey = [
+    currentTab === 'sales' ? 'salesStatementList' : 'purchaseStatementList',
+    queryParams,
   ];
+
+  const {
+    data: statementRes,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: queryKey,
+    queryFn: queryFn,
+  });
+
+  const statements = statementRes?.data ?? [];
+  const pageInfo = statementRes?.pageData;
+  const totalPages = pageInfo?.totalPages ?? 1;
 
   const handleViewDetail = (id: number) => {
     setShowDetailModal(true);
-    setSelectedVoucherId(id);
+    setSelectedStatementId(id);
     console.log(showDetailModal);
   };
 
   const handleSelectVoucher = (voucherId: number, checked: boolean) => {
     if (checked) {
-      setSelectedVoucherId(voucherId);
+      setSelectedStatementId(voucherId);
     } else {
-      setSelectedVoucherId(0);
+      setSelectedStatementId(0);
     }
   };
 
   const handleReceivableComplete = () => {
-    if (selectedVouchers.length === 0) {
+    if (selectedStatements.length === 0) {
       alert('처리할 전표를 선택해주세요.');
       return;
     }
     alert(`미수 처리가 완료되었습니다.`);
-    setSelectedVouchers([]);
+    setSelectedStatements([]);
   };
 
   return (
@@ -157,8 +97,8 @@ const VoucherList = () => {
             <label className="text-sm text-gray-600">상태:</label>
 
             <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as StatementStatus)}
               className="px-3 py-1 border border-gray-300 rounded-md text-sm cursor-pointer pr-8"
             >
               {VOUCHER_STATUS_OPTIONS.map(({ key, value }) => (
@@ -171,9 +111,9 @@ const VoucherList = () => {
 
           <button
             onClick={handleReceivableComplete}
-            disabled={selectedVoucherId ? false : true}
+            disabled={selectedStatementId ? false : true}
             className={`px-4 py-2 rounded-lg transition-colors font-medium text-sm whitespace-nowrap cursor-pointer ${
-              selectedVoucherId
+              selectedStatementId
                 ? 'bg-green-600 text-white hover:bg-green-700'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
@@ -205,37 +145,44 @@ const VoucherList = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {vouchers.map((voucher) => (
-              <tr key={voucher.id} className="hover:bg-gray-50 transition-colors duration-200">
+            {statements.map((statement) => (
+              <tr
+                key={statement.statementId}
+                className="hover:bg-gray-50 transition-colors duration-200"
+              >
                 <td className="py-3 px-4">
                   <input
                     type="checkbox"
-                    checked={selectedVoucherId === voucher.id}
-                    onChange={(e) => handleSelectVoucher(voucher.id, e.target.checked)}
+                    checked={selectedStatementId === statement.statementId}
+                    onChange={(e) => handleSelectVoucher(statement.statementId, e.target.checked)}
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                 </td>
-                <td className="py-3 px-4 text-sm font-medium text-gray-900">{voucher.id}</td>
-                <td className="py-3 px-4 text-sm text-gray-900">{voucher.vendor}</td>
-                <td className="py-3 px-4 text-sm font-medium text-gray-900 text-right">
-                  {voucher.amount}
+                <td className="py-3 px-4 text-sm font-medium text-gray-900">
+                  {statement.statementCode}
                 </td>
-                <td className="py-3 px-4 text-sm text-gray-500">{voucher.date}</td>
-                <td className="py-3 px-4 text-sm text-gray-500">{voucher.dueDate}</td>
+                <td className="py-3 px-4 text-sm text-gray-900">
+                  {statement.connection.connectionName}
+                </td>
+                <td className="py-3 px-4 text-sm font-medium text-gray-900 text-right">
+                  ₩{statement.totalAmount.toLocaleString()}
+                </td>
+                <td className="py-3 px-4 text-sm text-gray-500">{statement.issueDate}</td>
+                <td className="py-3 px-4 text-sm text-gray-500">{statement.dueDate}</td>
                 <td className="py-3 px-4">
                   <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${getChitStatusColor(voucher.status)}`}
+                    className={`px-2 py-1 rounded text-xs font-medium ${getChitStatusColor(statement.status)}`}
                   >
-                    {getChitStatusText(voucher.status)}
+                    {getChitStatusText(statement.status)}
                   </span>
                 </td>
                 <td className="py-3 px-4 text-sm text-blue-600 hover:text-blue-500 cursor-pointer">
-                  {voucher.reference}
+                  {statement.reference.referenceCode}
                 </td>
                 <td className="py-3 px-4 text-center">
                   <div className="flex items-center justify-center space-x-2">
                     <button
-                      onClick={() => handleViewDetail(voucher.id)}
+                      onClick={() => handleViewDetail(statement.statementId)}
                       className="text-blue-600 hover:text-blue-500 cursor-pointer"
                     >
                       <i className="ri-eye-line"></i>
@@ -247,57 +194,24 @@ const VoucherList = () => {
           </tbody>
         </table>
       </div>
-
-      <div className="mt-6 flex items-center justify-between">
-        <div className="text-sm text-gray-500">총 0건의 전표 0 - 0 표시</div>
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-            className={`px-3 py-1 border border-gray-300 rounded-md text-sm cursor-pointer ${
-              currentPage === 1
-                ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                : 'text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            이전
-          </button>
-
-          {Array.from({ length: 2 }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => setCurrentPage(page)}
-              className={`px-3 py-1 rounded-md text-sm cursor-pointer ${
-                currentPage === page
-                  ? 'bg-blue-600 text-white'
-                  : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setCurrentPage(Math.min(2, currentPage + 1))}
-            disabled={currentPage === 2}
-            className={`px-3 py-1 border border-gray-300 rounded-md text-sm cursor-pointer ${
-              currentPage === 2
-                ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                : 'text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            다음
-          </button>
-        </div>
-      </div>
-      {/* 전표 상세 모달 */}
-      {showDetailModal && (
-        <StatementDetailModal
-          $setShowDetailModal={setShowDetailModal}
-          $selectedVoucherId={selectedVoucherId}
-          $setSelectedVoucherId={setSelectedVoucherId}
+      {/* 페이지네이션 */}
+      {isError || isLoading ? null : (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalElements={pageInfo?.totalElements}
+          onPageChange={(page) => setCurrentPage(page)}
         />
       )}
+
+      {/* 전표 상세 모달 */}
+      {/* {showDetailModal && (
+        <StatementDetailModal
+          $setShowDetailModal={setShowDetailModal}
+          $selectedStatementId={selectedStatementId}
+          $setSelectedStatementId={setSelectedStatementId}
+        />
+      )} */}
     </div>
   );
 };

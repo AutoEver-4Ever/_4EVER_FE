@@ -1,7 +1,7 @@
 export interface StatementDetailModalProps {
   $setShowDetailModal: (show: boolean) => void;
-  $selectedVoucherId: number;
-  $setSelectedVoucherId: (id: number) => void;
+  $selectedStatementId: number;
+  $setSelectedStatementId: (id: number) => void;
 }
 
 export interface StatementDetail {

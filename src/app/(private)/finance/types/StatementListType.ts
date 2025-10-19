@@ -21,3 +21,9 @@ export interface StatementList {
     referenceCode: string;
   };
 }
+
+export interface StatementQueryParams {
+  status: string;
+  page: number;
+  size: number;
+}
