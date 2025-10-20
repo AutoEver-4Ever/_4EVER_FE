@@ -21,6 +21,8 @@ import {
 } from '@/app/(private)/purchase/types/PurchaseReqType';
 import DateRangePicker from '@/app/components/common/DateRangePicker';
 import { getQueryClient } from '@/lib/queryClient';
+import TableStatusBox from '@/app/components/common/TableStatusBox';
+import Pagination from '@/app/components/common/Pagination';
 
 const getStatusColor = (status: string): string => {
   switch (status) {
@@ -50,14 +52,15 @@ const getStatusText = (status: string): string => {
 
 export default function PurchaseRequestListTab() {
   const [selectedStatus, setSelectedStatus] = useState<string>('');
-  const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize] = useState(10);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState<number>(-1);
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   const queryClient = getQueryClient();
 
@@ -102,14 +105,10 @@ export default function PurchaseRequestListTab() {
     },
   });
 
-  if (isLoading) return <p>불러오는 중...</p>;
-  if (isError || !requestData) return <p>데이터를 불러오지 못했습니다.</p>;
+  const requests = requestData?.content || [];
+  const pageInfo = requestData?.page;
 
-  const requests = requestData.content || [];
-  const pageInfo = requestData.page;
-
-  const isFirstPage = currentPage === 0;
-  const isLastPage = pageInfo ? currentPage === pageInfo.totalPages - 1 : true;
+  const totalPages = pageInfo?.totalPages ?? 1;
 
   const getStatusValue = (): string => {
     const item = PURCHASE_REQ_STATUS.find((s) => s.key === selectedStatus);
@@ -118,23 +117,7 @@ export default function PurchaseRequestListTab() {
 
   const handleStatusChange = (status: string): void => {
     setSelectedStatus(status);
-    setCurrentPage(0);
-  };
-
-  const handlePageChange = (page: number): void => {
-    setCurrentPage(page);
-  };
-
-  const handlePrevPage = (): void => {
-    if (pageInfo && currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = (): void => {
-    if (pageInfo && currentPage < pageInfo.totalPages - 1) {
-      setCurrentPage(currentPage + 1);
-    }
+    setCurrentPage(1);
   };
 
   const handleViewDetail = (request: PurchaseReqResponse): void => {
@@ -189,126 +172,99 @@ export default function PurchaseRequestListTab() {
 
         {/* 테이블 */}
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                {PURCHASE_LIST_TABLE_HEADERS.map((header) => (
-                  <th
-                    key={header}
-                    className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center"
-                  >
-                    {header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {requests.map((request) => (
-                <tr key={request.id} className="hover:bg-gray-50 text-center">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    <div className="flex flex-col">
-                      <span>{request.prNumber}</span>
-                      <span>{request.departmentName}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{request.requesterName}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{request.requestDate}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{request.desiredDeliveryDate}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{request.totalAmount}원</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor('APPROVED')}`}
-                    >
-                      {getStatusText('APPROVED')}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
-                    <div className="flex items-center justify-center space-x-2">
-                      <button
-                        onClick={() => handleViewDetail(request)}
-                        className="w-8 h-8 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded cursor-pointer"
-                        title="상세보기"
-                      >
-                        <i className="ri-eye-line"></i>
-                      </button>
-                      <>
-                        <button
-                          onClick={() => handleApprove(request.id)}
-                          className="text-green-600 hover:text-green-900 cursor-pointer"
-                          title="승인"
-                        >
-                          <i className="ri-check-line"></i>
-                        </button>
-                        <button
-                          onClick={() => handleReject(request.id)}
-                          className="text-red-600 hover:text-red-900 cursor-pointer"
-                          title="반려"
-                        >
-                          <i className="ri-close-line"></i>
-                        </button>
-                      </>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {requests.length === 0 && (
+          {isLoading ? (
+            <TableStatusBox $type="loading" $message="구매 요청 목록을 불러오는 중입니다..." />
+          ) : isError ? (
+            <TableStatusBox
+              $type="error"
+              $message="구매 요청 목록을 불러오는 중 오류가 발생했습니다."
+            />
+          ) : !requests || requests.length === 0 ? (
+            <TableStatusBox $type="empty" $message="구매 요청 정보가 없습니다." />
+          ) : (
+            <table className="w-full">
+              <thead className="bg-gray-50">
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500 text-sm">
-                    구매 요청이 없습니다.
-                  </td>
+                  {PURCHASE_LIST_TABLE_HEADERS.map((header) => (
+                    <th
+                      key={header}
+                      className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center"
+                    >
+                      {header}
+                    </th>
+                  ))}
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {requests.map((request) => (
+                  <tr key={request.id} className="hover:bg-gray-50 text-center">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <div className="flex flex-col">
+                        <span>{request.prNumber}</span>
+                        <span>{request.departmentName}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{request.requesterName}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{request.requestDate}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {request.desiredDeliveryDate}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{request.totalAmount}원</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor('APPROVED')}`}
+                      >
+                        {getStatusText('APPROVED')}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      <div className="flex items-center justify-center space-x-2">
+                        <button
+                          onClick={() => handleViewDetail(request)}
+                          className="w-8 h-8 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded cursor-pointer"
+                          title="상세보기"
+                        >
+                          <i className="ri-eye-line"></i>
+                        </button>
+                        <>
+                          <button
+                            onClick={() => handleApprove(request.id)}
+                            className="text-green-600 hover:text-green-900 cursor-pointer"
+                            title="승인"
+                          >
+                            <i className="ri-check-line"></i>
+                          </button>
+                          <button
+                            onClick={() => handleReject(request.id)}
+                            className="text-red-600 hover:text-red-900 cursor-pointer"
+                            title="반려"
+                          >
+                            <i className="ri-close-line"></i>
+                          </button>
+                        </>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {requests.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500 text-sm">
+                      구매 요청이 없습니다.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
 
-        {/* 페이지네이션 */}
-        {pageInfo && (
-          <div className="p-6 flex items-center justify-between border-t border-gray-200">
-            <div className="text-sm text-gray-600">
-              총 {pageInfo.totalElements}건 ({pageInfo.size * currentPage + 1}-
-              {Math.min(pageInfo.size * (currentPage + 1), pageInfo.totalElements)} 표시)
-            </div>
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={handlePrevPage}
-                disabled={isFirstPage}
-                className={`px-3 py-1 border border-gray-300 rounded-lg text-sm ${
-                  isFirstPage
-                    ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                이전
-              </button>
-
-              {Array.from({ length: pageInfo.totalPages }, (_, i) => i).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={`px-3 py-1 rounded-lg text-sm font-medium ${
-                    currentPage === page
-                      ? 'bg-blue-600 text-white'
-                      : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {page + 1}
-                </button>
-              ))}
-
-              <button
-                onClick={handleNextPage}
-                disabled={isLastPage}
-                className={`px-3 py-1 border border-gray-300 rounded-lg text-sm ${
-                  isLastPage
-                    ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                다음
-              </button>
-            </div>
-          </div>
+        {isError || isLoading ? null : (
+          <Pagination
+            currentPage={currentPage + 1} // 0-based를 1-based로 변환
+            totalPages={totalPages}
+            totalElements={pageInfo?.totalElements}
+            onPageChange={(page) => setCurrentPage(page - 1)} // 1-based를 0-based로 변환
+          />
         )}
       </div>
       {/* 구매 요청 작성 모달 */}

@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { href: '/inventory', label: '재고관리' },
   { href: '/finance', label: '재무관리' },
   { href: '/hrm', label: '인적자원관리' },
-  { href: '/bom', label: '생산관리' },
+  { href: '/production', label: '생산관리' },
 ] as const;
 
 export default function Navigation() {

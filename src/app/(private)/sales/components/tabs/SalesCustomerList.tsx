@@ -194,7 +194,7 @@ const CustomerList = () => {
       </div>
 
       {/* 페이지네이션 */}
-      {isError || isLoading ? null : (
+      {isError || !isLoading ? null : (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

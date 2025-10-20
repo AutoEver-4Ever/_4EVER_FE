@@ -1,9 +1,9 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { TabNavigationProps } from '@/app/(private)/purchase/types/TabNavigationType';
+import { Tab } from '@/types/NavigationType';
 
-export default function TabNavigation({ tabs }: TabNavigationProps) {
+export default function TabNavigation({ tabs }: { tabs: Tab[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathName = usePathname(); // 현재 경로 가져오기 (ex: "/purchase")

@@ -240,7 +240,7 @@ const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
                   </p>
                   <div className="flex gap-3">
                     <Link
-                      href="/bom"
+                      href="/production"
                       className="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors cursor-pointer whitespace-nowrap flex items-center space-x-2"
                       onClick={$onClose}
                     >
