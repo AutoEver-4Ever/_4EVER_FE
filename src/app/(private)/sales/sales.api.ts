@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { SALES_ENDPOINTS, ApiResponse } from '@/app/api';
+import { SALES_ENDPOINTS, ApiResponse, ApiResponseNoData } from '@/app/api';
 
 import { SalesStatResponse } from '@/app/(private)/sales/types/SalesStatsType';
 import { Quote, QuoteQueryParams } from '@/app/(private)/sales/types/SalesQuoteListType';
-import { QuoteDetail } from '@/app/(private)/sales/types/QuoteDetailModalType';
+import { Inventories, QuoteDetail } from '@/app/(private)/sales/types/QuoteDetailModalType';
 import { CustomerDetail } from '@/app/(private)/sales/types/SalesCustomerDetailType';
 import {
   SalesCustomer,
@@ -100,6 +100,16 @@ export const getOrderList = async (
 export const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
   const res = await axios.get<ApiResponse<OrderDetail>>(SALES_ENDPOINTS.ORDER_DETAIL(orderId));
   return res.data.data;
+};
+
+export const postQuotationConfirm = async (quotes: number): Promise<ApiResponseNoData> => {
+  const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.QUOTE_CONFIRM, quotes);
+  return res.data;
+};
+
+export const postInventoryCheck = async (items: Inventories): Promise<ApiResponseNoData> => {
+  const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.INVENTORY_CHECK, items);
+  return res.data;
 };
 
 // ----------------------- 고객 관리 -----------------------

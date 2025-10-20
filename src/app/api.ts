@@ -10,12 +10,19 @@ export interface ApiResponse<T> {
   message: string;
   data: T;
 }
+export interface ApiResponseNoData {
+  status: number;
+  success: boolean;
+  message: string;
+}
 
 // ----------------------- SALES -----------------------
 export const SALES_ENDPOINTS = {
   STATS: `${SALES_BASE_PATH}/statistics`,
   QUOTES_LIST: `${SALES_BASE_PATH}/quotations`,
   QUOTE_DETAIL: (id: number) => `${SALES_BASE_PATH}/quotations/${id}`,
+  QUOTE_CONFIRM: `${SALES_BASE_PATH}/quotations/confirm`,
+  INVENTORY_CHECK: `${SALES_BASE_PATH}/quotations/inventory/check`,
   ORDERS_LIST: `${SALES_BASE_PATH}/orders`,
   ORDER_DETAIL: (id: number) => `${SALES_BASE_PATH}/orders/${id}`,
   CUSTOMERS_LIST: `${SALES_BASE_PATH}/customers`,

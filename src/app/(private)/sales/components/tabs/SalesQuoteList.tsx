@@ -1,14 +1,18 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   QuoteStatus,
   Quote,
   QuoteQueryParams,
 } from '@/app/(private)/sales/types/SalesQuoteListType';
 import QuoteDetailModal from '../modals/QuoteDetailModal';
-import { useQuery } from '@tanstack/react-query';
-import { getQuoteList } from '@/app/(private)/sales/sales.api';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  getQuoteList,
+  postInventoryCheck,
+  postQuotationConfirm,
+} from '@/app/(private)/sales/sales.api';
 import { useDebounce } from 'use-debounce';
 import QuoteReviewModal from '../modals/QuoteReviewModal';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
@@ -17,6 +21,7 @@ import { QUOTE_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
 import { getQuoteStatusColor, getQuoteStatusText } from '../../utils';
 import Pagination from '@/app/components/common/Pagination';
 import IconButton from '@/app/components/common/IconButton';
+import { stat } from 'fs';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,6 +36,10 @@ const SalesQuoteList = () => {
   const [endDate, setEndDate] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 200);
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    console.log(selectedQuotes);
+  }, [selectedQuotes]);
 
   const queryParams = useMemo(
     () => ({
@@ -57,6 +66,29 @@ const SalesQuoteList = () => {
   const quotes = quoteRes?.data ?? [];
   const pageInfo = quoteRes?.pageData;
   const totalPages = pageInfo?.totalPages ?? 1;
+  //---------------------------------------------
+  const { mutate: quotationConfirmReq } = useMutation({
+    mutationFn: postQuotationConfirm,
+    onSuccess: (data) => {
+      alert(`${data.status} : ${selectedQuotes}
+        `);
+    },
+    onError: (error) => {
+      alert(`검토 요청 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+
+  const { mutate: inventoryCheckReq } = useMutation({
+    mutationFn: postInventoryCheck,
+    onSuccess: (data) => {
+      alert(`${data.status} : ${selectedQuotes}
+        `);
+    },
+    onError: (error) => {
+      alert(`재고 확인 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+  //---------------------------------------------
 
   const handleViewQuote = (quote: Quote) => {
     setSelectedQuoteId(quote.quotationId);

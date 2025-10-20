@@ -55,7 +55,7 @@ const VoucherList = () => {
   ];
 
   const {
-    data: invoiceRes,
+    data: invoiceReq,
     isLoading,
     isError,
   } = useQuery({
@@ -64,8 +64,8 @@ const VoucherList = () => {
     staleTime: 1000,
   });
 
-  const invoices = invoiceRes?.data ?? [];
-  const pageInfo = invoiceRes?.pageData;
+  const invoices = invoiceReq?.data ?? [];
+  const pageInfo = invoiceReq?.pageData;
   const totalPages = pageInfo?.totalPages ?? 1;
 
   const mutationFn =

@@ -75,7 +75,7 @@ const QuoteDetailModal = ({ $onClose, $selectedQuoteId }: QuoteDetailModalProps)
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">담당자:</span>
-                      <span className="font-medium">{data!.ownerName}</span>
+                      <span className="font-medium">{data!.ceoName}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">상태:</span>
@@ -109,8 +109,9 @@ const QuoteDetailModal = ({ $onClose, $selectedQuoteId }: QuoteDetailModalProps)
                   </thead>
                   <tbody>
                     <tr className="border-b">
-                      <td className="px-4 py-3 text-sm">{data!.items[0].productName}</td>
+                      <td className="px-4 py-3 text-sm">{data!.items[0].itemName}</td>
                       <td className="px-4 py-3 text-sm text-center">{data!.items[0].quantity}</td>
+                      <td className="px-4 py-3 text-sm text-center">{data!.items[0].uomName}</td>
                       <td className="px-4 py-3 text-sm text-right">
                         ₩{data!.items[0].unitPrice.toLocaleString()}
                       </td>
