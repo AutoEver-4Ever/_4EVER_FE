@@ -1,3 +1,5 @@
+import { Period } from '@/types/StatType';
+
 // 전표 상태에 따른 색상
 export const getChitStatusColor = (status: string) => {
   switch (status) {
@@ -33,5 +35,18 @@ export const getInvoiceType = (tab: string) => {
       return '매출 전표';
     case 'purchase':
       return '매입 전표';
+  }
+};
+
+export const getPeriodText = (period: Period) => {
+  switch (period) {
+    case 'week':
+      return '지난 주';
+    case 'month':
+      return '지난 달';
+    case 'quarter':
+      return '지난 분기';
+    case 'year':
+      return '작년';
   }
 };

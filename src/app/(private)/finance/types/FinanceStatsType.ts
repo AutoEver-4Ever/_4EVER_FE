@@ -1,5 +1,5 @@
 export interface FinanceStatsProps {
-  $selectedPeriod: string;
+  $selectedPeriod: Period;
 }
 
 interface Metric {
@@ -10,6 +10,8 @@ interface Metric {
 interface PeriodData {
   total_purchases: Metric;
   net_profit: Metric;
+  accounts_receivable: Metric;
+  total_sales: Metric;
 }
 
 export type Period = 'week' | 'month' | 'quarter' | 'year';

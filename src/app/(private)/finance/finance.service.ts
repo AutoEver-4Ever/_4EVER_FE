@@ -4,9 +4,10 @@ import { FinanceStatCard, FinanceStatData } from '@/app/(private)/finance/types/
 import { InvoiceListRes, InvoiceQueryParams } from './types/InvoiceListType';
 import { InvoicetDetailRes } from './types/InvoiceDetailModalType';
 import { Page } from '@/types/Page';
+import { Period } from '@/types/StatType';
 
 // ----------------------- 통계 지표 -----------------------
-export const getFinanceStatistics = async (): Promise<Record<string, FinanceStatCard[]>> => {
+export const getFinanceStats = async (): Promise<Record<Period, FinanceStatCard[]>> => {
   const res = await axios.get<ApiResponse<FinanceStatData>>(FINANCE_ENDPOINTS.STATISTICS);
   const datas = res.data.data;
 
@@ -15,36 +16,36 @@ export const getFinanceStatistics = async (): Promise<Record<string, FinanceStat
       const cards: FinanceStatCard[] = [
         {
           title: '총 매출 (AR)',
-          value: `₩${stats.totalSales.toLocaleString()}`,
-          change: `${stats.totalSalesChange > 0 ? '+' : ''}${stats.totalSalesChange}%`,
-          changeType: stats.totalSalesChange >= 0 ? 'increase' : 'decrease',
+          value: `₩${stats.total_sales.value.toLocaleString()}`,
+          change: `${stats.total_sales.delta_rate > 0 ? '+' : ''}${stats.total_sales.delta_rate}%`,
+          changeType: stats.total_sales.delta_rate >= 0 ? 'increase' : 'decrease',
           icon: 'ri-arrow-up-circle-line',
           iconBg: 'text-green-600',
           iconColor: 'bg-green-100',
         },
         {
           title: '총 매입 (AP)',
-          value: `₩${stats.totalPurchases.toLocaleString()}`,
-          change: `${stats.totalPurchasesChange > 0 ? '+' : ''}${stats.totalPurchasesChange}%`,
-          changeType: stats.totalPurchasesChange >= 0 ? 'increase' : 'decrease',
+          value: `₩${stats.total_purchases.value.toLocaleString()}`,
+          change: `${stats.total_purchases.delta_rate > 0 ? '+' : ''}${stats.total_purchases.delta_rate}%`,
+          changeType: stats.total_purchases.delta_rate >= 0 ? 'increase' : 'decrease',
           icon: 'ri-arrow-down-circle-line',
           iconColor: 'text-red-600',
           iconBg: 'bg-red-100',
         },
         {
           title: '순이익',
-          value: `₩${stats.netProfit.toLocaleString()}`,
-          change: `${stats.netProfitChange > 0 ? '+' : ''}${stats.netProfitChange}%`,
-          changeType: stats.netProfitChange >= 0 ? 'increase' : 'decrease',
+          value: `₩${stats.net_profit.value.toLocaleString()}`,
+          change: `${stats.net_profit.delta_rate > 0 ? '+' : ''}${stats.net_profit.delta_rate}%`,
+          changeType: stats.net_profit.delta_rate >= 0 ? 'increase' : 'decrease',
           icon: 'ri-money-dollar-circle-line',
           iconColor: 'text-blue-600',
           iconBg: 'bg-blue-100',
         },
         {
           title: '미수금',
-          value: `₩${stats.accountsReceivable.toLocaleString()}`,
-          change: `${stats.accountsReceivableChange > 0 ? '+' : ''}${stats.accountsReceivableChange}%`,
-          changeType: stats.accountsReceivableChange >= 0 ? 'increase' : 'decrease',
+          value: `₩${stats.accounts_receivable.value.toLocaleString()}`,
+          change: `${stats.accounts_receivable.delta_rate > 0 ? '+' : ''}${stats.accounts_receivable.delta_rate}%`,
+          changeType: stats.accounts_receivable.delta_rate >= 0 ? 'increase' : 'decrease',
           icon: 'ri-file-text-line',
           iconColor: 'text-orange-600',
           iconBg: 'bg-orange-100',
