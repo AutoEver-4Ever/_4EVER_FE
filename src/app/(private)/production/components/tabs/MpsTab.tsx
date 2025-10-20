@@ -6,7 +6,7 @@ export default function MpsTab() {
   const [selectedProduct, setSelectedProduct] = useState('도어패널');
   const [viewType, setViewType] = useState('weekly');
   const [showDemandModal, setShowDemandModal] = useState(false);
-  const [selectedWeek, setSelectedWeek] = useState<any>(null);
+  // const [selectedWeek, setSelectedWeek] = useState<any>(null);
 
   const products = ['도어패널', 'Hood Panel', 'Fender Panel', 'Trunk Lid', 'Roof Panel'];
 
@@ -71,12 +71,12 @@ export default function MpsTab() {
 
   const currentData = productionData[selectedProduct as keyof typeof productionData];
 
-  const handleWeekClick = (weekData: any) => {
-    if (weekData.demand > 0) {
-      setSelectedWeek(weekData);
-      setShowDemandModal(true);
-    }
-  };
+  // const handleWeekClick = (weekData: any) => {
+  //   if (weekData.demand > 0) {
+  //     setSelectedWeek(weekData);
+  //     setShowDemandModal(true);
+  //   }
+  // };
 
   const getDemandSource = (week: string) => {
     const sources = [
@@ -170,7 +170,7 @@ export default function MpsTab() {
                     className={`border border-gray-300 px-4 py-3 text-center text-sm text-gray-900 ${
                       item.demand > 0 ? 'cursor-pointer hover:bg-blue-50' : ''
                     }`}
-                    onClick={() => handleWeekClick(item)}
+                    // onClick={() => handleWeekClick(item)}
                   >
                     {item.demand || '-'}
                   </td>
@@ -234,7 +234,7 @@ export default function MpsTab() {
       </div>
 
       {/* 수요 출처 모달 */}
-      {showDemandModal && selectedWeek && (
+      {/* {showDemandModal && selectedWeek && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
@@ -308,7 +308,7 @@ export default function MpsTab() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* 요약 정보 */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

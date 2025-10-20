@@ -671,7 +671,7 @@ export default function BomTab() {
                               <input
                                 type="text"
                                 value={row.code}
-                                onChange={(e) => updateComponentRow(row.id, 'code', e.target.value)}
+                                // onChange={(e) => updateComponentRow(row.id, 'code', e.target.value)}
                                 className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 placeholder="MAT-001"
                               />
@@ -679,7 +679,7 @@ export default function BomTab() {
                             <td className="px-3 py-2">
                               <select
                                 value={row.type}
-                                onChange={(e) => updateComponentRow(row.id, 'type', e.target.value)}
+                                // onChange={(e) => updateComponentRow(row.id, 'type', e.target.value)}
                                 className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 pr-8"
                               >
                                 {typeOptions.map((type) => (
@@ -693,7 +693,7 @@ export default function BomTab() {
                               <input
                                 type="text"
                                 value={row.name}
-                                onChange={(e) => updateComponentRow(row.id, 'name', e.target.value)}
+                                // onChange={(e) => updateComponentRow(row.id, 'name', e.target.value)}
                                 className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 placeholder="품목명"
                               />
@@ -702,13 +702,13 @@ export default function BomTab() {
                               <input
                                 type="number"
                                 value={row.quantity}
-                                onChange={(e) =>
-                                  updateComponentRow(
-                                    row.id,
-                                    'quantity',
-                                    parseInt(e.target.value) || 1,
-                                  )
-                                }
+                                // onChange={(e) =>
+                                //   // updateComponentRow(
+                                //   //   row.id,
+                                //   //   'quantity',
+                                //   //   parseInt(e.target.value) || 1,
+                                //   // )
+                                // }
                                 className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 min="1"
                               />
@@ -717,7 +717,7 @@ export default function BomTab() {
                               <input
                                 type="text"
                                 value={row.unit}
-                                onChange={(e) => updateComponentRow(row.id, 'unit', e.target.value)}
+                                // onChange={(e) => updateComponentRow(row.id, 'unit', e.target.value)}
                                 className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 placeholder="EA"
                               />
@@ -725,9 +725,9 @@ export default function BomTab() {
                             <td className="px-3 py-2">
                               <select
                                 value={row.level}
-                                onChange={(e) =>
-                                  updateComponentRow(row.id, 'level', parseInt(e.target.value))
-                                }
+                                // onChange={(e) =>
+                                //   // updateComponentRow(row.id, 'level', parseInt(e.target.value))
+                                // }
                                 className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 pr-8"
                               >
                                 {levelOptions.map((level) => (
@@ -740,9 +740,9 @@ export default function BomTab() {
                             <td className="px-3 py-2">
                               <select
                                 value={row.material}
-                                onChange={(e) =>
-                                  updateComponentRow(row.id, 'material', e.target.value)
-                                }
+                                // onChange={(e) =>
+                                //   // updateComponentRow(row.id, 'material', e.target.value)
+                                // }
                                 className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 pr-8"
                               >
                                 <option value="">선택</option>
@@ -756,9 +756,9 @@ export default function BomTab() {
                             <td className="px-3 py-2">
                               <select
                                 value={row.supplier}
-                                onChange={(e) =>
-                                  updateComponentRow(row.id, 'supplier', e.target.value)
-                                }
+                                // onChange={(e) =>
+                                //   // updateComponentRow(row.id, 'supplier', e.target.value)
+                                // }
                                 className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 pr-8"
                                 disabled={!row.material}
                               >
@@ -773,9 +773,9 @@ export default function BomTab() {
                             <td className="px-3 py-2">
                               <select
                                 value={row.process}
-                                onChange={(e) =>
-                                  updateComponentRow(row.id, 'process', e.target.value)
-                                }
+                                // onChange={(e) =>
+                                //   // updateComponentRow(row.id, 'process', e.target.value)
+                                // }
                                 className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 pr-8"
                                 disabled={!row.supplier}
                               >

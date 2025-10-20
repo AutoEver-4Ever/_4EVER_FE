@@ -9,7 +9,7 @@ export default function MrpTab() {
   const [selectedRequirements, setSelectedRequirements] = useState<string[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
   const [showPurchaseRequestModal, setShowPurchaseRequestModal] = useState(false);
-  const [purchaseRequestOrders, setPurchaseRequestOrders] = useState<any[]>([]);
+  // const [purchaseRequestOrders, setPurchaseRequestOrders] = useState<any[]>([]);
 
   const products = ['도어패널', 'Hood Panel', 'Fender Panel', 'Trunk Lid', 'Roof Panel'];
   const quotes = ['전체', 'Q-2024-001', 'Q-2024-002', 'Q-2024-003', 'Q-2024-004', 'Q-2024-005'];
@@ -211,15 +211,15 @@ export default function MrpTab() {
 
   const handlePurchaseRequest = () => {
     const selectedOrdersData = plannedOrders.filter((order) => selectedOrders.includes(order.id));
-    setPurchaseRequestOrders(selectedOrdersData);
+    // setPurchaseRequestOrders(selectedOrdersData);
     setShowPurchaseRequestModal(true);
   };
 
-  const handleUpdatePurchaseRequest = (updatedOrders: any[]) => {
-    alert('자재 구매 요청이 업데이트되었습니다.');
-    setShowPurchaseRequestModal(false);
-    setSelectedOrders([]);
-  };
+  // const handleUpdatePurchaseRequest = (updatedOrders: any[]) => {
+  //   alert('자재 구매 요청이 업데이트되었습니다.');
+  //   setShowPurchaseRequestModal(false);
+  //   setSelectedOrders([]);
+  // };
 
   const subTabs = [
     { id: 'requirements', name: '순소요', icon: 'ri-file-list-3-line' },
@@ -520,16 +520,16 @@ export default function MrpTab() {
                   <div className="grid grid-cols-3 gap-4 text-sm">
                     <div>
                       <span className="text-blue-600">선택된 주문:</span>
-                      <span className="ml-2 font-medium">{purchaseRequestOrders.length}건</span>
+                      {/* <span className="ml-2 font-medium">{purchaseRequestOrders.length}건</span> */}
                     </div>
                     <div>
                       <span className="text-blue-600">총 예상 금액:</span>
-                      <span className="ml-2 font-medium">
+                      {/* <span className="ml-2 font-medium">
                         ₩
                         {purchaseRequestOrders
                           .reduce((sum, order) => sum + order.totalPrice, 0)
                           .toLocaleString()}
-                      </span>
+                      </span> */}
                     </div>
                     <div>
                       <span className="text-blue-600">요청일:</span>
@@ -571,8 +571,8 @@ export default function MrpTab() {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {purchaseRequestOrders.map((order, index) => (
+                    {/* <tbody className="bg-white divide-y divide-gray-200">
+                      {/* {purchaseRequestOrders.map((order, index) => ( 
                         <tr key={order.id} className="hover:bg-gray-50">
                           <td className="px-4 py-3 text-sm font-medium text-blue-600">
                             {order.referenceQuote}
@@ -617,7 +617,7 @@ export default function MrpTab() {
                           </td>
                         </tr>
                       ))}
-                    </tbody>
+                    </tbody> */}
                   </table>
                 </div>
 
@@ -640,7 +640,7 @@ export default function MrpTab() {
                 취소
               </button>
               <button
-                onClick={() => handleUpdatePurchaseRequest(purchaseRequestOrders)}
+                // onClick={() => handleUpdatePurchaseRequest(purchaseRequestOrders)}
                 className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 cursor-pointer whitespace-nowrap"
               >
                 구매 요청 확정

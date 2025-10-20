@@ -6,7 +6,7 @@ export default function QuotationTab() {
   const [selectedQuotes, setSelectedQuotes] = useState<string[]>([]);
   const [showSimulationModal, setShowSimulationModal] = useState(false);
   const [showMpsPreviewModal, setShowMpsPreviewModal] = useState(false);
-  const [simulationResult, setSimulationResult] = useState<any>(null);
+  // const [simulationResult, setSimulationResult] = useState<any>(null);
 
   const quotes = [
     {
@@ -128,7 +128,7 @@ export default function QuotationTab() {
       }),
     };
 
-    setSimulationResult(result);
+    // setSimulationResult(result);
     setShowSimulationModal(true);
   };
 
@@ -237,7 +237,7 @@ export default function QuotationTab() {
       </div>
 
       {/* 시뮬레이션 결과 모달 */}
-      {showSimulationModal && simulationResult && (
+      {/* {showSimulationModal && simulationResult && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
@@ -251,7 +251,7 @@ export default function QuotationTab() {
             </div>
 
             <div className="space-y-6">
-              {simulationResult.mpsResult.map((result: any, index: number) => (
+              {/* {simulationResult.mpsResult.map((result: any, index: number) => (
                 <div key={index} className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-4">
                     <div>
@@ -286,7 +286,7 @@ export default function QuotationTab() {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))} 
 
               <div className="flex gap-3 pt-4">
                 <button
@@ -305,10 +305,10 @@ export default function QuotationTab() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* MPS 생성 Preview 모달 */}
-      {showMpsPreviewModal && simulationResult && (
+      {/* {showMpsPreviewModal && simulationResult && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-5xl mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
@@ -322,7 +322,7 @@ export default function QuotationTab() {
             </div>
 
             <div className="space-y-6">
-              {simulationResult.mpsResult.map((result: any, index: number) => (
+              {/* {simulationResult.mpsResult.map((result: any, index: number) => (
                 <div key={index} className="border border-gray-200 rounded-lg p-4">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4">
                     {result.product} - {result.customer}
@@ -422,7 +422,7 @@ export default function QuotationTab() {
                     </table>
                   </div>
                 </div>
-              ))}
+              ))} 
 
               <div className="flex gap-3 pt-4">
                 <button
@@ -441,7 +441,7 @@ export default function QuotationTab() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

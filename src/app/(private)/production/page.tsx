@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import BomStats from './components/BomStats';
 import BomList from './components/tabs/BomTab';
 import MrpCalculation from './components/MrpCalculation';
-import ProductionPlan from '../ProductionPlan';
+// import ProductionPlan from '../ProductionPlan';
 import ManufacturingExecution from './components/tabs/MesTab';
 import MrpTabNew from './components/tabs/MrpTab';
 import PageHeader from '@/app/components/common/PageHeader';
