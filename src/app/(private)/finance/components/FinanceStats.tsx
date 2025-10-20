@@ -8,9 +8,9 @@ import { getPeriodText } from '../utils';
 
 const FinanceStats = ({ $selectedPeriod }: FinanceStatsProps) => {
   const { data, isLoading, isError } = useQuery<Record<Period, FinanceStatCard[]>>({
-    queryKey: ['Financestats'],
+    queryKey: ['financeStats'],
     queryFn: getFinanceStats,
-    staleTime: 0,
+    staleTime: 1000,
   });
   if (isLoading) return <p>불러오는 중...</p>;
   if (isError || !data) return <p>데이터를 불러오지 못했습니다.</p>;

@@ -37,6 +37,12 @@ const VoucherList = () => {
     [currentPage, statusFilter],
   );
 
+  // const queryParams = {
+  //   page: currentPage - 1,
+  //   size: 10,
+  //   status: statusFilter || 'ALL',
+  // };
+
   const queryFn =
     currentTab === 'sales'
       ? () => getSalesInvoicesList(queryParams)
@@ -54,6 +60,7 @@ const VoucherList = () => {
   } = useQuery({
     queryKey: queryKey,
     queryFn: queryFn,
+    staleTime: 1000,
   });
 
   const invoices = invoiceRes?.data ?? [];

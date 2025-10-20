@@ -17,7 +17,7 @@ export default async function SalesPage() {
   await queryClient.prefetchQuery({
     queryKey: [
       'quoteList',
-      { page: 0, size: 50, startDate: '', endDate: '', status: 'ALL', search: '' },
+      { page: 0, size: 10, startDate: '', endDate: '', status: 'ALL', search: '' },
     ],
     queryFn: ({ queryKey }) => getQuoteList(queryKey[1] as QuoteQueryParams),
   });
