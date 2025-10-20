@@ -158,10 +158,10 @@ const InvoiceDetailModal = ({
                           {item?.uomName}
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-900 text-right">
-                          ₩{item.unitPrice?.toLocaleString() ?? 0}
+                          ₩{item.unitPrice?.toLocaleString()}
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-900 text-right">
-                          ₩{item.amount?.toLocaleString() ?? 0}
+                          ₩{item.totalPrice?.toLocaleString()}
                         </td>
                       </tr>
                     ))}
@@ -172,10 +172,7 @@ const InvoiceDetailModal = ({
                         총 금액
                       </td>
                       <td className="px-4 py-3 text-right font-medium text-green-600">
-                        ₩
-                        {invoiceRes?.items
-                          .reduce((sum: number, item) => sum + (item?.amount ?? 0), 0)
-                          .toLocaleString()}
+                        ₩{invoiceRes?.totalAmount.toLocaleString()}
                       </td>
                     </tr>
                   </tfoot>

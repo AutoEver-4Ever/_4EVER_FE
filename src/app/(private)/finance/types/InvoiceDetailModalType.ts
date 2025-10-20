@@ -20,6 +20,6 @@ export interface InvoicetDetailRes {
     quantity: number;
     uomName: string;
     unitPrice: number;
-    amount: number;
+    totalPrice: number;
   }[];
 }
