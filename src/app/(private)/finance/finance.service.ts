@@ -73,7 +73,7 @@ export const getPurchaseInvoicesList = async (
   return { data: res.data.data.content, pageData: res.data.data.page };
 };
 
-export const getInvoiceDetail = async (invoiceId: number): Promise<InvoicetDetailRes> => {
+export const getPurchaseInvoiceDetail = async (invoiceId: number): Promise<InvoicetDetailRes> => {
   const res = await axios.get<ApiResponse<InvoicetDetailRes>>(
     FINANCE_ENDPOINTS.PURCHASE_INVOICE_DETAIL(invoiceId),
   );

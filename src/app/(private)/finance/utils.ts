@@ -25,3 +25,13 @@ export const getChitStatusText = (status: string) => {
       return status;
   }
 };
+
+// 텝에 따른 전표 유형 텍스트
+export const getInvoiceType = (tab: string) => {
+  switch (tab) {
+    case 'sales':
+      return '매출 전표';
+    case 'purchase':
+      return '매입 전표';
+  }
+};

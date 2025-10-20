@@ -6,26 +6,28 @@ export interface InvoiceDetailModalProps {
 
 export interface InvoicetDetailRes {
   invoiceId: number;
-  invoiceCode: string;
-  connection: {
-    connectionId: number;
-    connectionCode: string;
-    connectionName: string;
-  };
-  totalAmount: number;
+  invoiceCode: string | null;
+  statusCode: string;
   issueDate: string;
   dueDate: string;
-  status: string;
+  customerName: string;
+  ceoName: string;
+  ownerName: string;
   reference: {
-    referenceId: number;
-    referenceCode: string;
+    type: string;
+    quotationId: number;
+    quotationCode: string;
+    quotationDate: string;
+    dueDate: string;
   };
-  note: string;
   items: {
+    itemId: number;
     itemName: string;
     quantity: number;
-    unit: string;
+    uomName: string;
     unitPrice: number;
-    totalPrice: number;
+    amount: number;
   }[];
+  totalAmount: number;
+  note: string;
 }
