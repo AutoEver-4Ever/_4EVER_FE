@@ -13,14 +13,6 @@ export interface SalesCustomer {
   status: string;
 }
 
-export interface PageType {
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-  hasNext: boolean;
-}
-
 export interface CustomerQueryParams {
   status?: string;
   keyword?: string;

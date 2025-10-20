@@ -1,8 +1,8 @@
 'use client';
 
 import SalesStats from '@/app/(private)/sales/components/SalesStats';
+import { Period } from '@/types/StatType';
 import { useState } from 'react';
-import { Period } from '@/app/(private)/sales/types/SalesStatsType';
 
 const SalesHeader = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<Period>('month');
@@ -42,7 +42,7 @@ const SalesHeader = () => {
         </div>
       </div>
       {/* 주요 지표 */}
-      <SalesStats $selectedPeriod={selectedPeriod} />
+      <SalesStats />
     </>
   );
 };

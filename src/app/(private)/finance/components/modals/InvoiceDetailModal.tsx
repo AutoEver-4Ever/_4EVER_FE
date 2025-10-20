@@ -1,57 +1,66 @@
 'use client';
 
 import {
-  VoucherDetailType,
-  VoucherItem,
-  VourcherDetailModalProps,
-} from '@/app/(private)/finance/types/VoucherDetailModalType';
-import { getChitStatusColor, getChitStatusText } from '../../utils';
-import { VOUCHER_DETAIL_TABLE_HEADERS } from '../../constants';
+  getChitStatusColor,
+  getChitStatusText,
+  getInvoiceType,
+} from '@/app/(private)/finance/utils';
+import { VOUCHER_DETAIL_TABLE_HEADERS } from '@/app/(private)/finance/constants';
+import {
+  InvoiceDetailModalProps,
+  InvoicetDetailRes,
+} from '@/app/(private)/finance/types/InvoiceDetailModalType';
+import ModalStatusBox from '@/app/components/common/ModalStatusBox';
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getPurchaseInvoiceDetail, getSalesInvoiceDetail } from '../../finance.api';
+import { useSearchParams } from 'next/navigation';
 
-const VourcherDetailModal = ({
+const InvoiceDetailModal = ({
   $setShowDetailModal,
-  $selectedVoucherId,
-  $setSelectedVoucherId,
-}: VourcherDetailModalProps) => {
-  const mockVouchers: VoucherDetailType = {
-    id: 1,
-    voucherId: 'AP-2024-001',
-    type: 'AP',
-    description: '강판 구매 - 대한철강',
-    amount: '₩5,000,000',
-    date: '2024-01-18',
-    dueDate: '2024-02-17',
-    status: 'unpaid',
-    reference: 'PO-2024-001',
-    vendor: '대한철강',
-    details: {
-      voucherType: '매입전표',
-      memo: '1월 생산용 강판 구매',
-      items: [
-        {
-          name: '강판 A급',
-          spec: '1200x2400x3mm',
-          quantity: 50,
-          unit: '매',
-          unitPrice: 80000,
-          amount: 4000000,
-        },
-        {
-          name: '강판 B급',
-          spec: '1000x2000x2mm',
-          quantity: 25,
-          unit: '매',
-          unitPrice: 40000,
-          amount: 1000000,
-        },
-      ],
-    },
-  };
-
+  $selectedInvoiceId,
+  $setSelectedInvoiceId,
+}: InvoiceDetailModalProps) => {
   const onClose = () => {
-    $setSelectedVoucherId(0);
+    $setSelectedInvoiceId(0);
     $setShowDetailModal(false);
   };
+  const searchParams = useSearchParams();
+  const currentTab = searchParams.get('tab') || 'sales';
+
+  const queryFn =
+    currentTab === 'sales'
+      ? () => getSalesInvoiceDetail($selectedInvoiceId)
+      : () => {
+          return getPurchaseInvoiceDetail($selectedInvoiceId);
+        };
+
+  const {
+    data: invoiceRes,
+    isLoading,
+    isError,
+  } = useQuery<InvoicetDetailRes>({
+    queryKey: ['invoiceDetail', $selectedInvoiceId],
+    queryFn: queryFn,
+    enabled: !!$selectedInvoiceId,
+  });
+
+  const [errorModal, setErrorModal] = useState(false);
+  useEffect(() => {
+    setErrorModal(isError);
+  }, [isError]);
+
+  if (isLoading)
+    return <ModalStatusBox $type="loading" $message="고객 상세 데이터를 불러오는 중입니다..." />;
+
+  if (errorModal)
+    return (
+      <ModalStatusBox
+        $type="error"
+        $message="고객 상세 데이터를 불러오는 중 오류가 발생했습니다."
+        $onClose={() => setErrorModal(false)}
+      />
+    );
 
   return (
     <>
@@ -71,39 +80,45 @@ const VourcherDetailModal = ({
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">전표번호</label>
                   <div className="text-lg font-semibold text-gray-900">
-                    {mockVouchers.voucherId}
+                    {invoiceRes?.invoiceCode}
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">전표유형</label>
-                  <div className="text-gray-900">{mockVouchers.id}</div>
+                  <div className="text-gray-900">
+                    {getInvoiceType(invoiceRes?.invoiceType ?? 'AR')}
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">거래처</label>
-                  <div className="text-gray-900">{mockVouchers.vendor}</div>
+                  <div className="text-gray-900">{invoiceRes?.name}</div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">메모</label>
-                  <div className="text-gray-900">{mockVouchers.details.memo}</div>
+                  <div className="text-gray-900">{invoiceRes?.note}</div>
                 </div>
               </div>
               <div className="space-y-4">
                 <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">참조번호</label>
+                  <div className="text-gray-900">{invoiceRes?.referenceCode}</div>
+                </div>
+                <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     전표 발생일
                   </label>
-                  <div className="text-gray-900">{mockVouchers.date}</div>
+                  <div className="text-gray-900">{invoiceRes?.issueDate}</div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">만기일</label>
-                  <div className="text-gray-900">{mockVouchers.dueDate}</div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">납기일</label>
+                  <div className="text-gray-900">{invoiceRes?.dueDate}</div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
                   <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${getChitStatusColor(mockVouchers.status)}`}
+                    className={`px-2 py-1 rounded text-xs font-medium ${getChitStatusColor(invoiceRes?.statusCode ?? '')}`}
                   >
-                    {getChitStatusText(mockVouchers.status)}
+                    {getChitStatusText(invoiceRes?.statusCode ?? '')}
                   </span>
                 </div>
               </div>
@@ -133,18 +148,20 @@ const VourcherDetailModal = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {mockVouchers.details.items.map((item: VoucherItem, index: number) => (
+                    {invoiceRes?.items.map((item, index: number) => (
                       <tr key={index} className="border-b">
-                        <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
+                        <td className="px-4 py-3 text-sm text-gray-900">{item.itemName}</td>
                         <td className="px-4 py-3 text-sm text-gray-900 text-center">
-                          {item.quantity}
+                          {item?.quantity}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-900 text-center">{item.unit}</td>
-                        <td className="px-4 py-3 text-sm text-gray-900 text-right">
-                          ₩{item.unitPrice.toLocaleString()}
+                        <td className="px-4 py-3 text-sm text-gray-900 text-center">
+                          {item?.uomName}
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-900 text-right">
-                          ₩{item.amount.toLocaleString()}
+                          ₩{item.unitPrice?.toLocaleString()}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-900 text-right">
+                          ₩{item.totalPrice?.toLocaleString()}
                         </td>
                       </tr>
                     ))}
@@ -155,10 +172,7 @@ const VourcherDetailModal = ({
                         총 금액
                       </td>
                       <td className="px-4 py-3 text-right font-medium text-green-600">
-                        ₩
-                        {mockVouchers.details.items
-                          .reduce((sum: number, item: VoucherItem) => sum + item.amount, 0)
-                          .toLocaleString()}
+                        ₩{invoiceRes?.totalAmount.toLocaleString()}
                       </td>
                     </tr>
                   </tfoot>
@@ -182,4 +196,4 @@ const VourcherDetailModal = ({
   );
 };
 
-export default VourcherDetailModal;
+export default InvoiceDetailModal;

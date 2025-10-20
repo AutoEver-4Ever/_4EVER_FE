@@ -8,7 +8,7 @@ import {
 } from '@/app/(private)/sales/types/SalesQuoteListType';
 import QuoteDetailModal from '../modals/QuoteDetailModal';
 import { useQuery } from '@tanstack/react-query';
-import { getQuoteList } from '@/app/(private)/sales/sales.service';
+import { getQuoteList } from '@/app/(private)/sales/sales.api';
 import { useDebounce } from 'use-debounce';
 import QuoteReviewModal from '../modals/QuoteReviewModal';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
@@ -16,6 +16,7 @@ import { QUOTE_LIST_TABLE_HEADERS } from '@/app/(private)/sales/constant';
 import { QUOTE_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
 import { getQuoteStatusColor, getQuoteStatusText } from '../../utils';
 import Pagination from '@/app/components/common/Pagination';
+import IconButton from '@/app/components/common/IconButton';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -139,6 +140,7 @@ const SalesQuoteList = () => {
             </select>
           </div>
 
+          {/* <IconButton icon="ri-add-line" label="견적 검토 요청" /> */}
           <button
             onClick={() => setShowReviewModal(true)}
             className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"

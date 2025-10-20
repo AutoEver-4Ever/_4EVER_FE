@@ -16,7 +16,7 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import { getAnalytics } from '../../sales.service';
+import { getAnalytics } from '../../sales.api';
 import { AnalyticsQueryParams, SalesAnalysis } from '@/app/(private)/sales/types/SalesChartType';
 import { formatCurrency } from '@/app/(private)/sales/utils';
 

@@ -2,19 +2,16 @@
 
 import { useState } from 'react';
 import FinanceStats from '@/app/(private)/finance/components/FinanceStats';
+import { Period } from '@/types/StatType';
 
 const FinanceHeader = () => {
-  const periods = ['이번 주', '이번 달', '이번 분기', '올해'];
-  const [selectedPeriod, setSelectedPeriod] = useState('이번 달');
-
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-
-  const notifications = [
-    { id: 1, type: 'warning', message: '미결제 전표가 5건 있습니다', time: '10분 전' },
-    { id: 2, type: 'info', message: '월말 결산 준비가 필요합니다', time: '30분 전' },
-    { id: 3, type: 'success', message: '전표 V-2024-025가 승인되었습니다', time: '1시간 전' },
+  const periods: { id: Period; name: string }[] = [
+    { id: 'week', name: '이번 주' },
+    { id: 'month', name: '이번 달' },
+    { id: 'quarter', name: '이번 분기' },
+    { id: 'year', name: '연도별' },
   ];
+  const [selectedPeriod, setSelectedPeriod] = useState<Period>('month');
 
   return (
     <>
@@ -29,22 +26,22 @@ const FinanceHeader = () => {
             <div className="flex items-center space-x-1 bg-white rounded-lg border border-gray-300 p-1">
               {periods.map((period) => (
                 <button
-                  key={period}
-                  onClick={() => setSelectedPeriod(period)}
+                  key={period.id}
+                  onClick={() => setSelectedPeriod(period.id)}
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 whitespace-nowrap cursor-pointer ${
-                    selectedPeriod === period
+                    selectedPeriod === period.id
                       ? 'bg-blue-600 text-white'
                       : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
-                  {period}
+                  {period.name}
                 </button>
               ))}
             </div>
           </div>
         </div>
       </div>
-      <FinanceStats $selectedPeriod={selectedPeriod} />
+      <FinanceStats />
     </>
   );
 };

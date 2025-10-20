@@ -9,7 +9,7 @@ import {
 } from '@/app/(private)/sales/types/SalesCustomerListType';
 import CustomerEditModal from '../modals/CustomerEditModal';
 import { useQuery } from '@tanstack/react-query';
-import { getCustomerList } from '../../sales.service';
+import { getCustomerList } from '../../sales.api';
 import { useDebounce } from 'use-debounce';
 import { CustomerDetail } from '../../types/SalesCustomerDetailType';
 import TableStatusBox from '@/app/components/common/TableStatusBox';

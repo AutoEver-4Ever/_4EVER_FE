@@ -1,8 +1,8 @@
 import { KeyValueItem } from '@/types/CommonType';
-import { VoucherStatus } from './types/VoucherListType';
+import { InvoiceStatus } from './types/InvoiceListType';
 
 // 전표 상태 필터링
-export const VOUCHER_STATUS_OPTIONS: KeyValueItem<VoucherStatus>[] = [
+export const VOUCHER_STATUS_OPTIONS: KeyValueItem<InvoiceStatus>[] = [
   { key: 'ALL', value: '전체 상태' },
   { key: 'UNPAID', value: '미납' },
   { key: 'PENDING', value: '확인대기' },

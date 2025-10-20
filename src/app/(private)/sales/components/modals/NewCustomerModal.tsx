@@ -6,7 +6,7 @@ import {
   NewCustomerModalProps,
 } from '@/app/(private)/sales/types/NewCustomerModalType';
 import { useMutation } from '@tanstack/react-query';
-import { postCustomer } from '@/app/(private)/sales/sales.service';
+import { postCustomer } from '@/app/(private)/sales/sales.api';
 const NewCustomerModal = ({ $onClose }: NewCustomerModalProps) => {
   const [customerData, setCustomerData] = useState<CustomerData>({
     companyName: '',
