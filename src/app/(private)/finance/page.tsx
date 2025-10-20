@@ -3,7 +3,7 @@ import FinanceTabNavigation from './components/FinanceTabNavigation';
 import { Suspense } from 'react';
 import { dehydrate } from '@tanstack/react-query';
 import { getQueryClient } from '@/lib/queryClient';
-import { getFinanceStats, getSalesInvoicesList } from '@/app/(private)/finance/finance.service';
+import { getFinanceStats, getSalesInvoicesList } from '@/app/(private)/finance/finance.api';
 import { InvoiceQueryParams } from './types/InvoiceListType';
 import Providers from '@/app/providers';
 

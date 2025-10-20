@@ -9,10 +9,7 @@ import {
 // import StatementDetailModal from '@/app/(private)/finance/components/modals/StatementDetailModal';
 import { InvoiceStatus } from '@/app/(private)/finance/types/InvoiceListType';
 import { useQuery } from '@tanstack/react-query';
-import {
-  getPurchaseInvoicesList,
-  getSalesInvoicesList,
-} from '@/app/(private)/finance/finance.service';
+import { getPurchaseInvoicesList, getSalesInvoicesList } from '@/app/(private)/finance/finance.api';
 import Pagination from '@/app/components/common/Pagination';
 import { useSearchParams } from 'next/navigation';
 import TableStatusBox from '@/app/components/common/TableStatusBox';

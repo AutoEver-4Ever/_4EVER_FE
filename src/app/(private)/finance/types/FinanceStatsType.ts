@@ -1,34 +1,10 @@
-export interface FinanceStatsProps {
-  $selectedPeriod: Period;
+import { Period, Stat, StatResponse } from '@/types/StatType';
+
+interface FinanceStat {
+  total_purchases: Stat;
+  net_profit: Stat;
+  accounts_receivable: Stat;
+  total_sales: Stat;
 }
 
-interface Metric {
-  value: number;
-  delta_rate: number;
-}
-
-interface PeriodData {
-  total_purchases: Metric;
-  net_profit: Metric;
-  accounts_receivable: Metric;
-  total_sales: Metric;
-}
-
-export type Period = 'week' | 'month' | 'quarter' | 'year';
-
-export interface FinanceStatCard {
-  title: string;
-  value: string;
-  change: string;
-  changeType: 'increase' | 'decrease';
-  icon: string;
-  iconBg: string;
-  iconColor: string;
-}
-
-export interface FinanceStatData {
-  week: PeriodData;
-  month: PeriodData;
-  quarter: PeriodData;
-  year: PeriodData;
-}
+export type FinanceStatResponse = StatResponse<FinanceStat>;

@@ -1,13 +1,13 @@
 'use client';
 
-import { FinanceStatCard, FinanceStatsProps } from '@/app/(private)/finance/types/FinanceStatsType';
-import { Period } from '@/types/StatType';
+import { FinanceStatResponse } from '@/app/(private)/finance/types/FinanceStatsType';
 import { useQuery } from '@tanstack/react-query';
-import { getFinanceStats } from '@/app/(private)/finance/finance.service';
-import { getPeriodText } from '../utils';
+import { getFinanceStats } from '@/app/(private)/finance/finance.api';
+import StatSection from '@/app/components/statCard/StatSection';
+import { mapFinanceStatsToCards } from '../finance.service';
 
-const FinanceStats = ({ $selectedPeriod }: FinanceStatsProps) => {
-  const { data, isLoading, isError } = useQuery<Record<Period, FinanceStatCard[]>>({
+const FinanceStats = () => {
+  const { data, isLoading, isError } = useQuery<FinanceStatResponse>({
     queryKey: ['financeStats'],
     queryFn: getFinanceStats,
     staleTime: 1000,
@@ -15,11 +15,12 @@ const FinanceStats = ({ $selectedPeriod }: FinanceStatsProps) => {
   if (isLoading) return <p>불러오는 중...</p>;
   if (isError || !data) return <p>데이터를 불러오지 못했습니다.</p>;
 
-  const stats = data[$selectedPeriod];
+  const stats = mapFinanceStatsToCards(data);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {stats.map((stat, index) => (
+    <div className="space-y-4">
+      <StatSection statsData={stats} />
+      {/* {stats.map((stat, index) => (
         <div
           key={index}
           className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200"
@@ -51,7 +52,7 @@ const FinanceStats = ({ $selectedPeriod }: FinanceStatsProps) => {
             </div>
           </div>
         </div>
-      ))}
+      ))} */}
     </div>
   );
 };

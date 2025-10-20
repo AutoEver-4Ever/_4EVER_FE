@@ -13,7 +13,7 @@ import {
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getPurchaseInvoiceDetail, getSalesInvoiceDetail } from '../../finance.service';
+import { getPurchaseInvoiceDetail, getSalesInvoiceDetail } from '../../finance.api';
 import { useSearchParams } from 'next/navigation';
 
 const InvoiceDetailModal = ({
