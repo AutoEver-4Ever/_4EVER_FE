@@ -25,10 +25,8 @@ export const SALES_ENDPOINTS = {
 
 export const FINANCE_ENDPOINTS = {
   STATISTICS: `${FINANCE_BASE_PATH}/statictics`,
-  PURCHASE_STATEMENTS_LIST: `${FINANCE_BASE_PATH}/statement/ap`,
-  PURCHASE_STATEMENT_DETAIL: (statementId: number) =>
-    `${FINANCE_BASE_PATH}/statement/ap/${statementId}`,
-  SALES_STATEMENTS_LIST: `${FINANCE_BASE_PATH}/statement/as`,
-  SALES_STATEMENT_DETAIL: (statementId: number) =>
-    `${FINANCE_BASE_PATH}/statement/as/${statementId}`,
+  PURCHASE_INVOICES_LIST: `${FINANCE_BASE_PATH}/invoice/ap`,
+  PURCHASE_INVOICE_DETAIL: (invoiceId: number) => `${FINANCE_BASE_PATH}/invoice/ap/${invoiceId}`,
+  SALES_INVOICES_LIST: `${FINANCE_BASE_PATH}/invoice/as`,
+  SALES_INVOICE_DETAIL: (invoiceId: number) => `${FINANCE_BASE_PATH}/invoice/as/${invoiceId}`,
 } as const;

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { FINANCE_ENDPOINTS, ApiResponse } from '@/app/api';
 import { FinanceStatCard, FinanceStatData } from '@/app/(private)/finance/types/FinanceStatsType';
-import { StatementListRes, StatementQueryParams } from './types/StatementListType';
-import { StatementDetailRes } from './types/StatementDetailModalType';
+import { InvoiceListRes, InvoiceQueryParams } from './types/InvoiceListType';
+import { InvoicetDetailRes } from './types/InvoiceDetailModalType';
 import { Page } from '@/types/Page';
 
 // ----------------------- 통계 지표 -----------------------
@@ -58,47 +58,47 @@ export const getFinanceStatistics = async (): Promise<Record<string, FinanceStat
 };
 
 // ----------------------- 매입 전표(AP) -----------------------
-export const getPurchaseStatementsList = async (
-  params?: StatementQueryParams,
-): Promise<{ data: StatementListRes[]; pageData: Page }> => {
+export const getPurchaseInvoicesList = async (
+  params?: InvoiceQueryParams,
+): Promise<{ data: InvoiceListRes[]; pageData: Page }> => {
   const query = new URLSearchParams({
     ...(params?.status && { status: params.status }),
     ...(params?.page && { page: String(params.page) }),
     ...(params?.size && { size: String(params.size) }),
   }).toString();
 
-  const res = await axios.get<ApiResponse<{ content: StatementListRes[]; page: Page }>>(
-    `${FINANCE_ENDPOINTS.PURCHASE_STATEMENTS_LIST}?${query}`,
+  const res = await axios.get<ApiResponse<{ content: InvoiceListRes[]; page: Page }>>(
+    `${FINANCE_ENDPOINTS.PURCHASE_INVOICES_LIST}?${query}`,
   );
   return { data: res.data.data.content, pageData: res.data.data.page };
 };
 
-export const getStatementDetail = async (statementId: number): Promise<StatementDetailRes> => {
-  const res = await axios.get<ApiResponse<StatementDetailRes>>(
-    FINANCE_ENDPOINTS.PURCHASE_STATEMENT_DETAIL(statementId),
+export const getInvoiceDetail = async (invoiceId: number): Promise<InvoicetDetailRes> => {
+  const res = await axios.get<ApiResponse<InvoicetDetailRes>>(
+    FINANCE_ENDPOINTS.PURCHASE_INVOICE_DETAIL(invoiceId),
   );
   return res.data.data;
 };
 
 // ----------------------- 매출 전표(AS) -----------------------
-export const getSalesStatementsList = async (
-  params?: StatementQueryParams,
-): Promise<{ data: StatementListRes[]; pageData: Page }> => {
+export const getSalesInvoicesList = async (
+  params?: InvoiceQueryParams,
+): Promise<{ data: InvoiceListRes[]; pageData: Page }> => {
   const query = new URLSearchParams({
     ...(params?.status && { status: params.status }),
     ...(params?.page && { page: String(params.page) }),
     ...(params?.size && { size: String(params.size) }),
   }).toString();
 
-  const res = await axios.get<ApiResponse<{ content: StatementListRes[]; page: Page }>>(
-    `${FINANCE_ENDPOINTS.SALES_STATEMENTS_LIST}?${query}`,
+  const res = await axios.get<ApiResponse<{ content: InvoiceListRes[]; page: Page }>>(
+    `${FINANCE_ENDPOINTS.SALES_INVOICES_LIST}?${query}`,
   );
   return { data: res.data.data.content, pageData: res.data.data.page };
 };
 
-export const getSalesStatementDetail = async (statementId: number): Promise<StatementDetailRes> => {
-  const res = await axios.get<ApiResponse<StatementDetailRes>>(
-    FINANCE_ENDPOINTS.SALES_STATEMENT_DETAIL(statementId),
+export const getSalesInvoiceDetail = async (invoiceId: number): Promise<InvoicetDetailRes> => {
+  const res = await axios.get<ApiResponse<InvoicetDetailRes>>(
+    FINANCE_ENDPOINTS.SALES_INVOICE_DETAIL(invoiceId),
   );
   return res.data.data;
 };

@@ -1,12 +1,12 @@
-export interface StatementDetailModalProps {
+export interface InvoiceDetailModalProps {
   $setShowDetailModal: (show: boolean) => void;
-  $selectedStatementId: number;
-  $setSelectedStatementId: (id: number) => void;
+  $selectedInvoiceId: number;
+  $setSelectedInvoiceId: (id: number) => void;
 }
 
-export interface StatementDetailRes {
-  statementId: number;
-  statementCode: string;
+export interface InvoicetDetailRes {
+  invoiceId: number;
+  invoiceCode: string;
   connection: {
     connectionId: number;
     connectionCode: string;

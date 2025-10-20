@@ -7,28 +7,26 @@ import {
   VOUCHER_STATUS_OPTIONS,
 } from '@/app/(private)/finance/constants';
 // import StatementDetailModal from '@/app/(private)/finance/components/modals/StatementDetailModal';
-import {
-  StatementQueryParams,
-  StatementStatus,
-} from '@/app/(private)/finance/types/StatementListType';
+import { InvoiceStatus } from '@/app/(private)/finance/types/InvoiceListType';
 import { useQuery } from '@tanstack/react-query';
 import {
-  getPurchaseStatementsList,
-  getSalesStatementsList,
+  getPurchaseInvoicesList,
+  getSalesInvoicesList,
 } from '@/app/(private)/finance/finance.service';
 import Pagination from '@/app/components/common/Pagination';
 import { useSearchParams } from 'next/navigation';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
+import InvoiceDetailModal from '@/app/(private)/finance/components/modals/InvoiceDetailModal';
 
 const VoucherList = () => {
   const searchParams = useSearchParams();
   const currentTab = searchParams.get('tab') || 'sales';
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [selectedStatementId, setSelectedStatementId] = useState<number>(0);
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState<number>(0);
 
-  const [statusFilter, setStatusFilter] = useState<StatementStatus>('ALL');
+  const [statusFilter, setStatusFilter] = useState<InvoiceStatus>('ALL');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedStatements, setSelectedStatements] = useState<string[]>([]);
+  const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
 
   const queryParams = useMemo(
     () => ({
@@ -41,16 +39,16 @@ const VoucherList = () => {
 
   const queryFn =
     currentTab === 'sales'
-      ? () => getSalesStatementsList(queryParams)
-      : () => getPurchaseStatementsList(queryParams);
+      ? () => getSalesInvoicesList(queryParams)
+      : () => getPurchaseInvoicesList(queryParams);
 
   const queryKey = [
-    currentTab === 'sales' ? 'salesStatementList' : 'purchaseStatementList',
+    currentTab === 'sales' ? 'salesInvoiceList' : 'purchaseInvoiceList',
     queryParams,
   ];
 
   const {
-    data: statementRes,
+    data: invoiceRes,
     isLoading,
     isError,
   } = useQuery({
@@ -58,31 +56,31 @@ const VoucherList = () => {
     queryFn: queryFn,
   });
 
-  const statements = statementRes?.data ?? [];
-  const pageInfo = statementRes?.pageData;
+  const invoices = invoiceRes?.data ?? [];
+  const pageInfo = invoiceRes?.pageData;
   const totalPages = pageInfo?.totalPages ?? 1;
 
   const handleViewDetail = (id: number) => {
     setShowDetailModal(true);
-    setSelectedStatementId(id);
+    setSelectedInvoiceId(id);
     console.log(showDetailModal);
   };
 
   const handleSelectVoucher = (voucherId: number, checked: boolean) => {
     if (checked) {
-      setSelectedStatementId(voucherId);
+      setSelectedInvoiceId(voucherId);
     } else {
-      setSelectedStatementId(0);
+      setSelectedInvoiceId(0);
     }
   };
 
   const handleReceivableComplete = () => {
-    if (selectedStatements.length === 0) {
+    if (selectedInvoices.length === 0) {
       alert('처리할 전표를 선택해주세요.');
       return;
     }
     alert(`미수 처리가 완료되었습니다.`);
-    setSelectedStatements([]);
+    setSelectedInvoices([]);
   };
 
   return (
@@ -101,7 +99,7 @@ const VoucherList = () => {
 
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as StatementStatus)}
+              onChange={(e) => setStatusFilter(e.target.value as InvoiceStatus)}
               className="px-3 py-1 border border-gray-300 rounded-md text-sm cursor-pointer pr-8"
             >
               {VOUCHER_STATUS_OPTIONS.map(({ key, value }) => (
@@ -114,9 +112,9 @@ const VoucherList = () => {
 
           <button
             onClick={handleReceivableComplete}
-            disabled={selectedStatementId ? false : true}
+            disabled={selectedInvoiceId ? false : true}
             className={`px-4 py-2 rounded-lg transition-colors font-medium text-sm whitespace-nowrap cursor-pointer ${
-              selectedStatementId
+              selectedInvoiceId
                 ? 'bg-green-600 text-white hover:bg-green-700'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
@@ -131,7 +129,7 @@ const VoucherList = () => {
           <TableStatusBox $type="loading" $message="전표 목록을 불러오는 중입니다..." />
         ) : isError ? (
           <TableStatusBox $type="error" $message="전표 목록을 불러오는 중 오류가 발생했습니다." />
-        ) : !statements || statements.length === 0 ? (
+        ) : !invoices || invoices.length === 0 ? (
           <TableStatusBox $type="empty" $message="등록된 전표가 없습니다." />
         ) : (
           <table className="w-full">
@@ -155,44 +153,44 @@ const VoucherList = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {statements.map((statement) => (
+              {invoices.map((invoice) => (
                 <tr
-                  key={statement.statementId}
+                  key={invoice.invoiceId}
                   className="hover:bg-gray-50 transition-colors duration-200"
                 >
                   <td className="py-3 px-4">
                     <input
                       type="checkbox"
-                      checked={selectedStatementId === statement.statementId}
-                      onChange={(e) => handleSelectVoucher(statement.statementId, e.target.checked)}
+                      checked={selectedInvoiceId === invoice.invoiceId}
+                      onChange={(e) => handleSelectVoucher(invoice.invoiceId, e.target.checked)}
                       className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                   </td>
                   <td className="py-3 px-4 text-sm font-medium text-gray-900">
-                    {statement.statementCode}
+                    {invoice.invoiceCode}
                   </td>
                   <td className="py-3 px-4 text-sm text-gray-900">
-                    {statement.connection.connectionName}
+                    {invoice.connection.connectionName}
                   </td>
                   <td className="py-3 px-4 text-sm font-medium text-gray-900 text-right">
-                    ₩{statement.totalAmount.toLocaleString()}
+                    ₩{invoice.totalAmount.toLocaleString()}
                   </td>
-                  <td className="py-3 px-4 text-sm text-gray-500">{statement.issueDate}</td>
-                  <td className="py-3 px-4 text-sm text-gray-500">{statement.dueDate}</td>
+                  <td className="py-3 px-4 text-sm text-gray-500">{invoice.issueDate}</td>
+                  <td className="py-3 px-4 text-sm text-gray-500">{invoice.dueDate}</td>
                   <td className="py-3 px-4">
                     <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${getChitStatusColor(statement.status)}`}
+                      className={`px-2 py-1 rounded text-xs font-medium ${getChitStatusColor(invoice.status)}`}
                     >
-                      {getChitStatusText(statement.status)}
+                      {getChitStatusText(invoice.status)}
                     </span>
                   </td>
                   <td className="py-3 px-4 text-sm text-blue-600 hover:text-blue-500 cursor-pointer">
-                    {statement.reference.referenceCode}
+                    {invoice.reference.referenceCode}
                   </td>
                   <td className="py-3 px-4 text-center">
                     <div className="flex items-center justify-center space-x-2">
                       <button
-                        onClick={() => handleViewDetail(statement.statementId)}
+                        onClick={() => handleViewDetail(invoice.invoiceId)}
                         className="text-blue-600 hover:text-blue-500 cursor-pointer"
                       >
                         <i className="ri-eye-line"></i>
@@ -216,13 +214,13 @@ const VoucherList = () => {
       )}
 
       {/* 전표 상세 모달 */}
-      {/* {showDetailModal && (
-        <StatementDetailModal
+      {showDetailModal && (
+        <InvoiceDetailModal
           $setShowDetailModal={setShowDetailModal}
-          $selectedStatementId={selectedStatementId}
-          $setSelectedStatementId={setSelectedStatementId}
+          $selectedInvoiceId={selectedInvoiceId}
+          $setSelectedInvoiceId={setSelectedInvoiceId}
         />
-      )} */}
+      )}
     </div>
   );
 };

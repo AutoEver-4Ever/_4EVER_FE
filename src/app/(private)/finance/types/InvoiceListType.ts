@@ -1,11 +1,11 @@
 // 현재 VoucherDetailModalType과 VoucherListType의 타입이 같음!
 // api 연동 시 변경!
 
-export type StatementStatus = 'ALL' | 'UNPAID' | 'PENDING' | 'PAID';
+export type InvoiceStatus = 'ALL' | 'UNPAID' | 'PENDING' | 'PAID';
 
-export interface StatementListRes {
-  statementId: number;
-  statementCode: string;
+export interface InvoiceListRes {
+  invoiceId: number;
+  invoiceCode: string;
   connection: {
     connectionId: number;
     connectionCode: string;
@@ -22,7 +22,7 @@ export interface StatementListRes {
   };
 }
 
-export interface StatementQueryParams {
+export interface InvoiceQueryParams {
   status: string;
   page: number;
   size: number;

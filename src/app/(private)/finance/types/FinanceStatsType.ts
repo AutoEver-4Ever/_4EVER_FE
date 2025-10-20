@@ -2,7 +2,15 @@ export interface FinanceStatsProps {
   $selectedPeriod: string;
 }
 
-interface PeriodData {}
+interface Metric {
+  value: number;
+  delta_rate: number;
+}
+
+interface PeriodData {
+  total_purchases: Metric;
+  net_profit: Metric;
+}
 
 export type Period = 'week' | 'month' | 'quarter' | 'year';
 

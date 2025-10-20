@@ -1,7 +1,7 @@
 'use client';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import VoucherList from '@/app/(private)/finance/components/tabs/StatementList';
+import VoucherList from '@/app/(private)/finance/components/tabs/InvoiceList';
 
 const FinanceTabNavigation = () => {
   const router = useRouter();
