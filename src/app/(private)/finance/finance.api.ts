@@ -34,6 +34,26 @@ export const getPurchaseInvoiceDetail = async (invoiceId: number): Promise<Invoi
   return res.data.data;
 };
 
+export interface TempApiResponse {
+  status: number;
+  success: boolean;
+  message: string;
+}
+
+export const postApInvoice = async (invoiceId: number): Promise<TempApiResponse> => {
+  const res = await axios.post<TempApiResponse>(
+    FINANCE_ENDPOINTS.PURCHASE_INVOICE_REQUEST(invoiceId),
+  );
+  return res.data;
+};
+
+export const postArInvoice = async (invoiceId: number): Promise<TempApiResponse> => {
+  const res = await axios.post<TempApiResponse>(
+    FINANCE_ENDPOINTS.SALES_INVOICE_COMPLETE(invoiceId),
+  );
+  return res.data;
+};
+
 // ----------------------- 매출 전표(AS) -----------------------
 export const getSalesInvoicesList = async (
   params?: InvoiceQueryParams,

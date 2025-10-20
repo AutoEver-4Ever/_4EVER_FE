@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getChitStatusColor, getChitStatusText } from '@/app/(private)/finance/utils';
 import {
   VOUCHER_LIST_TABLE_HEADERS,
@@ -8,8 +8,13 @@ import {
 } from '@/app/(private)/finance/constants';
 // import StatementDetailModal from '@/app/(private)/finance/components/modals/StatementDetailModal';
 import { InvoiceStatus } from '@/app/(private)/finance/types/InvoiceListType';
-import { useQuery } from '@tanstack/react-query';
-import { getPurchaseInvoicesList, getSalesInvoicesList } from '@/app/(private)/finance/finance.api';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  getPurchaseInvoicesList,
+  getSalesInvoicesList,
+  postApInvoice,
+  postArInvoice,
+} from '@/app/(private)/finance/finance.api';
 import Pagination from '@/app/components/common/Pagination';
 import { useSearchParams } from 'next/navigation';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
@@ -23,7 +28,6 @@ const VoucherList = () => {
 
   const [statusFilter, setStatusFilter] = useState<InvoiceStatus>('ALL');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
 
   const queryParams = useMemo(
     () => ({
@@ -64,12 +68,27 @@ const VoucherList = () => {
   const pageInfo = invoiceRes?.pageData;
   const totalPages = pageInfo?.totalPages ?? 1;
 
+  const mutationFn =
+    currentTab === 'sales'
+      ? () => postArInvoice(selectedInvoiceId)
+      : () => postApInvoice(selectedInvoiceId);
+
+  const { mutate: sendReq, isPending } = useMutation({
+    mutationFn: mutationFn,
+    onSuccess: (data) => {
+      alert(`${data.status} : ${data.message}
+        `);
+    },
+    onError: (error) => {
+      alert(` 등록 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+
+  // ----------------------------------------------------------
   const handleViewDetail = (id: number) => {
     setShowDetailModal(true);
     setSelectedInvoiceId(id);
-    console.log(showDetailModal);
   };
-
   const handleSelectVoucher = (voucherId: number, checked: boolean) => {
     if (checked) {
       setSelectedInvoiceId(voucherId);
@@ -78,13 +97,12 @@ const VoucherList = () => {
     }
   };
 
+  useEffect(() => {
+    console.log(selectedInvoiceId);
+  }, [selectedInvoiceId]);
+
   const handleReceivableComplete = () => {
-    if (selectedInvoices.length === 0) {
-      alert('처리할 전표를 선택해주세요.');
-      return;
-    }
-    alert(`미수 처리가 완료되었습니다.`);
-    setSelectedInvoices([]);
+    sendReq();
   };
 
   return (
