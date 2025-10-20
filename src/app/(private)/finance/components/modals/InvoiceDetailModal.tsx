@@ -85,11 +85,13 @@ const InvoiceDetailModal = ({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">전표유형</label>
-                  <div className="text-gray-900">{getInvoiceType(currentTab)}</div>
+                  <div className="text-gray-900">
+                    {getInvoiceType(invoiceRes?.invoiceType ?? 'AR')}
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">거래처</label>
-                  <div className="text-gray-900">{invoiceRes?.customerName}</div>
+                  <div className="text-gray-900">{invoiceRes?.name}</div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">메모</label>
