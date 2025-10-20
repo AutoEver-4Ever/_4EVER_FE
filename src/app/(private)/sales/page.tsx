@@ -4,7 +4,7 @@ import { getQueryClient } from '@/lib/queryClient';
 import { dehydrate } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import Providers from '@/app/providers';
-import { getQuoteList, getSalesStats } from '@/app/(private)/sales/sales.service';
+import { getQuoteList, getSalesStats } from '@/app/(private)/sales/sales.api';
 import { QuoteQueryParams } from '@/app/(private)/sales/types/SalesQuoteListType';
 
 export default async function SalesPage() {

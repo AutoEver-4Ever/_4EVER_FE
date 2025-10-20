@@ -3,7 +3,7 @@
 import { CustomerDetailModalProps } from '@/app/(private)/sales/types/CustomerDetailModalProps';
 import { useEffect, useState } from 'react';
 import { CustomerDetail } from '@/app/(private)/sales/types/SalesCustomerDetailType';
-import { getCustomerDetail } from '../../sales.service';
+import { getCustomerDetail } from '../../sales.api';
 import { useQuery } from '@tanstack/react-query';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
 import { getCustomerStatusColor, getCustomerStatusText } from '@/app/(private)/sales/utils';

@@ -3,7 +3,7 @@ import {
   QuoteDetail,
 } from '@/app/(private)/sales/types/QuoteDetailModalType';
 import { useQuery } from '@tanstack/react-query';
-import { getQuoteDetail } from '../../sales.service';
+import { getQuoteDetail } from '../../sales.api';
 import { useEffect, useState } from 'react';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
 import { QUOTE_DETAIL_TABLE_HEADERS } from '../../constant';
