@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { FINANCE_ENDPOINTS, ApiResponse } from '@/app/api';
-import { PageType } from '@/app/(private)/sales/types/SalesCustomerListType';
 import { FinanceStatCard, FinanceStatData } from '@/app/(private)/finance/types/FinanceStatsType';
 import { StatementListRes, StatementQueryParams } from './types/StatementListType';
 import { StatementDetailRes } from './types/StatementDetailModalType';
+import { Page } from '@/types/Page';
 
 // ----------------------- 통계 지표 -----------------------
 export const getFinanceStatistics = async (): Promise<Record<string, FinanceStatCard[]>> => {
@@ -60,14 +60,14 @@ export const getFinanceStatistics = async (): Promise<Record<string, FinanceStat
 // ----------------------- 매입 전표(AP) -----------------------
 export const getPurchaseStatementsList = async (
   params?: StatementQueryParams,
-): Promise<{ data: StatementListRes[]; pageData: PageType }> => {
+): Promise<{ data: StatementListRes[]; pageData: Page }> => {
   const query = new URLSearchParams({
     ...(params?.status && { status: params.status }),
     ...(params?.page && { page: String(params.page) }),
     ...(params?.size && { size: String(params.size) }),
   }).toString();
 
-  const res = await axios.get<ApiResponse<{ content: StatementListRes[]; page: PageType }>>(
+  const res = await axios.get<ApiResponse<{ content: StatementListRes[]; page: Page }>>(
     `${FINANCE_ENDPOINTS.PURCHASE_STATEMENTS_LIST}?${query}`,
   );
   return { data: res.data.data.content, pageData: res.data.data.page };
@@ -83,14 +83,14 @@ export const getStatementDetail = async (statementId: number): Promise<Statement
 // ----------------------- 매출 전표(AS) -----------------------
 export const getSalesStatementsList = async (
   params?: StatementQueryParams,
-): Promise<{ data: StatementListRes[]; pageData: PageType }> => {
+): Promise<{ data: StatementListRes[]; pageData: Page }> => {
   const query = new URLSearchParams({
     ...(params?.status && { status: params.status }),
     ...(params?.page && { page: String(params.page) }),
     ...(params?.size && { size: String(params.size) }),
   }).toString();
 
-  const res = await axios.get<ApiResponse<{ content: StatementListRes[]; page: PageType }>>(
+  const res = await axios.get<ApiResponse<{ content: StatementListRes[]; page: Page }>>(
     `${FINANCE_ENDPOINTS.SALES_STATEMENTS_LIST}?${query}`,
   );
   return { data: res.data.data.content, pageData: res.data.data.page };

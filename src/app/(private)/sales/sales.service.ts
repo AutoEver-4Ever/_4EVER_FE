@@ -8,12 +8,12 @@ import { CustomerDetail } from '@/app/(private)/sales/types/SalesCustomerDetailT
 import {
   SalesCustomer,
   CustomerQueryParams,
-  PageType,
 } from '@/app/(private)/sales/types/SalesCustomerListType';
 import { CustomerData, ServerResponse } from '@/app/(private)/sales/types/NewCustomerModalType';
 import { AnalyticsQueryParams, SalesAnalysis } from '@/app/(private)/sales/types/SalesChartType';
 import { Order, OrderQueryParams } from '@/app/(private)/sales/types/SalesOrderListType';
 import { OrderDetail } from '@/app/(private)/sales/types/SalesOrderDetailType';
+import { Page } from '@/types/Page';
 
 // ----------------------- 통계 지표 -----------------------
 export const getSalesStats = async (): Promise<Record<string, SalesStatCard[]>> => {
@@ -54,7 +54,7 @@ export const getSalesStats = async (): Promise<Record<string, SalesStatCard[]>> 
 // ----------------------- 견적 관리 -----------------------
 export const getQuoteList = async (
   params?: QuoteQueryParams,
-): Promise<{ data: Quote[]; pageData: PageType }> => {
+): Promise<{ data: Quote[]; pageData: Page }> => {
   const query = new URLSearchParams({
     ...(params?.startDate && { startDate: params.startDate }),
     ...(params?.endDate && { endDate: params.endDate }),
@@ -65,7 +65,7 @@ export const getQuoteList = async (
     ...(params?.size && { size: String(params.size) }),
   }).toString();
 
-  const res = await axios.get<ApiResponse<{ items: Quote[]; page: PageType }>>(
+  const res = await axios.get<ApiResponse<{ items: Quote[]; page: Page }>>(
     `${SALES_ENDPOINTS.QUOTES_LIST}?${query}`,
   );
 
@@ -80,7 +80,7 @@ export const getQuoteDetail = async (quotationId: number): Promise<QuoteDetail> 
 // ----------------------- 주문 관리 -----------------------
 export const getOrderList = async (
   params?: OrderQueryParams,
-): Promise<{ data: Order[]; pageData: PageType }> => {
+): Promise<{ data: Order[]; pageData: Page }> => {
   const query = new URLSearchParams({
     ...(params?.start && { start: params.start }),
     ...(params?.end && { end: params.end }),
@@ -90,7 +90,7 @@ export const getOrderList = async (
     ...(params?.size && { size: String(params.size) }),
   }).toString();
 
-  const res = await axios.get<ApiResponse<{ content: Order[]; page: PageType }>>(
+  const res = await axios.get<ApiResponse<{ content: Order[]; page: Page }>>(
     `${SALES_ENDPOINTS.ORDERS_LIST}?${query}`,
   );
 
@@ -105,7 +105,7 @@ export const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
 // ----------------------- 고객 관리 -----------------------
 export const getCustomerList = async (
   params?: CustomerQueryParams,
-): Promise<{ data: SalesCustomer[]; pageData: PageType }> => {
+): Promise<{ data: SalesCustomer[]; pageData: Page }> => {
   const query = new URLSearchParams({
     ...(params?.status && { status: params.status }),
     ...(params?.keyword && { keyword: params.keyword }),
@@ -113,7 +113,7 @@ export const getCustomerList = async (
     ...(params?.size && { size: String(params.size) }),
   }).toString();
 
-  const res = await axios.get<ApiResponse<{ customers: SalesCustomer[]; page: PageType }>>(
+  const res = await axios.get<ApiResponse<{ customers: SalesCustomer[]; page: Page }>>(
     `${SALES_ENDPOINTS.CUSTOMERS_LIST}?${query}`,
   );
 
