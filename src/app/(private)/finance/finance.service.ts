@@ -10,19 +10,19 @@ export const mapFinanceStatsToCards = (
   return Object.entries(data).reduce(
     (acc, [period, stats]) => {
       const cards: StatCardType[] = [
-        createStatCard('총 매출 (AR)', stats.total_sales.value, stats.total_sales.delta_rate, '건'),
+        createStatCard('총 매출 (AR)', stats.total_sales.value, stats.total_sales.delta_rate, '₩'),
         createStatCard(
           '총 매입 (AP)',
           stats.total_purchases.value,
           stats.total_purchases.delta_rate,
-          '건',
+          '₩',
         ),
         createStatCard('순이익', stats.net_profit.value, stats.net_profit.delta_rate, '₩'),
         createStatCard(
           '미수금',
           stats.accounts_receivable.value,
           stats.accounts_receivable.delta_rate,
-          '건',
+          '₩',
         ),
       ];
 
