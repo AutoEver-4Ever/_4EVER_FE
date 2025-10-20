@@ -100,13 +100,17 @@ const InvoiceDetailModal = ({
               </div>
               <div className="space-y-4">
                 <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">참조번호</label>
+                  <div className="text-gray-900">{invoiceRes?.referenceCode}</div>
+                </div>
+                <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     전표 발생일
                   </label>
                   <div className="text-gray-900">{invoiceRes?.issueDate}</div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">만기일</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">납기일</label>
                   <div className="text-gray-900">{invoiceRes?.dueDate}</div>
                 </div>
                 <div>

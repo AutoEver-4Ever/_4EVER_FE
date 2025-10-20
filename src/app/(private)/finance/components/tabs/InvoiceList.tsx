@@ -126,7 +126,7 @@ const VoucherList = () => {
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
-            미수 처리 완료
+            미수 처리 신청
           </button>
         </div>
       </div>
