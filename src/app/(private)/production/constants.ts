@@ -1,9 +1,9 @@
 import { Tab } from '@/types/NavigationType';
-import QuotationTab from '@/app/(private)/production/components/QuotationTab';
-import MpsTab from '@/app/(private)/production/components/MpsTab';
-import MrpTab from '@/app/(private)/production/components/MrpTab';
-import MesTab from '@/app/(private)/production/components/MesTab';
-import BomTab from '@/app/(private)/production/components/BomTab';
+import QuotationTab from '@/app/(private)/production/components/tabs/QuotationTab';
+import MpsTab from '@/app/(private)/production/components/tabs/MpsTab';
+import MrpTab from '@/app/(private)/production/components/tabs/MrpTab';
+import MesTab from '@/app/(private)/production/components/tabs/MesTab';
+import BomTab from '@/app/(private)/production/components/tabs/BomTab';
 
 // 생산 관리 탭 전환
 export const Production_TABS: Tab[] = [

@@ -4,7 +4,9 @@ import { PURCHASE_ITEM_TABLE_HEADERS } from '@/app/(private)/purchase/constants'
 import { PurchaseRequestDetailModalProps } from '@/app/(private)/purchase/types/PurchaseRequestDetailModalType';
 import { useQuery } from '@tanstack/react-query';
 import { PurchaseReqDetailResponse } from '@/app/(private)/purchase/types/PurchaseReqType';
-import { fetchPurchaseReqDetail } from '../../api/purchase.api';
+import { fetchPurchaseReqDetail } from '@/app/(private)/purchase/api/purchase.api';
+import { useEffect, useState } from 'react';
+import ModalStatusBox from '@/app/components/common/ModalStatusBox';
 
 // 상태별 색상
 const getStatusColor = (status: string): string => {
@@ -46,14 +48,29 @@ export default function PurchaseRequestDetailModal({
     data: request,
     isLoading,
     isError,
-    error,
   } = useQuery<PurchaseReqDetailResponse>({
     queryKey: ['purchase-req-detail'],
     queryFn: () => fetchPurchaseReqDetail(purchaseId),
   });
 
-  if (isLoading || !request) return <div>로딩 중...</div>;
-  if (isError) return <div>에러 발생: {error?.message}</div>;
+  const [errorModal, setErrorModal] = useState(false);
+  useEffect(() => {
+    setErrorModal(isError);
+  }, [isError]);
+
+  if (!request) return null;
+
+  if (isLoading)
+    return <ModalStatusBox $type="loading" $message="구매 요청 상세정보를 불러오는 중입니다..." />;
+
+  if (errorModal)
+    return (
+      <ModalStatusBox
+        $type="error"
+        $message="구매 요청 상세 정보 데이터를 불러오는 중 오류가 발생했습니다."
+        $onClose={() => setErrorModal(false)}
+      />
+    );
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">

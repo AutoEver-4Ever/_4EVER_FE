@@ -4,6 +4,8 @@ import { PurchaseOrderDetailModalProps } from '@/app/(private)/purchase/types/Pu
 import { useQuery } from '@tanstack/react-query';
 import { fetchPurchaseOrderDetail } from '@/app/(private)/purchase/api/purchase.api';
 import { PurchaseOrderDetailResponse } from '@/app/(private)/purchase/types/PurchaseOrderType';
+import ModalStatusBox from '@/app/components/common/ModalStatusBox';
+import { useEffect, useState } from 'react';
 
 export default function PurchaseOrderDetailModal({
   purchaseId,
@@ -13,15 +15,29 @@ export default function PurchaseOrderDetailModal({
     data: order,
     isLoading,
     isError,
-    error,
   } = useQuery<PurchaseOrderDetailResponse>({
     queryKey: ['purchase-order-detail'],
     queryFn: () => fetchPurchaseOrderDetail(purchaseId),
   });
 
+  const [errorModal, setErrorModal] = useState(false);
+  useEffect(() => {
+    setErrorModal(isError);
+  }, [isError]);
+
   if (!order) return null;
-  if (isLoading) return <div>로딩 중...</div>;
-  if (isError) return <div>에러 발생: {error?.message}</div>;
+
+  if (isLoading)
+    return <ModalStatusBox $type="loading" $message="발주서 상세정보를 불러오는 중입니다..." />;
+
+  if (errorModal)
+    return (
+      <ModalStatusBox
+        $type="error"
+        $message="발주서 데이터를 불러오는 중 오류가 발생했습니다."
+        $onClose={() => setErrorModal(false)}
+      />
+    );
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

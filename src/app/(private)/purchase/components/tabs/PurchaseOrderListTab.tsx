@@ -14,6 +14,7 @@ import { PURCHASE_ORDER_STATUS, PurchaseOrderStatus } from '@/app/(private)/purc
 import Dropdown from '@/app/components/common/Dropdown';
 import DateRangePicker from '@/app/components/common/DateRangePicker';
 import { getQueryClient } from '@/lib/queryClient';
+import Pagination from '@/app/components/common/Pagination';
 
 type SortField = 'orderDate' | 'deliveryDate' | '';
 type SortDirection = 'asc' | 'desc';
@@ -47,7 +48,7 @@ export default function PurchaseOrderListTab() {
   const [sortField, setSortField] = useState<SortField>('');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [currentPage, setCurrentPage] = useState<number>(0); // 0부터 시작
-  const [pageSize] = useState(10);
+  const pageSize = 10;
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -96,6 +97,7 @@ export default function PurchaseOrderListTab() {
 
   const orders = orderData.content || [];
   const pageInfo = orderData.page;
+  const totalPages = pageInfo?.totalPages ?? 1;
 
   const handleApprove = (poId: number) => {
     if (confirm('해당 요청을 승인하시겠습니까?')) {
@@ -140,29 +142,6 @@ export default function PurchaseOrderListTab() {
     }
   });
 
-  // 페이지네이션 계산
-  const isFirstPage = currentPage === 0;
-  const isLastPage = pageInfo ? currentPage === pageInfo.totalPages - 1 : true;
-  const startIndex = pageInfo.size * currentPage + 1;
-  const endIndex = Math.min(pageInfo.size * (currentPage + 1), pageInfo.totalElements);
-
-  // 페이지 변경 핸들러
-  const handlePageChange = (page: number): void => {
-    setCurrentPage(page);
-  };
-
-  const handlePrevPage = (): void => {
-    if (!isFirstPage) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = (): void => {
-    if (!isLastPage) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
   // 상세 보기 모달 핸들러
   const handleViewDetail = (order: PurchaseOrder): void => {
     setSelectedOrder(order);
@@ -181,7 +160,7 @@ export default function PurchaseOrderListTab() {
 
   const handleStatusChange = (status: string) => {
     setSelectedStatus(status as PurchaseOrderStatus);
-    setCurrentPage(0); // 첫 페이지로
+    setCurrentPage(1); // 첫 페이지로
   };
 
   const getStatusValue = (): string => {
@@ -224,51 +203,14 @@ export default function PurchaseOrderListTab() {
         getStatusText={getStatusText}
       />
 
-      {/* 페이지네이션 섹션 */}
-      <div className="mt-6 flex items-center justify-between">
-        <div className="text-sm text-gray-500">
-          총 {pageInfo.totalElements}건의 발주서 ({startIndex}-{endIndex} 표시)
-        </div>
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={handlePrevPage}
-            disabled={isFirstPage}
-            className={`px-3 py-1 border border-gray-300 rounded-md text-sm ${
-              isFirstPage
-                ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                : 'text-gray-700 hover:bg-gray-50 cursor-pointer'
-            }`}
-          >
-            이전
-          </button>
-
-          {Array.from({ length: pageInfo.totalPages }, (_, i) => i).map((page) => (
-            <button
-              key={page}
-              onClick={() => handlePageChange(page)}
-              className={`px-3 py-1 rounded-md text-sm cursor-pointer ${
-                currentPage === page
-                  ? 'bg-blue-600 text-white'
-                  : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              {page + 1}
-            </button>
-          ))}
-
-          <button
-            onClick={handleNextPage}
-            disabled={isLastPage}
-            className={`px-3 py-1 border border-gray-300 rounded-md text-sm ${
-              isLastPage
-                ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                : 'text-gray-700 hover:bg-gray-50 cursor-pointer'
-            }`}
-          >
-            다음
-          </button>
-        </div>
-      </div>
+      {isError || isLoading ? null : (
+        <Pagination
+          currentPage={currentPage + 1}
+          totalPages={totalPages}
+          totalElements={pageInfo?.totalElements}
+          onPageChange={(page) => setCurrentPage(page - 1)}
+        />
+      )}
 
       {/* 발주서 상세 정보 모달 */}
       {showDetailModal && selectedOrder && (

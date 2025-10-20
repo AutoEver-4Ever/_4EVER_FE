@@ -14,6 +14,7 @@ import {
   SUPPLIER_STATUS_ITEMS,
   SupplierCategory,
 } from '@/app/(private)/purchase/constants';
+import Pagination from '@/app/components/common/Pagination';
 
 export default function SupplierListTab() {
   const [showAddSupplierModal, setShowAddSupplierModal] = useState(false);
@@ -23,8 +24,8 @@ export default function SupplierListTab() {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSupplierStatus, setSelectedSupplierStatus] = useState<string>('');
 
-  const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   // React Query로 데이터 가져오기 - 쿼리 파라미터 전달
   const {
@@ -47,34 +48,16 @@ export default function SupplierListTab() {
 
   const suppliers = supplierData.content || [];
   const pageInfo = supplierData.page;
-
-  const isFirstPage = currentPage === 0; // 0부터 시작이면
-  const isLastPage = pageInfo ? currentPage === pageInfo.totalPages - 1 : true;
+  const totalPages = pageInfo?.totalPages ?? 1;
 
   const handelSupplierStatusChange = (status: SupplierStatus) => {
     setSelectedSupplierStatus(status);
-    setCurrentPage(0);
+    setCurrentPage(1);
   };
 
   const handleSupplierCategoryChange = (category: SupplierCategory) => {
     setSelectedCategory(category);
-    setCurrentPage(0); // 첫 페이지로
-  };
-
-  const handlePageChange = (page: number): void => {
-    setCurrentPage(page);
-  };
-
-  const handlePrevPage = (): void => {
-    if (pageInfo && currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = (): void => {
-    if (pageInfo && currentPage < pageInfo.totalPages - 1) {
-      setCurrentPage(currentPage + 1);
-    }
+    setCurrentPage(1); // 첫 페이지로
   };
 
   const handleViewDetail = (supplierId: string) => {
@@ -225,52 +208,13 @@ export default function SupplierListTab() {
         </div>
 
         {/* 페이지네이션 */}
-        {pageInfo && (
-          <div className="p-6 flex items-center justify-between border-t border-gray-200">
-            <div className="text-sm text-gray-600">
-              총 {pageInfo.totalElements}건 ({pageInfo.size * currentPage + 1}-
-              {Math.min(pageInfo.size * (currentPage + 1), pageInfo.totalElements)} 표시)
-            </div>
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={handlePrevPage}
-                disabled={isFirstPage}
-                className={`px-3 py-1 border border-gray-300 rounded-lg text-sm ${
-                  isFirstPage
-                    ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                이전
-              </button>
-
-              {Array.from({ length: pageInfo.totalPages }, (_, i) => i).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={`px-3 py-1 rounded-lg text-sm font-medium ${
-                    currentPage === page
-                      ? 'bg-blue-600 text-white'
-                      : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {page + 1}
-                </button>
-              ))}
-
-              <button
-                onClick={handleNextPage}
-                disabled={isLastPage}
-                className={`px-3 py-1 border border-gray-300 rounded-lg text-sm ${
-                  isLastPage
-                    ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                다음
-              </button>
-            </div>
-          </div>
+        {isError || isLoading ? null : (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalElements={pageInfo?.totalElements}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         )}
       </div>
 

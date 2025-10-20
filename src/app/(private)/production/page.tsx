@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 import BomStats from './components/BomStats';
-import BomList from './components/BomTab';
+import BomList from './components/tabs/BomTab';
 import MrpCalculation from './components/MrpCalculation';
 import ProductionPlan from '../ProductionPlan';
-import ManufacturingExecution from './components/MesTab';
-import MrpTabNew from './components/MrpTab';
+import ManufacturingExecution from './components/tabs/MesTab';
+import MrpTabNew from './components/tabs/MrpTab';
 import PageHeader from '@/app/components/common/PageHeader';
 import Providers from '@/app/providers';
 import { getQueryClient } from '@/lib/queryClient';

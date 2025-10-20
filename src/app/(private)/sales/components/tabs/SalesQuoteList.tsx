@@ -55,6 +55,7 @@ const SalesQuoteList = () => {
 
   const quotes = quoteRes?.data ?? [];
   const pageInfo = quoteRes?.pageData;
+  const totalPages = pageInfo?.totalPages ?? 1;
 
   const handleViewQuote = (quote: Quote) => {
     setSelectedQuoteId(quote.quotationId);
@@ -81,8 +82,6 @@ const SalesQuoteList = () => {
   //     alert(`견적서 ${quote.quotationId}가 삭제되었습니다.`);
   //   }
   // };
-
-  const totalPages = pageInfo?.totalPages ?? 1;
 
   return (
     <div className="space-y-6 mt-6">
@@ -239,6 +238,7 @@ const SalesQuoteList = () => {
             </table>
           )}
         </div>
+
         {/* 페이지네이션 */}
         {isError || isLoading ? null : (
           <Pagination
@@ -249,11 +249,6 @@ const SalesQuoteList = () => {
           />
         )}
 
-        {/* 신규 견적서 작성 모달 */}
-        {/* <NewQuoteModal
-          $showNewQuoteModal={showNewQuoteModal}
-          $setShowNewQuoteModal={setShowNewQuoteModal}
-        /> */}
         {/* 견적서 상세보기 모달 */}
         {showQuoteModal && (
           <QuoteDetailModal
