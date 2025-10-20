@@ -29,3 +29,4 @@ export interface VoucherType {
   vendor: string;
   details: VoucherDetails;
 }
+export type VoucherStatus = 'ALL' | 'UNPAID' | 'PENDING' | 'PAID';

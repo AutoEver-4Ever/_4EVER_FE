@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import VourcherDetailModal from './VoucherDetailModal';
-import { VoucherDetailType } from '../types/VoucherDetailModalType';
+import VourcherDetailModal from '../modals/VoucherDetailModal';
+import { getChitStatusColor, getChitStatusText } from '../../utils';
+import { VOUCHER_LIST_TABLE_HEADERS, VOUCHER_STATUS_OPTIONS } from '../../constants';
 
 const VoucherList = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -117,32 +118,6 @@ const VoucherList = () => {
     },
   ];
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'unpaid':
-        return 'bg-red-100 text-red-700';
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'paid':
-        return 'bg-green-100 text-green-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'unpaid':
-        return '미납';
-      case 'pending':
-        return '확인대기';
-      case 'paid':
-        return '완납';
-      default:
-        return status;
-    }
-  };
-
   const handleViewDetail = (id: number) => {
     setShowDetailModal(true);
     setSelectedVoucherId(id);
@@ -177,15 +152,17 @@ const VoucherList = () => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <label className="text-sm text-gray-600">상태:</label>
+
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
               className="px-3 py-1 border border-gray-300 rounded-md text-sm cursor-pointer pr-8"
             >
-              <option value="all">전체</option>
-              <option value="unpaid">미납</option>
-              <option value="pending">확인대기</option>
-              <option value="paid">완납</option>
+              {VOUCHER_STATUS_OPTIONS.map(({ key, value }) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -214,31 +191,14 @@ const VoucherList = () => {
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
               </th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                전표번호
-              </th>
-
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                거래처
-              </th>
-              <th className="text-right py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                금액
-              </th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                전표 발생일
-              </th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                만기일
-              </th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                상태
-              </th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                참조번호
-              </th>
-              <th className="text-center py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                작업
-              </th>
+              {VOUCHER_LIST_TABLE_HEADERS.map((header) => (
+                <th
+                  key={header}
+                  className="py-3 px-4 text-xs font-medium text-gray-500 uppercase tracking-wider text-left"
+                >
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -261,9 +221,9 @@ const VoucherList = () => {
                 <td className="py-3 px-4 text-sm text-gray-500">{voucher.dueDate}</td>
                 <td className="py-3 px-4">
                   <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(voucher.status)}`}
+                    className={`px-2 py-1 rounded text-xs font-medium ${getChitStatusColor(voucher.status)}`}
                   >
-                    {getStatusText(voucher.status)}
+                    {getChitStatusText(voucher.status)}
                   </span>
                 </td>
                 <td className="py-3 px-4 text-sm text-blue-600 hover:text-blue-500 cursor-pointer">
@@ -327,16 +287,14 @@ const VoucherList = () => {
           </button>
         </div>
       </div>
-
       {/* 전표 상세 모달 */}
-      <VourcherDetailModal
-        $showDetailModal={showDetailModal}
-        $setShowDetailModal={setShowDetailModal}
-        $selectedVoucherId={selectedVoucherId}
-        $setSelectedVoucherId={setSelectedVoucherId}
-        $getStatusColor={getStatusColor}
-        $getStatusText={getStatusText}
-      />
+      {showDetailModal && (
+        <VourcherDetailModal
+          $setShowDetailModal={setShowDetailModal}
+          $selectedVoucherId={selectedVoucherId}
+          $setSelectedVoucherId={setSelectedVoucherId}
+        />
+      )}
     </div>
   );
 };

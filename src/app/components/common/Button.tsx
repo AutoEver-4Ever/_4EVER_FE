@@ -15,7 +15,7 @@ export default function Button({
   const base = 'rounded-lg font-semibold focus:outline-none transition cursor-pointer';
   const variants = {
     primary: 'bg-blue-500 text-white hover:opacity-85',
-    secondary: 'bg-gray-200 text-gray-600 hover:bg-gray-300',
+    secondary: 'bg-gray-200 text-gray-500 hover:bg-gray-300',
     outline: 'border border-blue-500 text-blue-500 bg-transparent hover:bg-blue-50',
     whiteOutline: 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50',
   };
