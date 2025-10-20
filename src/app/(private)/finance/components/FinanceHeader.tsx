@@ -41,7 +41,7 @@ const FinanceHeader = () => {
           </div>
         </div>
       </div>
-      <FinanceStats $selectedPeriod={selectedPeriod} />
+      <FinanceStats />
     </>
   );
 };
