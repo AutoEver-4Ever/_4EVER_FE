@@ -276,8 +276,8 @@ const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps)
 
                 {/* 확인 일시 */}
                 <div className="text-sm text-gray-500 text-right">
-                  재고 확인 일시: 현재 시간
-                  {new Date().toLocaleTimeString()}
+                  재고 확인 일시:{' '}
+                  {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
               </div>
             )}
