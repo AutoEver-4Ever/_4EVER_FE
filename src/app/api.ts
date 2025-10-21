@@ -23,6 +23,7 @@ export const SALES_ENDPOINTS = {
   QUOTE_DETAIL: (id: number) => `${SALES_BASE_PATH}/quotations/${id}`,
   QUOTE_CONFIRM: `${SALES_BASE_PATH}/quotations/confirm`,
   INVENTORY_CHECK: `${SALES_BASE_PATH}/quotations/inventory/check`,
+  QUOTE_DELIEVERY_PROCESS: `${SALES_BASE_PATH}/quotations/inventory/check`,
   ORDERS_LIST: `${SALES_BASE_PATH}/orders`,
   ORDER_DETAIL: (id: number) => `${SALES_BASE_PATH}/orders/${id}`,
   CUSTOMERS_LIST: `${SALES_BASE_PATH}/customers`,

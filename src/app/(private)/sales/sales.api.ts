@@ -103,9 +103,9 @@ export const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
   return res.data.data;
 };
 
-export const postQuotationConfirm = async (quotes: number[]): Promise<ApiResponseNoData> => {
+export const postQuotationConfirm = async (quotesId: number[]): Promise<ApiResponseNoData> => {
   const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.QUOTE_CONFIRM, {
-    quotationIds: quotes,
+    quotationIds: quotesId,
   });
   return res.data;
 };
@@ -118,6 +118,13 @@ export const postInventoryCheck = async (items: Inventories[]): Promise<Inventor
     },
   );
   return res.data.data.items;
+};
+
+export const postDeliveryProcess = async (quotesId: number): Promise<ApiResponseNoData> => {
+  const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.QUOTE_DELIEVERY_PROCESS, {
+    quotationIds: quotesId,
+  });
+  return res.data;
 };
 
 // ----------------------- 고객 관리 -----------------------

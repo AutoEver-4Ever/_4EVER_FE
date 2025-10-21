@@ -12,11 +12,15 @@ import {
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Inventories, QuoteDetail } from '../../types/QuoteDetailModalType';
-import { getQuoteDetail, postInventoryCheck, postQuotationConfirm } from '../../sales.api';
+import {
+  getQuoteDetail,
+  postDeliveryProcess,
+  postInventoryCheck,
+  postQuotationConfirm,
+} from '../../sales.api';
 import { getQuoteStatusColor, getQuoteStatusText } from '../../utils';
 
 const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps) => {
-  const [isChecking, setIsChecking] = useState(false);
   const [inventoryCheckResult, setInventoryCheckResult] = useState<InventoryCheckRes[] | null>(
     null,
   );
@@ -79,6 +83,18 @@ const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps)
       alert(`재고 확인 중 오류가 발생했습니다. ${error}`);
     },
   });
+
+  const { mutate: delieveryProcessReq } = useMutation({
+    mutationFn: (id: number) => postDeliveryProcess(id),
+    onSuccess: (data) => {
+      alert(`${data.status} : ${quote?.quotationCode}
+          `);
+    },
+    onError: (error) => {
+      alert(`즉시 납품 처리 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+  postDeliveryProcess;
 
   // const isAllInventoryFulfilled = (res: InventoryCheckRes[] | null): boolean => {
   //   if (!res || res.length === 0) return true;
@@ -281,7 +297,7 @@ const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps)
                   </p>
                   <div className="flex gap-3">
                     <button
-                      onClick={() => quotationConfirmReq($selectedQuoteId)}
+                      onClick={() => delieveryProcessReq($selectedQuoteId)}
                       className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer whitespace-nowrap flex items-center space-x-2"
                     >
                       <i className="ri-truck-line"></i>
@@ -299,7 +315,10 @@ const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps)
                     <Link
                       href="/production"
                       className="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors cursor-pointer whitespace-nowrap flex items-center space-x-2"
-                      onClick={$onClose}
+                      onClick={() => {
+                        quotationConfirmReq($selectedQuoteId);
+                        $onClose();
+                      }}
                     >
                       <i className="ri-settings-3-line"></i>
                       <span>생산관리에서 검토</span>
