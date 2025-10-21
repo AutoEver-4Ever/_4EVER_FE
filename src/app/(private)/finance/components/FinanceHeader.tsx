@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import FinanceStats from '@/app/(private)/finance/components/FinanceStats';
-import { Period } from '@/types/StatType';
+import { Period } from '@/app/types/StatType';
 
 const FinanceHeader = () => {
   const periods: { id: Period; name: string }[] = [

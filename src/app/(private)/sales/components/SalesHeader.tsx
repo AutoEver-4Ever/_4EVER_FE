@@ -1,7 +1,7 @@
 'use client';
 
 import SalesStats from '@/app/(private)/sales/components/SalesStats';
-import { Period } from '@/types/StatType';
+import { Period } from '@/app/types/StatType';
 import { useState } from 'react';
 
 const SalesHeader = () => {

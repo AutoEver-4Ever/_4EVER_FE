@@ -1,4 +1,4 @@
-import { KeyValueItem } from '@/types/CommonType';
+import { KeyValueItem } from '@/app/types/CommonType';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 
 interface DropdownProps<T extends string = string> {

@@ -1,9 +1,9 @@
-import { Tab } from '@/types/NavigationType';
+import { Tab } from '@/app/types/NavigationType';
 import { TableHeader } from '@/app/(private)/purchase/types/TableHeader';
 import PurchaseRequestListTab from '@/app/(private)/purchase/components/tabs/PurchaseRequestListTab';
 import PurchaseOrderListTab from '@/app/(private)/purchase/components/tabs/PurchaseOrderListTab';
 import SupplierListTab from '@/app/(private)/purchase/components/tabs/SupplierListTab';
-import { KeyValueItem } from '@/types/CommonType';
+import { KeyValueItem } from '@/app/types/CommonType';
 
 export type Period = 'week' | 'month' | 'quarter' | 'year';
 export type SupplierCategory = 'ALL' | 'MATERIAL' | 'PARTS' | 'ETC';

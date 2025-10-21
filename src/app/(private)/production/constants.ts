@@ -1,4 +1,4 @@
-import { Tab } from '@/types/NavigationType';
+import { Tab } from '@/app/types/NavigationType';
 import QuotationTab from '@/app/(private)/production/components/tabs/QuotationTab';
 import MpsTab from '@/app/(private)/production/components/tabs/MpsTab';
 import MrpTab from '@/app/(private)/production/components/tabs/MrpTab';
@@ -6,7 +6,7 @@ import MesTab from '@/app/(private)/production/components/tabs/MesTab';
 import BomTab from '@/app/(private)/production/components/tabs/BomTab';
 
 // 생산 관리 탭 전환
-export const Production_TABS: Tab[] = [
+export const PRODUCTION_TABS: Tab[] = [
   {
     id: 'quotations',
     name: '견적 관리',

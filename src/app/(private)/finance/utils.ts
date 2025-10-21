@@ -1,4 +1,4 @@
-import { Period } from '@/types/StatType';
+import { Period } from '@/app/types/StatType';
 
 // 전표 상태에 따른 색상
 export const getChitStatusColor = (status: string) => {
