@@ -25,7 +25,7 @@ export default function SlidingNavBar({ items, selectedKey, onSelect }: SlidingN
 
   return (
     <div
-      className={`relative inline-flex gap-1 items-center bg-white rounded-lg border border-gray-300 p-1`}
+      className={`relative inline-flex max-h-12 gap-1 items-center bg-white rounded-lg border border-gray-300 p-1`}
     >
       {/* 슬라이딩 인디케이터 */}
       <div

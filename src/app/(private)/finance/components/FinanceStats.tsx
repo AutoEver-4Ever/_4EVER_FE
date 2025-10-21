@@ -3,7 +3,6 @@
 import { FinanceStatResponse } from '@/app/(private)/finance/types/FinanceStatsType';
 import { useQuery } from '@tanstack/react-query';
 import { getFinanceStats } from '@/app/(private)/finance/finance.api';
-import StatSection from '@/app/components/statCard/StatSection';
 import { mapFinanceStatsToCards } from '../finance.service';
 
 const FinanceStats = () => {
@@ -19,7 +18,6 @@ const FinanceStats = () => {
 
   return (
     <div className="space-y-4">
-      <StatSection statsData={stats} />
       {/* {stats.map((stat, index) => (
         <div
           key={index}
