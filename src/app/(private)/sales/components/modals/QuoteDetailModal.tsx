@@ -128,7 +128,7 @@ const QuoteDetailModal = ({ $onClose, $selectedQuoteId }: QuoteDetailModalProps)
                   </tbody>
                   <tfoot className="bg-gray-50">
                     <tr>
-                      <td colSpan={3} className="px-4 py-3 text-right font-medium text-gray-900">
+                      <td colSpan={4} className="px-4 py-3 text-right font-medium text-gray-900">
                         총 견적금액
                       </td>
                       <td className="px-4 py-3 text-right font-bold text-lg text-blue-600">
