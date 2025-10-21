@@ -30,5 +30,5 @@ interface Item {
 export interface Inventories {
   itemId: number;
   itemName: string;
-  requireQty: number;
+  requiredQty: number;
 }

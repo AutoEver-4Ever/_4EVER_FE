@@ -15,13 +15,18 @@ export interface InventoryItem {
   available: boolean;
 }
 
-export interface StockCheckResult {
-  hasStock: boolean;
-  items: InventoryItem[];
-  checkDate: string;
-  deliveryPossible: boolean;
+export interface InventoryCheckRes {
+  itemId: number;
+  itemName: string;
+  requiredQty: number;
+  inventoryQty: number;
+  shortageQty: number;
+  statusCode: string;
+  productionRequired: boolean;
+  inventoryCheckTime: string;
 }
 
 export interface QuoteReviewModalProps {
   $onClose: () => void;
+  $selectedQuoteId: number;
 }

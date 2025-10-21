@@ -67,27 +67,7 @@ const SalesQuoteList = () => {
   const pageInfo = quoteRes?.pageData;
   const totalPages = pageInfo?.totalPages ?? 1;
   //---------------------------------------------
-  const { mutate: quotationConfirmReq } = useMutation({
-    mutationFn: postQuotationConfirm,
-    onSuccess: (data) => {
-      alert(`${data.status} : ${selectedQuotes}
-        `);
-    },
-    onError: (error) => {
-      alert(`검토 요청 중 오류가 발생했습니다. ${error}`);
-    },
-  });
 
-  const { mutate: inventoryCheckReq } = useMutation({
-    mutationFn: postInventoryCheck,
-    onSuccess: (data) => {
-      alert(`${data.status} : ${selectedQuotes}
-        `);
-    },
-    onError: (error) => {
-      alert(`재고 확인 중 오류가 발생했습니다. ${error}`);
-    },
-  });
   //---------------------------------------------
 
   const handleViewQuote = (quote: Quote) => {
@@ -103,9 +83,14 @@ const SalesQuoteList = () => {
     }
   };
   const handleCheckboxChange = (quoteId: number) => {
-    setSelectedQuotes((prev) =>
-      prev.includes(quoteId) ? prev.filter((id) => id !== quoteId) : [...prev, quoteId],
-    );
+    // setSelectedQuotes((prev) =>
+    //   prev.includes(quoteId) ? prev.filter((id) => id !== quoteId) : [...prev, quoteId],
+    // );
+    setSelectedQuoteId(quoteId);
+  };
+
+  const handleViewReview = () => {
+    setShowReviewModal(true);
   };
 
   // const handleDeleteQuote = (quote: Quote) => {
@@ -173,7 +158,7 @@ const SalesQuoteList = () => {
 
           {/* <IconButton icon="ri-add-line" label="견적 검토 요청" /> */}
           <button
-            onClick={() => setShowReviewModal(true)}
+            onClick={handleViewReview}
             className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"
           >
             <i className="ri-add-line"></i>
@@ -225,7 +210,7 @@ const SalesQuoteList = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <input
                         type="checkbox"
-                        checked={selectedQuotes.includes(quote.quotationId)}
+                        checked={selectedQuoteId === quote.quotationId}
                         onChange={() => handleCheckboxChange(quote.quotationId)}
                         className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
@@ -298,6 +283,7 @@ const SalesQuoteList = () => {
             $onClose={() => {
               setShowReviewModal(false);
             }}
+            $selectedQuoteId={selectedQuoteId}
           />
         )}
       </div>

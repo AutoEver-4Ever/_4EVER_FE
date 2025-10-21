@@ -14,6 +14,7 @@ import { AnalyticsQueryParams, SalesAnalysis } from '@/app/(private)/sales/types
 import { Order, OrderQueryParams } from '@/app/(private)/sales/types/SalesOrderListType';
 import { OrderDetail } from '@/app/(private)/sales/types/SalesOrderDetailType';
 import { Page } from '@/types/Page';
+import { InventoryCheckRes } from './types/QuoteReviewModalType';
 
 // ----------------------- 통계 지표 -----------------------
 export const getSalesStats = async (): Promise<SalesStatResponse> => {
@@ -102,14 +103,21 @@ export const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
   return res.data.data;
 };
 
-export const postQuotationConfirm = async (quotes: number): Promise<ApiResponseNoData> => {
-  const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.QUOTE_CONFIRM, quotes);
+export const postQuotationConfirm = async (quotes: number[]): Promise<ApiResponseNoData> => {
+  const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.QUOTE_CONFIRM, {
+    quotationIds: quotes,
+  });
   return res.data;
 };
 
-export const postInventoryCheck = async (items: Inventories): Promise<ApiResponseNoData> => {
-  const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.INVENTORY_CHECK, items);
-  return res.data;
+export const postInventoryCheck = async (items: Inventories[]): Promise<InventoryCheckRes[]> => {
+  const res = await axios.post<ApiResponse<{ items: InventoryCheckRes[] }>>(
+    SALES_ENDPOINTS.INVENTORY_CHECK,
+    {
+      items,
+    },
+  );
+  return res.data.data.items;
 };
 
 // ----------------------- 고객 관리 -----------------------
