@@ -16,63 +16,27 @@ import {
   SupplierDetailResponse,
   SupplierListResponse,
 } from '@/app/(private)/purchase/types/SupplierType';
-
-interface PaginationParams {
-  page?: number;
-  size?: number;
-}
-
-interface FetchPurchaseReqParams extends PaginationParams {
-  status?: string;
-  searchKeyword?: string;
-  createdFrom?: string;
-  createdTo?: string;
-}
-
-// 구매 요청 등록
-export interface CreatePurchaseRequest {
-  requesterId: number;
-  items: {
-    itemName: string;
-    quantity: number;
-    uomName: string;
-    expectedUnitPrice: number;
-    expectedTotalPrice: number;
-    preferredVendorName: string;
-    desiredDeliveryDate: string;
-    purpose: string;
-    note?: string;
-  }[];
-}
-
-interface FetchSupplierListParams extends PaginationParams {
-  category?: string;
-  status?: string;
-  searchKeyword?: string;
-}
-
-interface FetchPurchaseOrderParams extends PaginationParams {
-  category?: string;
-  status?: string;
-  searchKeyword?: string;
-  orderDateFrom?: string;
-  orderDateTo?: string;
-}
+import {
+  CreatePurchaseRequest,
+  FetchPurchaseOrderParams,
+  FetchPurchaseReqParams,
+  FetchSupplierListParams,
+} from '@/app/(private)/purchase/types/PurchaseApiRequestType';
 
 // 구매 관리 지표
-export const fetchPurchaseStats = async (): Promise<PurchaseStatResponse> => {
+export const fetchPurchaseStats = async (): Promise<ApiResponse<PurchaseStatResponse>> => {
   const res = await axios.get<ApiResponse<PurchaseStatResponse>>(
     `${API_BASE_URL}${PURCHASE_ENDPOINTS.STATISTICS}`,
   );
   // console.log(res);
-  return res.data.data;
+  return res.data;
 };
 
 // 구매 요청 목록
 export const fetchPurchaseReqList = async (
   params: FetchPurchaseReqParams,
 ): Promise<PurchaseReqListResponse> => {
-  const { page = 0, size = 10, status, createdFrom, createdTo } = params;
+  const { page = 0, size = 10, status = 'ALL', createdFrom, createdTo } = params;
 
   const res = await axios.get<ApiResponse<PurchaseReqListResponse>>(
     `${API_BASE_URL}${PURCHASE_ENDPOINTS.PURCHASE_REQUISITIONS}`,

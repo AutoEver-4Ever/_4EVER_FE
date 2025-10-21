@@ -3,7 +3,7 @@ interface PageHeaderProps {
   subTitle?: string;
 }
 
-export default function PageHeader({ title, subTitle }: PageHeaderProps) {
+export default function PageTitle({ title, subTitle }: PageHeaderProps) {
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between">

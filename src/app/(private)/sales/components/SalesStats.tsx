@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { SalesStatResponse } from '@/app/(private)/sales/types/SalesStatsType';
 import { getSalesStats } from '@/app/(private)/sales/sales.api';
 import { mapSalesStatsToCards } from '../sales.service';
-import StatSection from '@/app/components/statCard/StatSection';
 
 const SalesStats = () => {
   const { data, isLoading, isError } = useQuery<SalesStatResponse>({
@@ -17,12 +16,7 @@ const SalesStats = () => {
 
   const stats = mapSalesStatsToCards(data);
 
-  return (
-    <div className="space-y-4">
-      {/* 통계 카드 */}
-      <StatSection statsData={stats} />
-    </div>
-  );
+  return <div className="space-y-4"></div>;
 };
 
 export default SalesStats;

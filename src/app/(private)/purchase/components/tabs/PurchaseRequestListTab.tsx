@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import PurchaseRequestModal from '@/app/(private)/purchase/components/modals/PurchaseRequestModal';
 import PurchaseRequestDetailModal from '@/app/(private)/purchase/components/modals/PurchaseRequestDetailModal';
@@ -23,6 +23,7 @@ import DateRangePicker from '@/app/components/common/DateRangePicker';
 import { getQueryClient } from '@/lib/queryClient';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
 import Pagination from '@/app/components/common/Pagination';
+import { FetchPurchaseReqParams } from '@/app/(private)/purchase/types/PurchaseApiRequestType';
 
 const getStatusColor = (status: string): string => {
   switch (status) {
@@ -51,7 +52,7 @@ const getStatusText = (status: string): string => {
 };
 
 export default function PurchaseRequestListTab() {
-  const [selectedStatus, setSelectedStatus] = useState<string>('');
+  const [selectedStatus, setSelectedStatus] = useState<string>('ALL');
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState<number>(-1);
@@ -64,21 +65,26 @@ export default function PurchaseRequestListTab() {
 
   const queryClient = getQueryClient();
 
+  const queryParams = useMemo(
+    () => ({
+      page: currentPage - 1,
+      size: pageSize,
+      status: selectedStatus,
+      createdFrom: startDate,
+      createdTo: endDate,
+    }),
+    [currentPage, selectedStatus, startDate, endDate],
+  );
+
   // React Query로 요청 목록 가져오기
   const {
     data: requestData,
     isLoading,
     isError,
   } = useQuery<PurchaseReqListResponse>({
-    queryKey: ['purchaseRequests', currentPage, pageSize, selectedStatus, startDate, endDate],
-    queryFn: () =>
-      fetchPurchaseReqList({
-        page: currentPage,
-        size: pageSize,
-        status: selectedStatus || undefined,
-        createdFrom: startDate,
-        createdTo: endDate,
-      }),
+    queryKey: ['purchaseRequests', queryParams],
+    queryFn: ({ queryKey }) => fetchPurchaseReqList(queryKey[1] as FetchPurchaseReqParams),
+    staleTime: 1000,
   });
 
   // 승인 mutation
@@ -86,7 +92,7 @@ export default function PurchaseRequestListTab() {
     mutationFn: (prId: number) => postApporvePurchaseReq(prId),
     onSuccess: () => {
       alert('구매 요청 승인 완료되었습니다.');
-      queryClient.invalidateQueries({ queryKey: ['purchaseRequest'] }); // 목록 새로고침
+      queryClient.invalidateQueries({ queryKey: ['purchaseRequests'] }); // 목록 새로고침
     },
     onError: (error) => {
       alert(`구매 요청 승인 중 오류가 발생했습니다. ${error}`);
@@ -98,10 +104,10 @@ export default function PurchaseRequestListTab() {
     mutationFn: (prId: number) => postRejectPurchaseReq(prId),
     onSuccess: () => {
       alert('반려 처리되었습니다.');
-      queryClient.invalidateQueries({ queryKey: ['purchaseReqeust"'] });
+      queryClient.invalidateQueries({ queryKey: ['purchaseRequests'] });
     },
     onError: (error) => {
-      alert(`반려 중 오류가 발생했습니다. ${error}`);
+      alert(`반려 처리 중 오류가 발생했습니다. ${error}`);
     },
   });
 
