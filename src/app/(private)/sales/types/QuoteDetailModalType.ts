@@ -13,15 +13,22 @@ export interface QuoteDetail {
   statusCode: QuoteStatus;
   statusLabel: QuoteStatus;
   customerName: string;
-  ownerName: string;
+  ceoName: string;
   items: Item[];
   totalAmount: number;
 }
 
 interface Item {
   itemId: number;
-  productName: string;
+  itemName: string;
   quantity: number;
+  uomName: string;
   unitPrice: number;
   amount: number;
+}
+
+export interface Inventories {
+  itemId: number;
+  itemName: string;
+  requiredQty: number;
 }

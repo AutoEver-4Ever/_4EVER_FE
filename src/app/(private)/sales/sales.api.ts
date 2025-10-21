@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { SALES_ENDPOINTS, ApiResponse } from '@/app/api';
+import { SALES_ENDPOINTS, ApiResponse, ApiResponseNoData } from '@/app/api';
 
 import { SalesStatResponse } from '@/app/(private)/sales/types/SalesStatsType';
 import { Quote, QuoteQueryParams } from '@/app/(private)/sales/types/SalesQuoteListType';
-import { QuoteDetail } from '@/app/(private)/sales/types/QuoteDetailModalType';
+import { Inventories, QuoteDetail } from '@/app/(private)/sales/types/QuoteDetailModalType';
 import { CustomerDetail } from '@/app/(private)/sales/types/SalesCustomerDetailType';
 import {
   SalesCustomer,
@@ -14,6 +14,7 @@ import { AnalyticsQueryParams, SalesAnalysis } from '@/app/(private)/sales/types
 import { Order, OrderQueryParams } from '@/app/(private)/sales/types/SalesOrderListType';
 import { OrderDetail } from '@/app/(private)/sales/types/SalesOrderDetailType';
 import { Page } from '@/types/Page';
+import { InventoryCheckRes } from './types/QuoteReviewModalType';
 
 // ----------------------- 통계 지표 -----------------------
 export const getSalesStats = async (): Promise<SalesStatResponse> => {
@@ -100,6 +101,28 @@ export const getOrderList = async (
 export const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
   const res = await axios.get<ApiResponse<OrderDetail>>(SALES_ENDPOINTS.ORDER_DETAIL(orderId));
   return res.data.data;
+};
+
+export const postQuotationConfirm = async (quotesId: number[]): Promise<ApiResponseNoData> => {
+  const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.QUOTE_CONFIRM, {
+    quotationIds: quotesId,
+  });
+  return res.data;
+};
+
+export const postInventoryCheck = async (items: Inventories[]): Promise<InventoryCheckRes[]> => {
+  const res = await axios.post<ApiResponse<{ items: InventoryCheckRes[] }>>(
+    SALES_ENDPOINTS.INVENTORY_CHECK,
+    {
+      items,
+    },
+  );
+  return res.data.data.items;
+};
+
+export const postDeliveryProcess = async (quotesId: number): Promise<ApiResponseNoData> => {
+  const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.QUOTE_DELIVERY_PROCESS(quotesId));
+  return res.data;
 };
 
 // ----------------------- 고객 관리 -----------------------

@@ -1,14 +1,18 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   QuoteStatus,
   Quote,
   QuoteQueryParams,
 } from '@/app/(private)/sales/types/SalesQuoteListType';
 import QuoteDetailModal from '../modals/QuoteDetailModal';
-import { useQuery } from '@tanstack/react-query';
-import { getQuoteList } from '@/app/(private)/sales/sales.api';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  getQuoteList,
+  postInventoryCheck,
+  postQuotationConfirm,
+} from '@/app/(private)/sales/sales.api';
 import { useDebounce } from 'use-debounce';
 import QuoteReviewModal from '../modals/QuoteReviewModal';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
@@ -17,6 +21,7 @@ import { QUOTE_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
 import { getQuoteStatusColor, getQuoteStatusText } from '../../utils';
 import Pagination from '@/app/components/common/Pagination';
 import IconButton from '@/app/components/common/IconButton';
+import { stat } from 'fs';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,6 +36,10 @@ const SalesQuoteList = () => {
   const [endDate, setEndDate] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 200);
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    console.log(selectedQuotes);
+  }, [selectedQuotes]);
 
   const queryParams = useMemo(
     () => ({
@@ -63,26 +72,12 @@ const SalesQuoteList = () => {
     setShowQuoteModal(true);
   };
 
-  const handleSelectAll = () => {
-    if (selectedQuotes.length === quotes.length && quotes.length > 0) {
-      setSelectedQuotes([]);
-    } else {
-      setSelectedQuotes(quotes.map((quote) => quote.quotationId));
-    }
-  };
   const handleCheckboxChange = (quoteId: number) => {
-    setSelectedQuotes((prev) =>
-      prev.includes(quoteId) ? prev.filter((id) => id !== quoteId) : [...prev, quoteId],
-    );
+    setSelectedQuoteId((prev) => (prev === quoteId ? 0 : quoteId));
   };
-
-  // const handleDeleteQuote = (quote: Quote) => {
-  //   if (
-  //     confirm(`견적서 ${quote.quotationId}를 정말 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)
-  //   ) {
-  //     alert(`견적서 ${quote.quotationId}가 삭제되었습니다.`);
-  //   }
-  // };
+  const handleViewReview = () => {
+    setShowReviewModal(true);
+  };
 
   return (
     <div className="space-y-6 mt-6">
@@ -141,8 +136,14 @@ const SalesQuoteList = () => {
 
           {/* <IconButton icon="ri-add-line" label="견적 검토 요청" /> */}
           <button
-            onClick={() => setShowReviewModal(true)}
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"
+            onClick={handleViewReview}
+            disabled={selectedQuoteId === 0}
+            className={`px-4 py-2 font-medium rounded-lg transition-colors duration-200 whitespace-nowrap flex items-center space-x-2
+    ${
+      !selectedQuoteId
+        ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+        : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
+    }`}
           >
             <i className="ri-add-line"></i>
             <span>견적 검토 요청</span>
@@ -171,8 +172,8 @@ const SalesQuoteList = () => {
                       <th key={header} className="px-6 py-3 text-left">
                         <input
                           type="checkbox"
+                          disabled
                           checked={selectedQuotes.length === quotes.length && quotes.length > 0}
-                          onChange={handleSelectAll}
                           className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
                       </th>
@@ -193,7 +194,7 @@ const SalesQuoteList = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <input
                         type="checkbox"
-                        checked={selectedQuotes.includes(quote.quotationId)}
+                        checked={selectedQuoteId === quote.quotationId}
                         onChange={() => handleCheckboxChange(quote.quotationId)}
                         className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
@@ -266,6 +267,7 @@ const SalesQuoteList = () => {
             $onClose={() => {
               setShowReviewModal(false);
             }}
+            $selectedQuoteId={selectedQuoteId}
           />
         )}
       </div>

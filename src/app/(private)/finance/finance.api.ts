@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FINANCE_ENDPOINTS, ApiResponse } from '@/app/api';
+import { FINANCE_ENDPOINTS, ApiResponse, ApiResponseNoData } from '@/app/api';
 import { FinanceStatResponse } from '@/app/(private)/finance/types/FinanceStatsType';
 import { InvoiceListRes, InvoiceQueryParams } from './types/InvoiceListType';
 import { InvoicetDetailRes } from './types/InvoiceDetailModalType';
@@ -34,21 +34,15 @@ export const getPurchaseInvoiceDetail = async (invoiceId: number): Promise<Invoi
   return res.data.data;
 };
 
-export interface TempApiResponse {
-  status: number;
-  success: boolean;
-  message: string;
-}
-
-export const postApInvoice = async (invoiceId: number): Promise<TempApiResponse> => {
-  const res = await axios.post<TempApiResponse>(
+export const postApInvoice = async (invoiceId: number): Promise<ApiResponseNoData> => {
+  const res = await axios.post<ApiResponseNoData>(
     FINANCE_ENDPOINTS.PURCHASE_INVOICE_REQUEST(invoiceId),
   );
   return res.data;
 };
 
-export const postArInvoice = async (invoiceId: number): Promise<TempApiResponse> => {
-  const res = await axios.post<TempApiResponse>(
+export const postArInvoice = async (invoiceId: number): Promise<ApiResponseNoData> => {
+  const res = await axios.post<ApiResponseNoData>(
     FINANCE_ENDPOINTS.SALES_INVOICE_COMPLETE(invoiceId),
   );
   return res.data;

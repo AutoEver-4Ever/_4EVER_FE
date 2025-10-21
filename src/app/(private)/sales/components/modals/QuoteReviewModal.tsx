@@ -1,64 +1,109 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { INVENTORY_NEED_TABLE_HEADERS } from '@/app/(private)/sales/constant';
 import {
-  InventoryItem,
-  Quote,
+  InventoryCheckRes,
   QuoteReviewModalProps,
-  StockCheckResult,
 } from '@/app/(private)/sales/types/QuoteReviewModalType';
+import ModalStatusBox from '@/app/components/common/ModalStatusBox';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Inventories, QuoteDetail } from '../../types/QuoteDetailModalType';
+import {
+  getQuoteDetail,
+  postDeliveryProcess,
+  postInventoryCheck,
+  postQuotationConfirm,
+} from '../../sales.api';
+import { getQuoteStatusColor, getQuoteStatusText, isAllInventoryFulfilled } from '../../utils';
 
-const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
-  const [isChecking, setIsChecking] = useState(false);
-  const [stockCheckResult, setStockCheckResult] = useState<StockCheckResult | null>(null);
+const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps) => {
+  const [inventoryCheckResult, setInventoryCheckResult] = useState<InventoryCheckRes[] | null>(
+    null,
+  );
 
-  const mockInventory: InventoryItem[] = [
-    { product: '제품 A', currentStock: 15, requiredStock: 10, available: true },
-    { product: '제품 B', currentStock: 3, requiredStock: 5, available: false },
-    { product: '제품 C', currentStock: 20, requiredStock: 8, available: true },
-  ];
-
-  const handleStockCheck = async () => {
-    setIsChecking(true);
-
-    setTimeout(() => {
-      const hasInsufficientStock = mockInventory.some((item) => !item.available);
-
-      setStockCheckResult({
-        hasStock: !hasInsufficientStock,
-        items: mockInventory,
-        checkDate: new Date().toISOString().split('T')[0],
-        deliveryPossible: !hasInsufficientStock,
-      });
-
-      setIsChecking(false);
-    }, 2000);
+  const handleInventoryCheck = () => {
+    inventoryCheckReq(haveToCheckItems);
   };
 
-  const quote: Quote = {
-    id: 'Q-2025-1016',
-    customer: '삼성전자',
-    contact: '김철수 대리',
-    date: '2025-10-10',
-    deliveryDate: '2025-10-20',
-    amount: 23500000,
-    status: '검토중',
+  const handleDelieveryProcess = () => {
+    delieveryProcessReq($selectedQuoteId);
   };
 
-  const handleDirectDelivery = () => {
-    alert(
-      `견적 ${quote?.id}의 제품이 즉시 납품 처리되었습니다.\n고객: ${quote?.customer}\n납기일: ${quote?.deliveryDate}`,
+  const {
+    data: quote,
+    isLoading,
+    isError,
+  } = useQuery<QuoteDetail>({
+    queryKey: ['quoteDetailForReview', $selectedQuoteId],
+    queryFn: () => getQuoteDetail($selectedQuoteId),
+    enabled: !!$selectedQuoteId,
+  });
+
+  const haveToCheckItems: Inventories[] =
+    quote?.items.map(({ itemId, itemName, quantity }) => ({
+      itemId,
+      itemName,
+      requiredQty: quantity,
+    })) ?? [];
+
+  const { mutate: quotationConfirmReq } = useMutation({
+    mutationFn: (id: number) => postQuotationConfirm([id]),
+    onSuccess: (data) => {
+      alert(`${data.status} : ${quote?.quotationCode}
+          `);
+    },
+    onError: (error) => {
+      alert(`검토 요청 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+
+  const { mutate: inventoryCheckReq, isPending } = useMutation({
+    mutationFn: (items: Inventories[]) => postInventoryCheck(items),
+    onSuccess: (data) => {
+      setInventoryCheckResult(data);
+    },
+    onError: (error) => {
+      alert(`재고 확인 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+
+  const { mutate: delieveryProcessReq } = useMutation({
+    mutationFn: (id: number) => postDeliveryProcess(id),
+    onSuccess: (data) => {
+      alert(`${data.status} : ${quote?.quotationCode}
+          `);
+    },
+    onError: (error) => {
+      alert(`즉시 납품 처리 중 오류가 발생했습니다. ${error}`);
+    },
+  });
+
+  useEffect(() => {
+    setErrorModal(isError);
+  }, [isError]);
+
+  const [errorModal, setErrorModal] = useState(false);
+
+  if (isLoading) return <ModalStatusBox $type="loading" $message="견적서를 불러오는 중입니다..." />;
+
+  if (errorModal)
+    return (
+      <ModalStatusBox
+        $type="error"
+        $message="견적서를 불러오는 중 오류가 발생했습니다."
+        $onClose={() => setErrorModal(false)}
+      />
     );
-    $onClose();
-  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-semibold text-gray-900">견적 검토 요청 - {quote?.id}</h3>
+          <h3 className="text-xl font-semibold text-gray-900">
+            견적 검토 요청 - {quote?.quotationId}
+          </h3>
           <button onClick={$onClose} className="text-gray-400 hover:text-gray-600 cursor-pointer">
             <i className="ri-close-line text-2xl"></i>
           </button>
@@ -72,32 +117,34 @@ const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-600">고객명:</span>
-                  <span className="font-medium">{quote?.customer}</span>
+                  <span className="font-medium">{quote?.customerName}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">담당자:</span>
-                  <span className="font-medium">{quote?.contact}</span>
+                  <span className="font-medium">{quote?.ceoName}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">견적일자:</span>
-                  <span className="font-medium">{quote?.date}</span>
+                  <span className="font-medium">{quote?.quotationDate}</span>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-600">납기일:</span>
-                  <span className="font-medium">{quote?.deliveryDate}</span>
+                  <span className="font-medium">{quote?.dueDate}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">견적금액:</span>
                   <span className="font-medium text-blue-600">
-                    ₩{quote?.amount?.toLocaleString()}
+                    ₩{quote?.totalAmount?.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">상태:</span>
-                  <span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
-                    {quote?.status}
+                  <span
+                    className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getQuoteStatusColor(quote!.statusCode)}`}
+                  >
+                    {getQuoteStatusText(quote!.statusCode)}
                   </span>
                 </div>
               </div>
@@ -108,13 +155,13 @@ const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
           <div className="border border-gray-200 rounded-lg p-4">
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-lg font-semibold text-gray-900">재고 확인</h4>
-              {!stockCheckResult && (
+              {!inventoryCheckResult && (
                 <button
-                  onClick={handleStockCheck}
-                  disabled={isChecking}
+                  onClick={handleInventoryCheck}
+                  disabled={isPending}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isChecking ? (
+                  {isPending ? (
                     <>
                       <i className="ri-loader-4-line animate-spin"></i>
                       <span>확인 중...</span>
@@ -129,7 +176,7 @@ const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
               )}
             </div>
 
-            {isChecking && (
+            {isPending && (
               <div className="text-center py-8">
                 <div className="inline-flex items-center space-x-3">
                   <i className="ri-loader-4-line text-2xl text-blue-600 animate-spin"></i>
@@ -138,27 +185,27 @@ const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
               </div>
             )}
 
-            {stockCheckResult && (
+            {inventoryCheckResult && (
               <div className="space-y-4">
                 {/* 재고 확인 결과 헤더 */}
                 <div
-                  className={`p-4 rounded-lg ${stockCheckResult.hasStock ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}
+                  className={`p-4 rounded-lg ${isAllInventoryFulfilled(inventoryCheckResult) ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}
                 >
                   <div className="flex items-center space-x-3">
                     <i
-                      className={`text-2xl ${stockCheckResult.hasStock ? 'ri-check-circle-line text-green-600' : 'ri-error-warning-line text-red-600'}`}
+                      className={`text-2xl ${isAllInventoryFulfilled(inventoryCheckResult) ? 'ri-check-circle-line text-green-600' : 'ri-error-warning-line text-red-600'}`}
                     ></i>
                     <div>
                       <h5
-                        className={`font-semibold ${stockCheckResult.hasStock ? 'text-green-800' : 'text-red-800'}`}
+                        className={`font-semibold ${isAllInventoryFulfilled(inventoryCheckResult) ? 'text-green-800' : 'text-red-800'}`}
                       >
-                        {stockCheckResult.hasStock ? '재고 충족' : '재고 부족'}
+                        {isAllInventoryFulfilled(inventoryCheckResult) ? '재고 충족' : '재고 부족'}
                       </h5>
                       <p
-                        className={`text-sm ${stockCheckResult.hasStock ? 'text-green-600' : 'text-red-600'}`}
+                        className={`text-sm ${isAllInventoryFulfilled(inventoryCheckResult) ? 'text-green-600' : 'text-red-600'}`}
                       >
-                        {stockCheckResult.hasStock
-                          ? `요청하신 납기일(${quote?.deliveryDate})에 모든 제품의 재고가 충분합니다.`
+                        {isAllInventoryFulfilled(inventoryCheckResult)
+                          ? `요청하신 납기일(${quote?.dueDate})에 모든 제품의 재고가 충분합니다.`
                           : '일부 제품의 재고가 부족하여 생산 계획 검토가 필요합니다.'}
                       </p>
                     </div>
@@ -181,20 +228,20 @@ const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {stockCheckResult.items.map((item: InventoryItem, index: number) => (
+                      {inventoryCheckResult?.map((item, index: number) => (
                         <tr key={index} className="border-b">
-                          <td className="px-4 py-3 text-sm font-medium">{item.product}</td>
-                          <td className="px-4 py-3 text-sm text-center">{item.requiredStock}</td>
-                          <td className="px-4 py-3 text-sm text-center">{item.currentStock}</td>
+                          <td className="px-4 py-3 text-sm font-medium">{item.itemName}</td>
+                          <td className="px-4 py-3 text-sm text-center">{item.requiredQty}</td>
+                          <td className="px-4 py-3 text-sm text-center">{item.inventoryQty}</td>
                           <td className="px-4 py-3 text-center">
                             <span
                               className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                                item.available
+                                isAllInventoryFulfilled(inventoryCheckResult)
                                   ? 'bg-green-100 text-green-800'
                                   : 'bg-red-100 text-red-800'
                               }`}
                             >
-                              {item.available ? '충족' : '부족'}
+                              {isAllInventoryFulfilled(inventoryCheckResult) ? '충족' : '부족'}
                             </span>
                           </td>
                         </tr>
@@ -205,18 +252,19 @@ const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
 
                 {/* 확인 일시 */}
                 <div className="text-sm text-gray-500 text-right">
-                  재고 확인 일시: {stockCheckResult.checkDate} {new Date().toLocaleTimeString()}
+                  재고 확인 일시:{' '}
+                  {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
               </div>
             )}
           </div>
 
           {/* 액션 버튼 */}
-          {stockCheckResult && (
+          {inventoryCheckResult && (
             <div className="bg-gray-50 rounded-lg p-4">
               <h4 className="text-lg font-semibold text-gray-900 mb-4">다음 단계</h4>
 
-              {stockCheckResult.hasStock ? (
+              {isAllInventoryFulfilled(inventoryCheckResult) ? (
                 <div className="space-y-3">
                   <p className="text-green-700 bg-green-50 p-3 rounded-lg border border-green-200">
                     <i className="ri-check-circle-line mr-2"></i>
@@ -224,7 +272,7 @@ const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
                   </p>
                   <div className="flex gap-3">
                     <button
-                      onClick={handleDirectDelivery}
+                      onClick={handleDelieveryProcess}
                       className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer whitespace-nowrap flex items-center space-x-2"
                     >
                       <i className="ri-truck-line"></i>
@@ -242,7 +290,10 @@ const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
                     <Link
                       href="/production"
                       className="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors cursor-pointer whitespace-nowrap flex items-center space-x-2"
-                      onClick={$onClose}
+                      onClick={() => {
+                        quotationConfirmReq($selectedQuoteId);
+                        $onClose();
+                      }}
                     >
                       <i className="ri-settings-3-line"></i>
                       <span>생산관리에서 검토</span>
@@ -261,15 +312,6 @@ const QuoteReviewModal = ({ $onClose }: QuoteReviewModalProps) => {
             >
               닫기
             </button>
-            {!stockCheckResult && (
-              <button
-                onClick={handleStockCheck}
-                disabled={isChecking}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                재고 확인 시작
-              </button>
-            )}
           </div>
         </div>
       </div>

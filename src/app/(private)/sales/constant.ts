@@ -73,7 +73,7 @@ export const NEW_QUOTE_PRODUCT_TABLE_HEADERS = [
 ] as const;
 
 // 견적서 상세 모달 테이블 헤더
-export const QUOTE_DETAIL_TABLE_HEADERS = ['제품명', '수량', '단가', '금액'] as const;
+export const QUOTE_DETAIL_TABLE_HEADERS = ['제품명', '수량', '단위', '단가', '금액'] as const;
 
 // 견적 요청 모달 재고 부족 테이블 헤더
 export const INVENTORY_NEED_TABLE_HEADERS = ['제품명', '필요 수량', '현재 재고', '상태'] as const;
