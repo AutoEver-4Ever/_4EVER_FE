@@ -1,6 +1,14 @@
 'use client';
 
+import Dropdown from '@/app/components/common/Dropdown';
 import { useState } from 'react';
+import {
+  AVAILABLE_STOCK_STATUS,
+  AvailableStockStatus,
+  QUOTATIONS_STATUS,
+  QuotationStatus,
+} from '../../constants';
+import IconButton from '@/app/components/common/IconButton';
 
 export default function QuotationTab() {
   const [selectedQuotes, setSelectedQuotes] = useState<string[]>([]);
@@ -142,23 +150,45 @@ export default function QuotationTab() {
     alert('MRP 실행이 시작되었습니다. MRP 탭에서 결과를 확인하세요.');
   };
 
+  const [selectedStockStatus, setSelectedStockStatus] = useState('');
+  const getStockStatus = (): string => {
+    const item = AVAILABLE_STOCK_STATUS.find((s) => s.key === selectedStockStatus);
+    return item?.value || '전체';
+  };
+
+  const [selectedQuotationsStatus, setSelectedQuotationsStatus] = useState('');
+  const getQuotationsStatus = (): string => {
+    const item = QUOTATIONS_STATUS.find((s) => s.key === selectedQuotationsStatus);
+    return item?.value || '전체';
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900">견적 관리</h3>
         <div className="flex gap-2">
-          <button
+          {/* 가용 재고 상태 드롭다운 */}
+          <Dropdown
+            label={getStockStatus()}
+            items={AVAILABLE_STOCK_STATUS}
+            onChange={(status: AvailableStockStatus) => {
+              setSelectedStockStatus(status);
+            }}
+          />
+          {/* 견적 상태 드롭다운 */}
+          <Dropdown
+            label={getQuotationsStatus()}
+            items={QUOTATIONS_STATUS}
+            onChange={(status: QuotationStatus) => {
+              setSelectedQuotationsStatus(status);
+            }}
+          />
+          <IconButton
+            label="시뮬레이션 실행"
+            icon="ri-play-line"
             onClick={handleSimulation}
             disabled={selectedQuotes.length === 0}
-            className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-              selectedQuotes.length > 0
-                ? 'bg-purple-600 text-white hover:bg-purple-700 cursor-pointer'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-          >
-            <i className="ri-play-line mr-1"></i>
-            시뮬레이션 실행
-          </button>
+          />
         </div>
       </div>
 

@@ -50,7 +50,7 @@ export default function SupplierListTab() {
   const pageInfo = supplierData.page;
   const totalPages = pageInfo?.totalPages ?? 1;
 
-  const handelSupplierStatusChange = (status: SupplierStatus) => {
+  const handleSupplierStatusChange = (status: SupplierStatus) => {
     setSelectedSupplierStatus(status);
     setCurrentPage(1);
   };
@@ -107,7 +107,7 @@ export default function SupplierListTab() {
               <Dropdown
                 label={getSatusValue()}
                 items={SUPPLIER_STATUS_ITEMS}
-                onChange={handelSupplierStatusChange}
+                onChange={handleSupplierStatusChange}
               />
               <IconButton
                 label="공급업체 등록"
