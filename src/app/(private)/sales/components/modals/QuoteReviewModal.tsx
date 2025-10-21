@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { INVENTORY_NEED_TABLE_HEADERS } from '@/app/(private)/sales/constant';
 import {
   InventoryCheckRes,
-  InventoryItem,
-  Quote,
   QuoteReviewModalProps,
 } from '@/app/(private)/sales/types/QuoteReviewModalType';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
@@ -18,32 +16,19 @@ import {
   postInventoryCheck,
   postQuotationConfirm,
 } from '../../sales.api';
-import { getQuoteStatusColor, getQuoteStatusText } from '../../utils';
+import { getQuoteStatusColor, getQuoteStatusText, isAllInventoryFulfilled } from '../../utils';
 
 const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps) => {
   const [inventoryCheckResult, setInventoryCheckResult] = useState<InventoryCheckRes[] | null>(
     null,
   );
 
-  const handleStockCheck = async () => {
-    // setIsChecking(true);
-    // setTimeout(() => {
-    //   const hasInsufficientStock = mockInventory.some((item) => !item.available);
-    //   setStockCheckResult({
-    //     hasStock: !hasInsufficientStock,
-    //     items: mockInventory,
-    //     checkDate: new Date().toISOString().split('T')[0],
-    //     deliveryPossible: !hasInsufficientStock,
-    //   });
-    //   setIsChecking(false);
-    // }, 2000);
+  const handleInventoryCheck = () => {
+    inventoryCheckReq(haveToCheckItems);
   };
 
-  const handleDirectDelivery = () => {
-    // alert(
-    //   `견적 ${quote?.id}의 제품이 즉시 납품 처리되었습니다.\n고객: ${quote?.customer}\n납기일: ${quote?.deliveryDate}`,
-    // );
-    // $onClose();
+  const handleDelieveryProcess = () => {
+    delieveryProcessReq($selectedQuoteId);
   };
 
   const {
@@ -94,15 +79,6 @@ const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps)
       alert(`즉시 납품 처리 중 오류가 발생했습니다. ${error}`);
     },
   });
-
-  // const isAllInventoryFulfilled = (res: InventoryCheckRes[] | null): boolean => {
-  //   if (!res || res.length === 0) return true;
-  //   return !res.some((item) => item.productionRequired === true);
-  // };
-  const isAllInventoryFulfilled = (arr: InventoryCheckRes[]): boolean => {
-    if (arr.length === 0) return true;
-    return !arr.some((item) => item.productionRequired === true);
-  };
 
   useEffect(() => {
     setErrorModal(isError);
@@ -181,7 +157,7 @@ const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps)
               <h4 className="text-lg font-semibold text-gray-900">재고 확인</h4>
               {!inventoryCheckResult && (
                 <button
-                  onClick={() => inventoryCheckReq(haveToCheckItems)}
+                  onClick={handleInventoryCheck}
                   disabled={isPending}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -296,7 +272,7 @@ const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps)
                   </p>
                   <div className="flex gap-3">
                     <button
-                      onClick={() => delieveryProcessReq($selectedQuoteId)}
+                      onClick={handleDelieveryProcess}
                       className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer whitespace-nowrap flex items-center space-x-2"
                     >
                       <i className="ri-truck-line"></i>

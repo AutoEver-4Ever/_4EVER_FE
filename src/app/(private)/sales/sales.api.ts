@@ -121,9 +121,7 @@ export const postInventoryCheck = async (items: Inventories[]): Promise<Inventor
 };
 
 export const postDeliveryProcess = async (quotesId: number): Promise<ApiResponseNoData> => {
-  const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.QUOTE_DELIEVERY_PROCESS, {
-    quotationIds: quotesId,
-  });
+  const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.QUOTE_DELIVERY_PROCESS(quotesId));
   return res.data;
 };
 
