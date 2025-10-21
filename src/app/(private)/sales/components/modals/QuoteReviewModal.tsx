@@ -94,7 +94,6 @@ const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps)
       alert(`즉시 납품 처리 중 오류가 발생했습니다. ${error}`);
     },
   });
-  postDeliveryProcess;
 
   // const isAllInventoryFulfilled = (res: InventoryCheckRes[] | null): boolean => {
   //   if (!res || res.length === 0) return true;
