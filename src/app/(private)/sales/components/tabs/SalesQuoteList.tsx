@@ -66,40 +66,18 @@ const SalesQuoteList = () => {
   const quotes = quoteRes?.data ?? [];
   const pageInfo = quoteRes?.pageData;
   const totalPages = pageInfo?.totalPages ?? 1;
-  //---------------------------------------------
-
-  //---------------------------------------------
 
   const handleViewQuote = (quote: Quote) => {
     setSelectedQuoteId(quote.quotationId);
     setShowQuoteModal(true);
   };
 
-  const handleSelectAll = () => {
-    if (selectedQuotes.length === quotes.length && quotes.length > 0) {
-      setSelectedQuotes([]);
-    } else {
-      setSelectedQuotes(quotes.map((quote) => quote.quotationId));
-    }
-  };
   const handleCheckboxChange = (quoteId: number) => {
-    // setSelectedQuotes((prev) =>
-    //   prev.includes(quoteId) ? prev.filter((id) => id !== quoteId) : [...prev, quoteId],
-    // );
-    setSelectedQuoteId(quoteId);
+    setSelectedQuoteId((prev) => (prev === quoteId ? 0 : quoteId));
   };
-
   const handleViewReview = () => {
     setShowReviewModal(true);
   };
-
-  // const handleDeleteQuote = (quote: Quote) => {
-  //   if (
-  //     confirm(`견적서 ${quote.quotationId}를 정말 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)
-  //   ) {
-  //     alert(`견적서 ${quote.quotationId}가 삭제되었습니다.`);
-  //   }
-  // };
 
   return (
     <div className="space-y-6 mt-6">
@@ -159,7 +137,13 @@ const SalesQuoteList = () => {
           {/* <IconButton icon="ri-add-line" label="견적 검토 요청" /> */}
           <button
             onClick={handleViewReview}
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center space-x-2"
+            disabled={selectedQuoteId === 0}
+            className={`px-4 py-2 font-medium rounded-lg transition-colors duration-200 whitespace-nowrap flex items-center space-x-2
+    ${
+      !selectedQuoteId
+        ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+        : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
+    }`}
           >
             <i className="ri-add-line"></i>
             <span>견적 검토 요청</span>
@@ -188,8 +172,8 @@ const SalesQuoteList = () => {
                       <th key={header} className="px-6 py-3 text-left">
                         <input
                           type="checkbox"
+                          disabled
                           checked={selectedQuotes.length === quotes.length && quotes.length > 0}
-                          onChange={handleSelectAll}
                           className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
                       </th>
