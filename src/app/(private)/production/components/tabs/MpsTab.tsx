@@ -309,38 +309,6 @@ export default function MpsTab() {
           </div>
         </div>
       )} */}
-
-      {/* 요약 정보 */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-blue-50 p-4 rounded-lg">
-          <div className="text-sm text-blue-600 font-medium">총 계획 생산량</div>
-          <div className="text-2xl font-bold text-blue-700">
-            {currentData.data.reduce((sum, item) => sum + item.mps, 0)}
-          </div>
-        </div>
-        <div className="bg-green-50 p-4 rounded-lg">
-          <div className="text-sm text-green-600 font-medium">총 수요량</div>
-          <div className="text-2xl font-bold text-green-700">
-            {currentData.data.reduce((sum, item) => sum + item.demand, 0)}
-          </div>
-        </div>
-        <div className="bg-yellow-50 p-4 rounded-lg">
-          <div className="text-sm text-yellow-600 font-medium">생산 주차</div>
-          <div className="text-2xl font-bold text-yellow-700">
-            {currentData.data.filter((item) => item.production > 0).length}주
-          </div>
-        </div>
-        <div className="bg-purple-50 p-4 rounded-lg">
-          <div className="text-sm text-purple-600 font-medium">평균 리드 타임</div>
-          <div className="text-2xl font-bold text-purple-700">
-            {Math.round(
-              currentData.data.reduce((sum, item) => sum + item.leadTime, 0) /
-                currentData.weeks.length,
-            )}
-            주
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

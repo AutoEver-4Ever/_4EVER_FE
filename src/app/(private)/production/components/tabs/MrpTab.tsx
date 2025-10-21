@@ -649,34 +649,6 @@ export default function MrpTab() {
           </div>
         </div>
       )}
-
-      {/* 요약 정보 */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-red-50 p-4 rounded-lg">
-          <div className="text-sm text-red-600 font-medium">부족 자재</div>
-          <div className="text-2xl font-bold text-red-700">
-            {netRequirements.filter((item) => item.availableStatus === 'SHORTAGE').length}개
-          </div>
-        </div>
-        <div className="bg-blue-50 p-4 rounded-lg">
-          <div className="text-sm text-blue-600 font-medium">계획 주문</div>
-          <div className="text-2xl font-bold text-blue-700">
-            {plannedOrders.filter((order) => order.status === 'PLANNED').length}건
-          </div>
-        </div>
-        <div className="bg-green-50 p-4 rounded-lg">
-          <div className="text-sm text-green-600 font-medium">승인 완료</div>
-          <div className="text-2xl font-bold text-green-700">
-            {plannedOrders.filter((order) => order.status === 'APPROVED').length}건
-          </div>
-        </div>
-        <div className="bg-purple-50 p-4 rounded-lg">
-          <div className="text-sm text-purple-600 font-medium">총 조달 비용</div>
-          <div className="text-2xl font-bold text-purple-700">
-            ₩{plannedOrders.reduce((sum, order) => sum + order.totalPrice, 0).toLocaleString()}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
