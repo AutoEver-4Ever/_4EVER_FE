@@ -6,9 +6,9 @@ import { InvoicetDetailRes } from './types/InvoiceDetailModalType';
 import { Page } from '@/types/Page';
 
 // ----------------------- 통계 지표 -----------------------
-export const getFinanceStats = async (): Promise<FinanceStatResponse> => {
+export const getFinanceStats = async (): Promise<ApiResponse<FinanceStatResponse>> => {
   const res = await axios.get<ApiResponse<FinanceStatResponse>>(FINANCE_ENDPOINTS.STATISTICS);
-  return res.data.data;
+  return res.data;
 };
 
 // ----------------------- 매입 전표(AP) -----------------------

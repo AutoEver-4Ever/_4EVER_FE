@@ -6,7 +6,6 @@ import {
   VOUCHER_LIST_TABLE_HEADERS,
   VOUCHER_STATUS_OPTIONS,
 } from '@/app/(private)/finance/constants';
-// import StatementDetailModal from '@/app/(private)/finance/components/modals/StatementDetailModal';
 import { InvoiceStatus } from '@/app/(private)/finance/types/InvoiceListType';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
@@ -20,7 +19,7 @@ import { useSearchParams } from 'next/navigation';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
 import InvoiceDetailModal from '@/app/(private)/finance/components/modals/InvoiceDetailModal';
 
-const VoucherList = () => {
+const InvoiceList = () => {
   const searchParams = useSearchParams();
   const currentTab = searchParams.get('tab') || 'sales';
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -247,4 +246,4 @@ const VoucherList = () => {
   );
 };
 
-export default VoucherList;
+export default InvoiceList;

@@ -17,6 +17,7 @@ export const ORDER_STATUS_OPTIONS: KeyValueItem<OrderStatus>[] = [
   { key: 'ALL', value: '전체 상태' },
   { key: 'IN_PRODUCTION', value: '생산중' },
   { key: 'READY_FOR_SHIPMENT', value: '출하 준비 완료' },
+  { key: 'MATERIAL_PREPARATION', value: '자재 준비중' },
   { key: 'DELIVERING', value: '배송중' },
   { key: 'DELIVERED', value: '배송완료' },
 ] as const;
