@@ -17,8 +17,8 @@ import {
   CUSTOMER_LIST_TABLE_HEADERS,
   CUSTOMER_STATUS_OPTIONS,
 } from '@/app/(private)/sales/constant';
-import { getCustomerStatusColor } from '@/app/(private)/sales/utils';
 import Pagination from '@/app/components/common/Pagination';
+import StatusLabel from '@/app/components/common/StatusLabel';
 
 const CustomerList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -61,10 +61,10 @@ const CustomerList = () => {
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [editFormData, setEditFormData] = useState<CustomerDetail | null>(null);
-  const handleEditClick = (customer: CustomerDetail) => {
-    setEditFormData({ ...customer });
-    setShowEditModal(true);
-  };
+  // const handleEditClick = (customer: CustomerDetail) => {
+  //   setEditFormData({ ...customer });
+  //   setShowEditModal(true);
+  // };
 
   const totalPages = pageInfo?.totalPages ?? 1;
 
@@ -169,11 +169,7 @@ const CustomerList = () => {
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getCustomerStatusColor(customer.status)}`}
-                    >
-                      {customer.status}
-                    </span>
+                    <StatusLabel $statusCode={customer.status} />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center space-x-2">

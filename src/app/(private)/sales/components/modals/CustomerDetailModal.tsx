@@ -6,7 +6,7 @@ import { CustomerDetail } from '@/app/(private)/sales/types/SalesCustomerDetailT
 import { getCustomerDetail } from '../../sales.api';
 import { useQuery } from '@tanstack/react-query';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
-import { getCustomerStatusColor, getCustomerStatusText } from '@/app/(private)/sales/utils';
+import StatusLabel from '@/app/components/common/StatusLabel';
 
 const CustomerDetailModal = ({
   $setShowDetailModal,
@@ -70,11 +70,7 @@ const CustomerDetailModal = ({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${getCustomerStatusColor(customer!.statusCode)}`}
-                  >
-                    {getCustomerStatusText(customer!.statusCode)}
-                  </span>
+                  <StatusLabel $statusCode={customer?.statusCode as string} />
                 </div>
               </div>
               <div className="space-y-4">

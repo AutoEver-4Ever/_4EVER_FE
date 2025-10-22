@@ -2,18 +2,14 @@
 
 import { useMemo, useState } from 'react';
 import SalesOrderDetailModal from '@/app/(private)/sales/components/modals/SalesOrderDetailModal';
-import {
-  Order,
-  OrderQueryParams,
-  OrderStatus,
-} from '@/app/(private)/sales/types/SalesOrderListType';
+import { OrderQueryParams, OrderStatus } from '@/app/(private)/sales/types/SalesOrderListType';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
 import { getOrderList } from '../../sales.api';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
 import { ORDER_LIST_TABLE_HEADERS, ORDER_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
-import { getOrderStatusText, getOrderStatusColor } from '@/app/(private)/sales/utils';
 import Pagination from '@/app/components/common/Pagination';
+import StatusLabel from '@/app/components/common/StatusLabel';
 
 const SalesOrderList = () => {
   const [showOrderDetailModal, setShowOrderDetailModal] = useState(false);
@@ -55,8 +51,6 @@ const SalesOrderList = () => {
   };
 
   const totalPages = pageInfo?.totalPages ?? 1;
-
-  const maxVisible = 5;
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 mt-6">
@@ -162,13 +156,7 @@ const SalesOrderList = () => {
                     ₩{order.totalAmount.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${getOrderStatusColor(
-                        order.statusCode,
-                      )}`}
-                    >
-                      {getOrderStatusText(order.statusCode)}
-                    </span>
+                    <StatusLabel $statusCode={order.statusCode} />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button

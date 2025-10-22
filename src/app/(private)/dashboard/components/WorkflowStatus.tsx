@@ -1,25 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { getOrderStatusColor, getOrderStatusText } from '../../sales/utils';
-import { useQuery } from '@tanstack/react-query';
-import { getWorkflowStatus } from '../dashboard.api';
-import { DashboardProps, DashboardWorkflowRes } from '../types/DashboardWorkflowType';
+import { DashboardProps } from '../types/DashboardWorkflowType';
 import { getTabCodeText } from '../dashboard.utils';
-import { getStatusColor, getStatusText } from '@/lib/status.constants';
-import { get } from 'http';
+import StatusLabel from '@/app/components/common/StatusLabel';
 
 const WorkflowStatus = ({ $workflowData }: DashboardProps) => {
-  // const {
-  //   data: workflowRes,
-  //   isLoading,
-  //   isError,
-  // } = useQuery<DashboardWorkflowRes>({
-  //   queryKey: ['workflowStatus'],
-  //   queryFn: () => getWorkflowStatus('SD_USER'),
-  //   staleTime: 1000,
-  // });
-
   const [activeTab, setActiveTab] = useState('first');
 
   const firstTabCode = $workflowData?.tabs[0].tabCode;
@@ -82,11 +68,7 @@ const WorkflowStatus = ({ $workflowData }: DashboardProps) => {
                 </p>
               </div>
             </div>
-            <div
-              className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(workflow.statusCode)}`}
-            >
-              {getStatusText(workflow.statusCode)}
-            </div>
+            <StatusLabel $statusCode={workflow.statusCode} />
           </div>
         ))}
       </div>

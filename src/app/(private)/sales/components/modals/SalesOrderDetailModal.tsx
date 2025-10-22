@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { getOrderDetail } from '@/app/(private)/sales/sales.api';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
 import { ORDER_DETAIL_TABLE_HEADERS } from '@/app/(private)/sales/constant';
-import { getOrderStatusText, getOrderStatusColor } from '@/app/(private)/sales/utils';
+import StatusLabel from '@/app/components/common/StatusLabel';
 
 const SalesOrderDetailModal = ({ $onClose, $selectedOrderId }: SalesOrderDetailProps) => {
   const {
@@ -79,13 +79,7 @@ const SalesOrderDetailModal = ({ $onClose, $selectedOrderId }: SalesOrderDetailP
                       </div>
                       <div>
                         <label className="text-sm font-medium text-gray-500">상태</label>
-                        <span
-                          className={`inline-block px-2 py-1 text-xs font-medium rounded-full ml-2 ${getOrderStatusColor(
-                            order!.statusCode,
-                          )}`}
-                        >
-                          {getOrderStatusText(order!.statusCode)}
-                        </span>
+                        <StatusLabel $statusCode={order?.statusCode as string} />
                       </div>
                     </div>
                   </div>
