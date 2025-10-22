@@ -99,6 +99,19 @@ const CustomerList = () => {
               </option>
             ))}
           </select>
+          <select
+            value={statusFilter}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              setStatusFilter(e.target.value as CustomerStatus)
+            }
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+          >
+            {CUSTOMER_STATUS_OPTIONS.map(({ key, value }) => (
+              <option key={key} value={key}>
+                {value}
+              </option>
+            ))}
+          </select>
           <div className="flex-1 max-w-md">
             <div className="relative">
               <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -111,21 +124,7 @@ const CustomerList = () => {
               />
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <select
-              value={statusFilter}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                setStatusFilter(e.target.value as CustomerStatus)
-              }
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
-            >
-              {CUSTOMER_STATUS_OPTIONS.map(({ key, value }) => (
-                <option key={key} value={key}>
-                  {value}
-                </option>
-              ))}
-            </select>
-          </div>
+          <div className="flex items-center space-x-2"></div>
         </div>
       </div>
 

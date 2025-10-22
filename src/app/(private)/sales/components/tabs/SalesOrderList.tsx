@@ -87,31 +87,6 @@ const SalesOrderList = () => {
               placeholder="끝날짜"
             />
           </div>
-          <select
-            value={searchType}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchType(e.target.value)}
-            className="bg-white px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
-          >
-            {ORDER_SEARCH_KEYWORD_OPTIONS.map(({ key, value }) => (
-              <option key={key} value={key}>
-                {value}
-              </option>
-            ))}
-          </select>
-          {/* 검색 */}
-          <div className="flex-1 max-w-md">
-            <div className="relative">
-              <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
-                placeholder="주문번호, 고객명, 담당자로 검색"
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-
           {/* 상태 필터 */}
           <select
             value={statusFilter}
@@ -126,6 +101,31 @@ const SalesOrderList = () => {
               </option>
             ))}
           </select>
+          <select
+            value={searchType}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchType(e.target.value)}
+            className="bg-white px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
+          >
+            {ORDER_SEARCH_KEYWORD_OPTIONS.map(({ key, value }) => (
+              <option key={key} value={key}>
+                {value}
+              </option>
+            ))}
+          </select>
+
+          {/* 검색 */}
+          <div className="flex-1 max-w-md">
+            <div className="relative">
+              <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+                placeholder="주문번호, 고객명, 담당자로 검색"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
