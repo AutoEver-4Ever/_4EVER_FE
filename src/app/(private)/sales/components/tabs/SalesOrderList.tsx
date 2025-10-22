@@ -7,15 +7,20 @@ import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
 import { getOrderList } from '../../sales.api';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
-import { ORDER_LIST_TABLE_HEADERS, ORDER_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
+import {
+  ORDER_LIST_TABLE_HEADERS,
+  ORDER_SEARCH_KEYWORD_OPTIONS,
+  ORDER_STATUS_OPTIONS,
+} from '@/app/(private)/sales/constant';
 import Pagination from '@/app/components/common/Pagination';
 import StatusLabel from '@/app/components/common/StatusLabel';
 
 const SalesOrderList = () => {
   const [showOrderDetailModal, setShowOrderDetailModal] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState<number>(0);
+  const [selectedSalesOrderId, setSelectedSalesOrderId] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<OrderStatus>('ALL');
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -45,8 +50,8 @@ const SalesOrderList = () => {
   const orders = orderRes?.data ?? [];
   const pageInfo = orderRes?.pageData;
 
-  const handleViewOrder = (id: number) => {
-    setSelectedOrderId(id);
+  const handleViewOrder = (id: string) => {
+    setSelectedSalesOrderId(id);
     setShowOrderDetailModal(true);
   };
 
@@ -80,7 +85,17 @@ const SalesOrderList = () => {
               placeholder="끝날짜"
             />
           </div>
-
+          <select
+            value={searchKeyword}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchKeyword(e.target.value)}
+            className="bg-white px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
+          >
+            {ORDER_SEARCH_KEYWORD_OPTIONS.map(({ key, value }) => (
+              <option key={key} value={key}>
+                {value}
+              </option>
+            ))}
+          </select>
           {/* 검색 */}
           <div className="flex-1 max-w-md">
             <div className="relative">
@@ -136,9 +151,14 @@ const SalesOrderList = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {orders.map((order) => (
-                <tr key={order.soId} className="hover:bg-gray-50 transition-colors duration-200">
+                <tr
+                  key={order.salesOrderId}
+                  className="hover:bg-gray-50 transition-colors duration-200"
+                >
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{order.soNumber}</div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {order.salesOrderNumber}
+                    </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm font-medium text-gray-900">{order.customerName}</div>
@@ -150,7 +170,7 @@ const SalesOrderList = () => {
                     {order.orderDate}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {order.deliveryDate}
+                    {order.dueDate}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     ₩{order.totalAmount.toLocaleString()}
@@ -160,7 +180,7 @@ const SalesOrderList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
-                      onClick={() => handleViewOrder(order.soId)}
+                      onClick={() => handleViewOrder(order.salesOrderId)}
                       className="text-blue-600 hover:text-blue-900 cursor-pointer"
                       title="상세보기"
                     >
@@ -187,7 +207,7 @@ const SalesOrderList = () => {
           $onClose={() => {
             setShowOrderDetailModal(false);
           }}
-          $selectedOrderId={selectedOrderId}
+          $selectedSalesOrderId={selectedSalesOrderId}
         />
       )}
     </div>

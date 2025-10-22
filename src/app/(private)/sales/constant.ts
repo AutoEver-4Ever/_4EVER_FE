@@ -3,6 +3,27 @@ import { QuoteStatus } from '@/app/(private)/sales/types/SalesQuoteListType';
 import { OrderStatus } from '@/app/(private)/sales/types/SalesOrderListType';
 import { CustomerStatus } from '@/app/(private)/sales/types/SalesCustomerListType';
 
+// 견적 검색 키워드 옵션
+export const QOUTE_SEARCH_KEYWORD_OPTIONS: KeyValueItem<string>[] = [
+  { key: 'QUOTE_NUMBER', value: '견적번호' },
+  { key: 'CUSTOMER_NAME', value: '고객명' },
+  { key: 'CONTACT_PERSON', value: '담당자' },
+] as const;
+
+// 견적 검색 키워드 옵션
+export const ORDER_SEARCH_KEYWORD_OPTIONS: KeyValueItem<string>[] = [
+  { key: 'ORDER_NUMBER', value: '주문번호' },
+  { key: 'CUSTOMER_NAME', value: '고객명' },
+  { key: 'CONTACT_PERSON', value: '담당자' },
+] as const;
+
+// 고객 검색 키워드 옵션
+export const CUSTOMER_SEARCH_KEYWORD_OPTIONS: KeyValueItem<string>[] = [
+  { key: 'CUSTOMER_NAME', value: '고객명' },
+  { key: 'CONTACT_PERSON', value: '담당자' },
+  { key: 'CUSTOMER_CODE', value: '고객코드' },
+] as const;
+
 // 견적 상태 필터링
 export const QUOTE_STATUS_OPTIONS: KeyValueItem<QuoteStatus>[] = [
   { key: 'ALL', value: '전체 상태' },

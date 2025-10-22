@@ -12,19 +12,22 @@ import { getQuoteList } from '@/app/(private)/sales/sales.api';
 import { useDebounce } from 'use-debounce';
 import QuoteReviewModal from '../modals/QuoteReviewModal';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
-import { QUOTE_LIST_TABLE_HEADERS } from '@/app/(private)/sales/constant';
+import {
+  QOUTE_SEARCH_KEYWORD_OPTIONS,
+  QUOTE_LIST_TABLE_HEADERS,
+} from '@/app/(private)/sales/constant';
 import { QUOTE_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
 import Pagination from '@/app/components/common/Pagination';
 import StatusLabel from '@/app/components/common/StatusLabel';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [statusFilter, setStatusFilter] = useState<QuoteStatus>('ALL');
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [selectedQuotes, setSelectedQuotes] = useState<number[]>([]);
-
-  const [selectedQuoteId, setSelectedQuoteId] = useState<number>(0);
+  const [selectedQuotationId, setSelectedQuotationId] = useState<string>('');
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -58,12 +61,12 @@ const SalesQuoteList = () => {
   const totalPages = pageInfo?.totalPages ?? 1;
 
   const handleViewQuote = (quote: Quote) => {
-    setSelectedQuoteId(quote.quotationId);
+    setSelectedQuotationId(quote.quotationId);
     setShowQuoteModal(true);
   };
 
-  const handleCheckboxChange = (quoteId: number) => {
-    setSelectedQuoteId((prev) => (prev === quoteId ? 0 : quoteId));
+  const handleCheckboxChange = (quotationId: string) => {
+    setSelectedQuotationId((prev) => (prev === quotationId ? '' : quotationId));
   };
   const handleViewReview = () => {
     setShowReviewModal(true);
@@ -98,6 +101,19 @@ const SalesQuoteList = () => {
         {/* 검색 및 필터 */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center space-x-4">
+            <select
+              value={searchKeyword}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setSearchKeyword(e.target.value)
+              }
+              className="bg-white px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
+            >
+              {QOUTE_SEARCH_KEYWORD_OPTIONS.map(({ key, value }) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
+            </select>
             <div className="relative">
               <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
               <input
@@ -127,10 +143,10 @@ const SalesQuoteList = () => {
           {/* <IconButton icon="ri-add-line" label="견적 검토 요청" /> */}
           <button
             onClick={handleViewReview}
-            disabled={selectedQuoteId === 0}
+            disabled={selectedQuotationId === ''}
             className={`px-4 py-2 font-medium rounded-lg transition-colors duration-200 whitespace-nowrap flex items-center space-x-2
     ${
-      !selectedQuoteId
+      !selectedQuotationId
         ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
         : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
     }`}
@@ -184,19 +200,19 @@ const SalesQuoteList = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <input
                         type="checkbox"
-                        checked={selectedQuoteId === quote.quotationId}
+                        checked={selectedQuotationId === quote.quotationId}
                         onChange={() => handleCheckboxChange(quote.quotationId)}
                         className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {quote.quotationCode}
+                      {quote.quotationNumber}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {quote.customerName}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {quote.ownerName}
+                      {quote.managerName}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {quote.quotationDate}
@@ -244,7 +260,7 @@ const SalesQuoteList = () => {
             $onClose={() => {
               setShowQuoteModal(false);
             }}
-            $selectedQuoteId={selectedQuoteId}
+            $selectedQuotationId={selectedQuotationId}
           />
         )}
 
@@ -253,7 +269,7 @@ const SalesQuoteList = () => {
             $onClose={() => {
               setShowReviewModal(false);
             }}
-            $selectedQuoteId={selectedQuoteId}
+            $selectedQuotationId={selectedQuotationId}
           />
         )}
       </div>

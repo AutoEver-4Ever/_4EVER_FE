@@ -8,10 +8,10 @@ export interface QuoteItem {
 }
 
 export interface Quote {
-  quotationId: number;
-  quotationCode: string;
+  quotationId: string;
+  quotationNumber: string;
   customerName: string;
-  ownerName: string;
+  managerName: string;
   quotationDate: string;
   dueDate: string;
   totalAmount: number;
