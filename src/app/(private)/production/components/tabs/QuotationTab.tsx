@@ -156,26 +156,29 @@ export default function QuotationTab() {
   const [selectedQuotationsStatus, setSelectedQuotationsStatus] = useState<QuotationStatus>('ALL');
 
   return (
-    <div className="space-y-6">
+    <div className="bg-white rounded-2xl p-6 space-y-6 shadow-sm">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900">견적 관리</h3>
-        <div className="flex gap-2">
-          {/* 가용 재고 상태 드롭다운 */}
-          <Dropdown
-            items={AVAILABLE_STOCK_STATUS}
-            value={selectedStockStatus}
-            onChange={(status: AvailableStockStatus) => {
-              setSelectedStockStatus(status);
-            }}
-          />
-          {/* 견적 상태 드롭다운 */}
-          <Dropdown
-            items={QUOTATIONS_STATUS}
-            value={selectedQuotationsStatus}
-            onChange={(status: QuotationStatus) => {
-              setSelectedQuotationsStatus(status);
-            }}
-          />
+        <div className="flex items-center">
+          <div className="flex gap-3 pr-5">
+            {/* 가용 재고 상태 드롭다운 */}
+            <Dropdown
+              items={AVAILABLE_STOCK_STATUS}
+              value={selectedStockStatus}
+              onChange={(status: AvailableStockStatus) => {
+                setSelectedStockStatus(status);
+              }}
+            />
+            {/* 견적 상태 드롭다운 */}
+            <Dropdown
+              items={QUOTATIONS_STATUS}
+              value={selectedQuotationsStatus}
+              onChange={(status: QuotationStatus) => {
+                setSelectedQuotationsStatus(status);
+              }}
+            />
+          </div>
+
           <IconButton
             label="시뮬레이션 실행"
             icon="ri-play-line"

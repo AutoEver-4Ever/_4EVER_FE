@@ -47,9 +47,15 @@ export default function Dropdown<T extends string = string>({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="pl-4 pr-1.5 py-1.5 bg-white text-gray-700 border border-gray-400 text-sm rounded-lg font-medium focus:outline-none transition hover:bg-gray-100 cursor-pointer"
+        className={`pl-4 pr-1.5 py-1.5 text-sm rounded-lg font-medium focus:outline-none transition cursor-pointer
+                    ${
+                      selectedItem?.key === 'ALL'
+                        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        : 'bg-blue-100 text-blue-500 hover:bg-blue-200/70'
+                    }
+                  `}
       >
-        <span>{displayLabel}</span>
+        <span>{displayLabel ?? items[0].value}</span>
         <span className="pl-2">
           <i className="ri-arrow-down-s-line"></i>
         </span>
@@ -57,17 +63,25 @@ export default function Dropdown<T extends string = string>({
       {/* 드롭다운 리스트 */}
       {open && (
         <ul className="absolute left-0 top-full mt-1 min-w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-          {items.map((item) => (
-            <li
-              key={item.key}
-              onClick={() => {
-                handleSelect(item.key);
-              }}
-              className="px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 cursor-pointer truncate"
-            >
-              {item.value}
-            </li>
-          ))}
+          {items.map((item, index) => {
+            const isSelected = item.key === selectedItem?.key;
+            const borderRadiusClass =
+              index === 0 ? 'rounded-t-lg' : index === items.length - 1 ? 'rounded-b-lg' : '';
+            return (
+              <li
+                key={item.key}
+                onClick={() => {
+                  handleSelect(item.key);
+                }}
+                className={`px-4 py-2 text-sm truncate cursor-pointer
+                            ${borderRadiusClass}
+                            ${isSelected ? 'text-blue-500 bg-blue-50' : 'text-gray-800 hover:bg-blue-50'}
+                          `}
+              >
+                {item.value}
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

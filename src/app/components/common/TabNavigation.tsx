@@ -21,7 +21,7 @@ export default function TabNavigation({ tabs }: { tabs: Tab[] }) {
   const ActiveComponent = activeTab?.component;
 
   return (
-    <div className="my-4 border-b border-gray-200">
+    <div className="my-4">
       {/* 네비게이션바 */}
       <nav className="-mb-px border-b border-gray-200 flex space-x-6">
         {tabs.map((tab) => (

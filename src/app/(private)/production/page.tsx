@@ -11,6 +11,14 @@ import Providers from '@/app/providers';
 
 export default async function ProductionPage() {
   const queryClient = getQueryClient();
+
+  // await queryClient.prefetchQuery({
+  //   queryKey: [
+  //     "p", {}
+  //   ],
+  //   queryFn: ({ queryKey }) => fetchQuotationList(queryKey[1] as )
+  // })
+
   const dehydratedState = dehydrate(queryClient);
 
   const data = await fetchProductionStats();

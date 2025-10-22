@@ -128,7 +128,7 @@ export default function MesTab() {
   });
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border">
+    <div className="bg-white rounded-lg shadow-sm">
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900">제조실행시스템 (MES)</h2>
@@ -139,17 +139,17 @@ export default function MesTab() {
       <div className="p-6 border-b border-gray-200">
         <div className="flex gap-4 justify-end">
           <Dropdown
-            items={MES_STATUS_OPTIONS}
-            value={selectedMesStatus}
-            onChange={(status: MesStatusCode) => {
-              setSelectedMesStatus(status);
-            }}
-          />
-          <Dropdown
             items={MES_QUOTE_OPTIONS}
             value={selectedMesQuote}
             onChange={(quote: string) => {
               setSelectedMesQuote(quote);
+            }}
+          />
+          <Dropdown
+            items={MES_STATUS_OPTIONS}
+            value={selectedMesStatus}
+            onChange={(status: MesStatusCode) => {
+              setSelectedMesStatus(status);
             }}
           />
         </div>

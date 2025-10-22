@@ -41,18 +41,18 @@ export const PRODUCTION_TABS: Tab[] = [
 ];
 
 // 가용 재고 상태 필터링
-export type AvailableStockStatus = 'ALL' | 'UNKNOWN' | 'INSUFFICIENT' | 'SUFFICIENT';
+export type AvailableStockStatus = 'ALL' | 'SUFFICIENT' | 'INSUFFICIENT' | 'UNKNOWN';
 export const AVAILABLE_STOCK_STATUS: KeyValueItem<AvailableStockStatus>[] = [
-  { key: 'ALL', value: '전체' },
+  { key: 'ALL', value: '전체 가용재고' },
+  { key: 'SUFFICIENT', value: '충분' }, // 재고 충분
   { key: 'UNKNOWN', value: '미확인' }, // 재고 상태 확인되지 않음
   { key: 'INSUFFICIENT', value: '부족' }, // 재고 부족
-  { key: 'SUFFICIENT', value: '충분' }, // 재고 충분
 ];
 
 // 견적 상태 필터링
 export type QuotationStatus = 'ALL' | 'NEW' | 'CONFIRMED';
 export const QUOTATIONS_STATUS: KeyValueItem<QuotationStatus>[] = [
-  { key: 'ALL', value: '전체' },
+  { key: 'ALL', value: '전체 상태' },
   { key: 'NEW', value: '신규' },
   { key: 'CONFIRMED', value: '확정' },
 ];
@@ -67,20 +67,20 @@ export const PRODUCTS: KeyValueItem[] = [
   { key: 'ROOF_PANEL', value: 'Roof Panel' },
 ];
 
-// MES 상태 필터
-export type MesStatusCode = 'ALL' | 'WAITING' | 'IN_PROGRESS';
-export const MES_STATUS_OPTIONS: KeyValueItem<MesStatusCode>[] = [
-  { key: 'ALL', value: '전체' },
-  { key: 'WAITING', value: '대기' },
-  { key: 'IN_PROGRESS', value: '진행중' },
-];
-
 // MES 견적 필터
 export const MES_QUOTE_OPTIONS: KeyValueItem[] = [
-  { key: 'ALL', value: '전체' },
+  { key: 'ALL', value: '전체 견적' },
   { key: 'Q-2024-001', value: 'Q-2024-001' },
   { key: 'Q-2024-002', value: 'Q-2024-002' },
   { key: 'Q-2024-003', value: 'Q-2024-003' },
   { key: 'Q-2024-004', value: 'Q-2024-004' },
   { key: 'Q-2024-005', value: 'Q-2024-005' },
+];
+
+// MES 상태 필터
+export type MesStatusCode = 'ALL' | 'WAITING' | 'IN_PROGRESS';
+export const MES_STATUS_OPTIONS: KeyValueItem<MesStatusCode>[] = [
+  { key: 'ALL', value: '전체 상태' },
+  { key: 'WAITING', value: '대기' },
+  { key: 'IN_PROGRESS', value: '진행중' },
 ];
