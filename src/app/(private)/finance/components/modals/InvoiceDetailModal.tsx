@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  getChitStatusColor,
-  getChitStatusText,
-  getInvoiceType,
-} from '@/app/(private)/finance/utils';
+import { getInvoiceType } from '@/app/(private)/finance/utils';
 import { VOUCHER_DETAIL_TABLE_HEADERS } from '@/app/(private)/finance/constants';
 import {
   InvoiceDetailModalProps,
@@ -15,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getPurchaseInvoiceDetail, getSalesInvoiceDetail } from '../../finance.api';
 import { useSearchParams } from 'next/navigation';
+import StatusLabel from '@/app/components/common/StatusLabel';
 
 const InvoiceDetailModal = ({
   $setShowDetailModal,
@@ -115,11 +112,7 @@ const InvoiceDetailModal = ({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">상태</label>
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${getChitStatusColor(invoiceRes?.statusCode ?? '')}`}
-                  >
-                    {getChitStatusText(invoiceRes?.statusCode ?? '')}
-                  </span>
+                  <StatusLabel $statusCode={invoiceRes?.statusCode as string} />
                 </div>
               </div>
             </div>

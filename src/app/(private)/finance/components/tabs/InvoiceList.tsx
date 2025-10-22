@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { getChitStatusColor, getChitStatusText } from '@/app/(private)/finance/utils';
 import {
   VOUCHER_LIST_TABLE_HEADERS,
   VOUCHER_STATUS_OPTIONS,
@@ -18,6 +17,7 @@ import Pagination from '@/app/components/common/Pagination';
 import { useSearchParams } from 'next/navigation';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
 import InvoiceDetailModal from '@/app/(private)/finance/components/modals/InvoiceDetailModal';
+import StatusLabel from '@/app/components/common/StatusLabel';
 
 const InvoiceList = () => {
   const searchParams = useSearchParams();
@@ -199,11 +199,7 @@ const InvoiceList = () => {
                   <td className="py-3 px-4 text-sm text-gray-500">{invoice.issueDate}</td>
                   <td className="py-3 px-4 text-sm text-gray-500">{invoice.dueDate}</td>
                   <td className="py-3 px-4">
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${getChitStatusColor(invoice.status)}`}
-                    >
-                      {getChitStatusText(invoice.status)}
-                    </span>
+                    <StatusLabel $statusCode={invoice.status} />
                   </td>
                   <td className="py-3 px-4 text-sm text-blue-600 hover:text-blue-500 cursor-pointer">
                     {invoice.reference.referenceCode}

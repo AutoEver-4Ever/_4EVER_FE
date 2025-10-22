@@ -1,5 +1,4 @@
 export const STATUS_TEXT_MAP: Record<string, string> = {
-  // 공통
   APPROVED: '승인',
   APPROVAL: '승인',
   PENDING: '대기',
@@ -16,7 +15,6 @@ export const STATUS_TEXT_MAP: Record<string, string> = {
   CAUTION: '주의',
   URGENT: '긴급',
 
-  // 생산 / 물류
   MATERIAL_PREPARATION: '자재 준비 중',
   IN_PRODUCTION: '생산중',
   READY_FOR_SHIPMENT: '출고 준비 완료',
@@ -27,9 +25,8 @@ export const STATUS_TEXT_MAP: Record<string, string> = {
   INSUFFICIENT: '부족',
   SUFFICIENT: '충족',
 
-  // 인사 / 근태
-  PAYROLL_PAID: '지급완료',
-  PAYROLL_UNPAID: '미지급',
+  PAID: '완납',
+  UNPAID: '미납',
   RECRUITING: '모집중',
   BASIC: '기본교육',
   TECHNOLOGY: '기술교육',
@@ -38,11 +35,9 @@ export const STATUS_TEXT_MAP: Record<string, string> = {
   CHECKED: '확인',
   UNCHECKED: '미확인',
 
-  // 생산 기획 / BOM
   NEW: '신규',
   CONFIRMED: '확정',
 
-  // 재고 / 자재
   MATERIAL: '원자재',
   ITEM: '부품',
 };
@@ -62,7 +57,6 @@ export const STATUS_COLOR_MAP: Record<string, string> = {
   REJECTED: 'bg-red-100 text-red-700 border-red-300',
   INACTIVE: 'bg-red-100 text-red-700 border-red-300',
   INSUFFICIENT: 'bg-red-100 text-red-700 border-red-300',
-  PAYROLL_UNPAID: 'bg-red-100 text-red-700 border-red-300',
 
   COMPLETED: 'bg-emerald-100 text-emerald-700 border-emerald-300',
   COMPLETE: 'bg-emerald-100 text-emerald-700 border-emerald-300',
@@ -85,7 +79,8 @@ export const STATUS_COLOR_MAP: Record<string, string> = {
   CHECKED: 'bg-sky-100 text-sky-700 border-sky-300',
   UNCHECKED: 'bg-gray-100 text-gray-600 border-gray-300',
 
-  PAYROLL_PAID: 'bg-green-100 text-green-700 border-green-300',
+  PAID: 'bg-green-100 text-green-700 border-green-300',
+  UNPAID: 'bg-red-100 text-red-700 border-red-300',
 
   DEFAULT: 'bg-gray-100 text-gray-600 border-gray-300',
 };
