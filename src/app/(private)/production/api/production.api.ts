@@ -1,6 +1,6 @@
 import { ProductionStatResponse } from '@/app/(private)/production/types/ProductionStatsType';
 import { ApiResponse } from '@/app/types/api';
-import { PRODUCTION_ENDPOINTS } from './endpoints';
+import { PRODUCTION_ENDPOINTS } from '@/app/(private)/production/api/production.endpoints';
 import axios from 'axios';
 
 // 구매 관리 지표

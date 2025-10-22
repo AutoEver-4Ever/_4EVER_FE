@@ -65,14 +65,13 @@ export default function QuotationTab() {
       requestDelivery: '2024-02-28',
       stockStatus: 'NOT_CHECKED',
       proposedDelivery: '2024-03-05',
-      status: 'SIMULATED',
+      status: 'COMMITTED',
     },
   ];
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       NEW: { label: '신규', class: 'bg-blue-100 text-blue-800' },
-      SIMULATED: { label: '시뮬레이션', class: 'bg-yellow-100 text-yellow-800' },
       COMMITTED: { label: '확정', class: 'bg-green-100 text-green-800' },
       REJECTED: { label: '거절', class: 'bg-red-100 text-red-800' },
     };
@@ -150,17 +149,8 @@ export default function QuotationTab() {
     alert('MRP 실행이 시작되었습니다. MRP 탭에서 결과를 확인하세요.');
   };
 
-  const [selectedStockStatus, setSelectedStockStatus] = useState('');
-  const getStockStatus = (): string => {
-    const item = AVAILABLE_STOCK_STATUS.find((s) => s.key === selectedStockStatus);
-    return item?.value || '전체';
-  };
-
-  const [selectedQuotationsStatus, setSelectedQuotationsStatus] = useState('');
-  const getQuotationsStatus = (): string => {
-    const item = QUOTATIONS_STATUS.find((s) => s.key === selectedQuotationsStatus);
-    return item?.value || '전체';
-  };
+  const [selectedStockStatus, setSelectedStockStatus] = useState<AvailableStockStatus>('ALL');
+  const [selectedQuotationsStatus, setSelectedQuotationsStatus] = useState<QuotationStatus>('ALL');
 
   return (
     <div className="space-y-6">
@@ -169,16 +159,16 @@ export default function QuotationTab() {
         <div className="flex gap-2">
           {/* 가용 재고 상태 드롭다운 */}
           <Dropdown
-            label={getStockStatus()}
             items={AVAILABLE_STOCK_STATUS}
+            value={selectedStockStatus}
             onChange={(status: AvailableStockStatus) => {
               setSelectedStockStatus(status);
             }}
           />
           {/* 견적 상태 드롭다운 */}
           <Dropdown
-            label={getQuotationsStatus()}
             items={QUOTATIONS_STATUS}
+            value={selectedQuotationsStatus}
             onChange={(status: QuotationStatus) => {
               setSelectedQuotationsStatus(status);
             }}

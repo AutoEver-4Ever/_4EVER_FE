@@ -116,11 +116,6 @@ export default function PurchaseRequestListTab() {
 
   const totalPages = pageInfo?.totalPages ?? 1;
 
-  const getStatusValue = (): string => {
-    const item = PURCHASE_REQ_STATUS.find((s) => s.key === selectedStatus);
-    return item?.value || '전체 상태';
-  };
-
   const handleStatusChange = (status: string): void => {
     setSelectedStatus(status);
     setCurrentPage(1);
@@ -162,8 +157,8 @@ export default function PurchaseRequestListTab() {
               onEndDateChange={setEndDate}
             />
             <Dropdown
-              label={getStatusValue()}
               items={PURCHASE_REQ_STATUS}
+              value={selectedStatus}
               onChange={handleStatusChange}
             />
 

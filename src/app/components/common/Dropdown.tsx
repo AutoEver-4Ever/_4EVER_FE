@@ -1,21 +1,24 @@
 import { KeyValueItem } from '@/app/types/CommonType';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface DropdownProps<T extends string = string> {
-  label: string | ReactNode;
   items: KeyValueItem[];
+  value: T; // 선택된 값
   onChange?: (key: T) => void;
   className?: string;
 }
 
 export default function Dropdown<T extends string = string>({
-  label,
   items,
+  value,
   onChange,
   className = '',
 }: DropdownProps<T>) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const selectedItem = items.find((item) => item.key === value);
+  const displayLabel = selectedItem?.value;
 
   const handleSelect = (key: string) => {
     onChange?.(key as T);
@@ -46,7 +49,7 @@ export default function Dropdown<T extends string = string>({
         onClick={() => setOpen(!open)}
         className="pl-4 pr-1.5 py-1.5 bg-white text-gray-700 border border-gray-400 text-sm rounded-lg font-medium focus:outline-none transition hover:bg-gray-100 cursor-pointer"
       >
-        <span>{label}</span>
+        <span>{displayLabel}</span>
         <span className="pl-2">
           <i className="ri-arrow-down-s-line"></i>
         </span>

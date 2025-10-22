@@ -21,8 +21,8 @@ export default function SupplierListTab() {
   const [showSupplierDetailModal, setShowSupplierDetailModal] = useState(false);
 
   const [selectedSupplierId, setSelectedSupplierId] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [selectedSupplierStatus, setSelectedSupplierStatus] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<SupplierCategory>('ALL');
+  const [selectedSupplierStatus, setSelectedSupplierStatus] = useState<SupplierStatus>('ALL');
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
@@ -55,11 +55,6 @@ export default function SupplierListTab() {
     setCurrentPage(1);
   };
 
-  const handleSupplierCategoryChange = (category: SupplierCategory) => {
-    setSelectedCategory(category);
-    setCurrentPage(1); // 첫 페이지로
-  };
-
   const handleViewDetail = (supplierId: string) => {
     setSelectedSupplierId(supplierId);
     setShowSupplierDetailModal(true); // 모달창 생성
@@ -79,11 +74,6 @@ export default function SupplierListTab() {
   };
   const getStatusText = (status: string) => (status === 'ACTIVE' ? '활성' : '비활성');
 
-  const getSatusValue = (): string => {
-    const item = SUPPLIER_STATUS_ITEMS.find((s) => s.key === selectedSupplierStatus);
-    return item?.value || '전체';
-  };
-
   const getCategoryValue = (category?: string): string => {
     const key = category ?? selectedCategory;
     const item = SUPPLIER_CATEGORY_ITEMS.find((s) => s.key === key);
@@ -99,15 +89,15 @@ export default function SupplierListTab() {
             <div className="flex items-center space-x-4">
               {/* 공급업체 카테고리 드롭다운 */}
               <Dropdown
-                label={getCategoryValue()}
                 items={SUPPLIER_CATEGORY_ITEMS}
-                onChange={handleSupplierCategoryChange}
+                value={selectedCategory}
+                onChange={(category: SupplierCategory) => setSelectedCategory(category)}
               />
               {/* 공급업체 상태 드롭다운 */}
               <Dropdown
-                label={getSatusValue()}
                 items={SUPPLIER_STATUS_ITEMS}
-                onChange={handleSupplierStatusChange}
+                value={selectedSupplierStatus}
+                onChange={(status: SupplierStatus) => setSelectedSupplierStatus(status)}
               />
               <IconButton
                 label="공급업체 등록"

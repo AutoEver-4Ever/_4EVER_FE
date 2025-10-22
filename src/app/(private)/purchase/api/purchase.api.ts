@@ -20,7 +20,7 @@ import {
   FetchPurchaseReqParams,
   FetchSupplierListParams,
 } from '@/app/(private)/purchase/types/PurchaseApiRequestType';
-import { PURCHASE_ENDPOINTS } from '@/app/(private)/purchase/api/endpoints';
+import { PURCHASE_ENDPOINTS } from '@/app/(private)/purchase/api/purchase.endpoints';
 
 // 구매 관리 지표
 export const fetchPurchaseStats = async (): Promise<PurchaseStatResponse | null> => {
