@@ -22,6 +22,7 @@ import { getQuoteStatusColor, getQuoteStatusText } from '../../utils';
 import Pagination from '@/app/components/common/Pagination';
 import IconButton from '@/app/components/common/IconButton';
 import { stat } from 'fs';
+import StatusLabel from '@/app/components/common/StatusLabel';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -218,11 +219,7 @@ const SalesQuoteList = () => {
                       {quote.totalAmount.toLocaleString()}원
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getQuoteStatusColor(quote.statusCode)}`}
-                      >
-                        {getQuoteStatusText(quote.statusCode)}
-                      </span>
+                      <StatusLabel $statusCode={quote.statusCode} />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
                       <div className="flex items-center justify-center space-x-2">

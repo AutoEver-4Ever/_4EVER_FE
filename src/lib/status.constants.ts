@@ -90,8 +90,8 @@ export const STATUS_COLOR_MAP: Record<string, string> = {
   DEFAULT: 'bg-gray-100 text-gray-600 border-gray-300',
 };
 
-export const getStatusText = (status?: string): string =>
+export const getStatusText = (status: string): string =>
   STATUS_TEXT_MAP[status ?? ''] ?? '알 수 없음';
 
-export const getStatusColor = (status?: string): string =>
+export const getStatusColor = (status: string): string =>
   STATUS_COLOR_MAP[status ?? ''] ?? STATUS_COLOR_MAP.DEFAULT;
