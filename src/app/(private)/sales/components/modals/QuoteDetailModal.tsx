@@ -7,7 +7,7 @@ import { getQuoteDetail } from '../../sales.api';
 import { useEffect, useState } from 'react';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
 import { QUOTE_DETAIL_TABLE_HEADERS } from '../../constant';
-import { getQuoteStatusColor, getQuoteStatusText } from '../../utils';
+import StatusLabel from '@/app/components/common/StatusLabel';
 
 const QuoteDetailModal = ({ $onClose, $selectedQuoteId }: QuoteDetailModalProps) => {
   const { data, isLoading, isError } = useQuery<QuoteDetail>({
@@ -79,11 +79,7 @@ const QuoteDetailModal = ({ $onClose, $selectedQuoteId }: QuoteDetailModalProps)
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">상태:</span>
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getQuoteStatusColor(data!.statusCode)}`}
-                      >
-                        {getQuoteStatusText(data!.statusCode)}
-                      </span>
+                      <StatusLabel $statusCode={data!.statusCode} />
                     </div>
                   </div>
                 </div>

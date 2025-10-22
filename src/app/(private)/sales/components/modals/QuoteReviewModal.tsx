@@ -16,7 +16,8 @@ import {
   postInventoryCheck,
   postQuotationConfirm,
 } from '../../sales.api';
-import { getQuoteStatusColor, getQuoteStatusText, isAllInventoryFulfilled } from '../../utils';
+import { isAllInventoryFulfilled } from '../../utils';
+import StatusLabel from '@/app/components/common/StatusLabel';
 
 const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps) => {
   const [inventoryCheckResult, setInventoryCheckResult] = useState<InventoryCheckRes[] | null>(
@@ -141,11 +142,7 @@ const QuoteReviewModal = ({ $onClose, $selectedQuoteId }: QuoteReviewModalProps)
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">상태:</span>
-                  <span
-                    className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getQuoteStatusColor(quote!.statusCode)}`}
-                  >
-                    {getQuoteStatusText(quote!.statusCode)}
-                  </span>
+                  <StatusLabel $statusCode={quote!.statusCode} />
                 </div>
               </div>
             </div>

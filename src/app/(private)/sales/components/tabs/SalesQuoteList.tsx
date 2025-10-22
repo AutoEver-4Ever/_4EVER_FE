@@ -7,21 +7,14 @@ import {
   QuoteQueryParams,
 } from '@/app/(private)/sales/types/SalesQuoteListType';
 import QuoteDetailModal from '../modals/QuoteDetailModal';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import {
-  getQuoteList,
-  postInventoryCheck,
-  postQuotationConfirm,
-} from '@/app/(private)/sales/sales.api';
+import { useQuery } from '@tanstack/react-query';
+import { getQuoteList } from '@/app/(private)/sales/sales.api';
 import { useDebounce } from 'use-debounce';
 import QuoteReviewModal from '../modals/QuoteReviewModal';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
 import { QUOTE_LIST_TABLE_HEADERS } from '@/app/(private)/sales/constant';
 import { QUOTE_STATUS_OPTIONS } from '@/app/(private)/sales/constant';
-import { getQuoteStatusColor, getQuoteStatusText } from '../../utils';
 import Pagination from '@/app/components/common/Pagination';
-import IconButton from '@/app/components/common/IconButton';
-import { stat } from 'fs';
 import StatusLabel from '@/app/components/common/StatusLabel';
 
 const SalesQuoteList = () => {
@@ -37,10 +30,6 @@ const SalesQuoteList = () => {
   const [endDate, setEndDate] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 200);
   const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    console.log(selectedQuotes);
-  }, [selectedQuotes]);
 
   const queryParams = useMemo(
     () => ({
