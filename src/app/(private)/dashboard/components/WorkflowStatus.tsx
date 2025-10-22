@@ -1,24 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getWorkflowStatus } from '../dashboard.api';
-import { DashboardProps, DashboardWorkflowRes } from '../types/DashboardWorkflowType';
+import { DashboardProps } from '../types/DashboardWorkflowType';
 import { getTabCodeText } from '../dashboard.utils';
-import { get } from 'http';
 import StatusLabel from '@/app/components/common/StatusLabel';
 
 const WorkflowStatus = ({ $workflowData }: DashboardProps) => {
-  // const {
-  //   data: workflowRes,
-  //   isLoading,
-  //   isError,
-  // } = useQuery<DashboardWorkflowRes>({
-  //   queryKey: ['workflowStatus'],
-  //   queryFn: () => getWorkflowStatus('SD_USER'),
-  //   staleTime: 1000,
-  // });
-
   const [activeTab, setActiveTab] = useState('first');
 
   const firstTabCode = $workflowData?.tabs[0].tabCode;

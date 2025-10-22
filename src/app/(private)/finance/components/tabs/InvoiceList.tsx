@@ -72,7 +72,7 @@ const InvoiceList = () => {
       ? () => postArInvoice(selectedInvoiceId)
       : () => postApInvoice(selectedInvoiceId);
 
-  const { mutate: sendReq, isPending } = useMutation({
+  const { mutate: sendReq } = useMutation({
     mutationFn: mutationFn,
     onSuccess: (data) => {
       alert(`${data.status} : ${data.message}
