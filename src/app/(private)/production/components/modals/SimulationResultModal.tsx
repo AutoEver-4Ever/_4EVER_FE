@@ -1,4 +1,4 @@
-import { SimulationResult } from '../types/QuotationType';
+import { SimulationResult } from '@/app/(private)/production/types/QuotationType';
 
 interface SimulationResultModalProps {
   simulationResult: SimulationResult;

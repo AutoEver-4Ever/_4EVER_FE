@@ -1,6 +1,4 @@
-// components/MpsPreviewModal.tsx
-
-import { SimulationResult } from '../types/QuotationType';
+import { SimulationResult } from '@/app/(private)/production/types/QuotationType';
 
 interface MpsPreviewModalProps {
   simulationResult: SimulationResult;

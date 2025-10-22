@@ -1,4 +1,4 @@
-import { DemandSource, WeeklyProductionData } from '../types/MpsType';
+import { DemandSource, WeeklyProductionData } from '@/app/(private)/production/types/MpsType';
 
 interface DemandSourceModalProps {
   selectedWeek: WeeklyProductionData;

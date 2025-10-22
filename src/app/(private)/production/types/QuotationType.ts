@@ -1,5 +1,3 @@
-// types/QuotationType.ts
-
 export interface Quote {
   id: string;
   customer: string;

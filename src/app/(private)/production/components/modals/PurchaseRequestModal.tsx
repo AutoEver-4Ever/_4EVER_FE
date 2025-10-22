@@ -1,7 +1,5 @@
-// components/PurchaseRequestModal.tsx
-
 import { useState } from 'react';
-import { PlannedOrder } from '@/app/(private)/production/components/types/MrpType';
+import { PlannedOrder } from '@/app/(private)/production/types/MrpType';
 
 interface PurchaseRequestModalProps {
   orders: PlannedOrder[];

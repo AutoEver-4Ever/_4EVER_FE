@@ -7,9 +7,9 @@ import {
   AvailableStockStatus,
   QUOTATIONS_STATUS,
   QuotationStatus,
-} from '../../constants';
+} from '@/app/(private)/production/constants';
 import IconButton from '@/app/components/common/IconButton';
-import { Quote, SimulationResult } from '@/app/(private)/production/components/types/QuotationType';
+import { Quote, SimulationResult } from '@/app/(private)/production/types/QuotationType';
 import SimulationResultModal from '@/app/(private)/production/components/modals/SimulationResultModal';
 import MpsPreviewModal from '@/app/(private)/production/components/modals/MpsPreviewModal';
 

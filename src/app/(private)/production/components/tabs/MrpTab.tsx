@@ -3,7 +3,7 @@
 import Button from '@/app/components/common/Button';
 import { useState } from 'react';
 import PurchaseRequestModal from '@/app/(private)/production/components/modals/PurchaseRequestModal';
-import { NetRequirement, PlannedOrder } from '@/app/(private)/production/components/types/MrpType';
+import { NetRequirement, PlannedOrder } from '@/app/(private)/production/types/MrpType';
 import Dropdown from '@/app/components/common/Dropdown';
 import { KeyValueItem } from '@/app/types/CommonType';
 import { PRODUCTS } from '@/app/(private)/production/constants';

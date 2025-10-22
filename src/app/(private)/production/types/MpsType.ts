@@ -1,5 +1,3 @@
-// types/MpsType.ts
-
 export type ProductType =
   | 'ALL'
   | 'DOOR_PANEL'

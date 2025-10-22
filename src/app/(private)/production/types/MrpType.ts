@@ -1,5 +1,3 @@
-// types/MrpType.ts
-
 export type AvailableStatus = 'SUFFICIENT' | 'SHORTAGE' | 'WARNING';
 export type OrderStatus = 'PLANNED' | 'WAITING' | 'APPROVED' | 'REJECTED';
 

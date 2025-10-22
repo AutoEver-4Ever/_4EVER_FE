@@ -9,7 +9,7 @@ import {
   ProductType,
   WeeklyProductionData,
   DemandSource,
-} from '@/app/(private)/production/components/types/MpsType';
+} from '@/app/(private)/production/types/MpsType';
 import DemandSourceModal from '@/app/(private)/production/components/modals/DemandSourceModal';
 
 export default function MpsTab() {
