@@ -56,6 +56,16 @@ export const QUOTATIONS_STATUS: KeyValueItem<QuotationStatus>[] = [
 ];
 export type QuotationStatus = 'ALL' | 'NEW' | 'CONFIRMED';
 
+// 제품 목록
+export const PRODUCTS: KeyValueItem[] = [
+  { key: 'ALL', value: '전체 제품' },
+  { key: 'DOOR_PANEL', value: '도어패널' },
+  { key: 'HOOD_PANEL', value: 'Hood Panel' },
+  { key: 'FENDER_PANEL', value: 'Fender Panel' },
+  { key: 'TRUNK_LID', value: 'Trunk Lid' },
+  { key: 'ROOF_PANEL', value: 'Roof Panel' },
+];
+
 import { TableHeader } from '@/app/(private)/purchase/types/TableHeader';
 import PurchaseRequestListTab from '@/app/(private)/purchase/components/tabs/PurchaseRequestListTab';
 import PurchaseOrderListTab from '@/app/(private)/purchase/components/tabs/PurchaseOrderListTab';
