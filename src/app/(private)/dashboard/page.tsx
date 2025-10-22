@@ -1,13 +1,11 @@
-import DashboardHeader from '@/app/(private)/dashboard/components/DashboardHeader';
-import DashboardStats from '@/app/(private)/dashboard/components/DashboardStats';
 import QuickActions from '@/app/(private)/dashboard/components/QuickActions';
 import WorkflowStatus from '@/app/(private)/dashboard/components/WorkflowStatus';
-import ReportDownloadModal from '@/app/(private)/dashboard/components/ReportDownloadModal';
 import Providers from '@/app/providers';
 import { getQueryClient } from '@/lib/queryClient';
 import { dehydrate } from '@tanstack/react-query';
-import { Suspense } from 'react';
 import StatSection from '@/app/components/common/StatSection';
+import { getDashboardStats } from '@/app/(private)/dashboard/dashboard.api';
+import { mapDashboardStatsToCards } from './dashboard.service';
 
 export default async function DashboardPage() {
   const queryClient = getQueryClient();
@@ -18,8 +16,11 @@ export default async function DashboardPage() {
   });
   const dashboardStats = await getDashboardStats();
 
+  const dehydratedState = dehydrate(queryClient);
+  const dashboardStatsData = mapDashboardStatsToCards(dashboardStats);
+
   return (
-    <Providers>
+    <Providers dehydratedState={dehydratedState}>
       <div className="min-h-screen">
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* 페이지 헤더 */}
@@ -28,7 +29,7 @@ export default async function DashboardPage() {
             subTitle="기업 자원 관리 현황"
             statsData={dashboardStatsData}
           />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8 mb-8">
             {/* 빠른 작업 */}
             <div className="lg:col-span-1">
               <QuickActions />
