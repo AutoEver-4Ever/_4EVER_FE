@@ -13,18 +13,13 @@ export const mapDashboardStatsToCards = (
   return Object.entries(data).reduce(
     (acc, [period, stats]) => {
       const cards: StatCardType[] = [
-        createStatCard('총 매출', stats.total_sales.value, stats.total_sales.delta_rate, '₩'),
-        createStatCard(
-          '총 매입',
-          stats.total_purchases.value,
-          stats.total_purchases.delta_rate,
-          '₩',
-        ),
-        createStatCard('순이익', stats.net_profit.value, stats.net_profit.delta_rate, '₩'),
+        createStatCard('총 매출', stats.totalSales.value, stats.totalSales.delta_rate, '₩'),
+        createStatCard('총 매입', stats.totalPurchases.value, stats.totalPurchases.delta_rate, '₩'),
+        createStatCard('순이익', stats.netProfit.value, stats.netProfit.delta_rate, '₩'),
         createStatCard(
           '총 직원 수',
-          stats.total_employee.value,
-          stats.total_employee.delta_rate,
+          stats.totalEmployee.value,
+          stats.totalEmployee.delta_rate,
           '명',
         ),
       ];

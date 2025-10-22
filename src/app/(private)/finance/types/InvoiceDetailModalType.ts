@@ -1,24 +1,25 @@
 export interface InvoiceDetailModalProps {
   $setShowDetailModal: (show: boolean) => void;
-  $selectedInvoiceId: number;
-  $setSelectedInvoiceId: (id: number) => void;
+  $selectedInvoiceId: string;
+  $setSelectedInvoiceId: (id: string) => void;
 }
 
 export interface InvoicetDetailRes {
-  invoiceId: number;
-  invoiceCode: string;
+  invoiceId: string;
+  invoiceNumber: string;
   invoiceType: string;
   statusCode: string;
   issueDate: string;
   dueDate: string;
   name: string;
-  referenceCode: string;
+  referenceNumber: string;
   totalAmount: number;
   note: string;
   items: {
+    itemId: string;
     itemName: string;
     quantity: number;
-    uomName: string;
+    unitOfMaterialName: string;
     unitPrice: number;
     totalPrice: number;
   }[];

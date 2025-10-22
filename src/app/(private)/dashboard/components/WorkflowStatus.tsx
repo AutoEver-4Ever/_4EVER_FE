@@ -51,7 +51,7 @@ const WorkflowStatus = ({ $workflowData }: DashboardProps) => {
       <div className="space-y-3">
         {currentWorkflows.map((workflow) => (
           <div
-            key={workflow.id}
+            key={workflow.itemId}
             className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
           >
             <div className="flex items-center space-x-4">
@@ -60,9 +60,9 @@ const WorkflowStatus = ({ $workflowData }: DashboardProps) => {
               </div>
               <div>
                 <div className="flex items-center space-x-2">
-                  <h3 className="text-sm font-medium text-gray-900">{workflow.title}</h3>
+                  <h3 className="text-sm font-medium text-gray-900">{workflow.itemTitle}</h3>
                 </div>
-                <p className="text-sm text-gray-600 mt-1">{workflow.number}</p>
+                <p className="text-sm text-gray-600 mt-1">{workflow.itemNumber}</p>
                 <p className="text-xs text-gray-500 mt-1">
                   {workflow.name ? workflow.name : '알수없음'} • {workflow.date}
                 </p>

@@ -15,6 +15,7 @@ import { Order, OrderQueryParams } from '@/app/(private)/sales/types/SalesOrderL
 import { OrderDetail } from '@/app/(private)/sales/types/SalesOrderDetailType';
 import { Page } from '@/types/Page';
 import { InventoryCheckRes } from './types/QuoteReviewModalType';
+import { CustomerEditData, CustomerResponse } from './types/CustomerEditModalType';
 
 // ----------------------- 통계 지표 -----------------------
 export const getSalesStats = async (): Promise<SalesStatResponse> => {
@@ -30,7 +31,8 @@ export const getQuoteList = async (
     ...(params?.startDate && { startDate: params.startDate }),
     ...(params?.endDate && { endDate: params.endDate }),
     ...(params?.status && { status: params.status }),
-    ...(params?.search && { search: params.search }),
+    ...(params?.type && { type: params.type }),
+    ...(params?.keyword && { keyword: params.keyword }),
     ...(params?.sort && { sort: params.sort }),
     ...(params?.page && { page: String(params.page) }),
     ...(params?.size && { size: String(params.size) }),
@@ -43,7 +45,7 @@ export const getQuoteList = async (
   return { data: res.data.data.items, pageData: res.data.data.page };
 };
 
-export const getQuoteDetail = async (quotationId: number): Promise<QuoteDetail> => {
+export const getQuoteDetail = async (quotationId: string): Promise<QuoteDetail> => {
   const res = await axios.get<ApiResponse<QuoteDetail>>(SALES_ENDPOINTS.QUOTE_DETAIL(quotationId));
   return res.data.data;
 };
@@ -56,6 +58,7 @@ export const getOrderList = async (
     ...(params?.start && { start: params.start }),
     ...(params?.end && { end: params.end }),
     ...(params?.status && { status: params.status }),
+    ...(params?.type && { type: params.type }),
     ...(params?.keyword && { keyword: params.keyword }),
     ...(params?.page && { page: String(params.page) }),
     ...(params?.size && { size: String(params.size) }),
@@ -68,14 +71,14 @@ export const getOrderList = async (
   return { data: res.data.data.content, pageData: res.data.data.page };
 };
 
-export const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
-  const res = await axios.get<ApiResponse<OrderDetail>>(SALES_ENDPOINTS.ORDER_DETAIL(orderId));
+export const getOrderDetail = async (salesOrderId: string): Promise<OrderDetail> => {
+  const res = await axios.get<ApiResponse<OrderDetail>>(SALES_ENDPOINTS.ORDER_DETAIL(salesOrderId));
   return res.data.data;
 };
 
-export const postQuotationConfirm = async (quotesId: number[]): Promise<ApiResponseNoData> => {
+export const postQuotationConfirm = async (quotationId: string): Promise<ApiResponseNoData> => {
   const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.QUOTE_CONFIRM, {
-    quotationIds: quotesId,
+    quotationId: quotationId,
   });
   return res.data;
 };
@@ -90,8 +93,10 @@ export const postInventoryCheck = async (items: Inventories[]): Promise<Inventor
   return res.data.data.items;
 };
 
-export const postDeliveryProcess = async (quotesId: number): Promise<ApiResponseNoData> => {
-  const res = await axios.post<ApiResponseNoData>(SALES_ENDPOINTS.QUOTE_DELIVERY_PROCESS(quotesId));
+export const postDeliveryProcess = async (quotationId: string): Promise<ApiResponseNoData> => {
+  const res = await axios.post<ApiResponseNoData>(
+    SALES_ENDPOINTS.QUOTE_DELIVERY_PROCESS(quotationId),
+  );
   return res.data;
 };
 
@@ -102,6 +107,7 @@ export const getCustomerList = async (
   const query = new URLSearchParams({
     ...(params?.status && { status: params.status }),
     ...(params?.keyword && { keyword: params.keyword }),
+    ...(params?.type && { type: params.type }),
     ...(params?.page && { page: String(params.page) }),
     ...(params?.size && { size: String(params.size) }),
   }).toString();
@@ -113,7 +119,7 @@ export const getCustomerList = async (
   return { data: res.data.data.customers, pageData: res.data.data.page };
 };
 
-export const getCustomerDetail = async (customerId: number): Promise<CustomerDetail> => {
+export const getCustomerDetail = async (customerId: string): Promise<CustomerDetail> => {
   const res = await axios.get<ApiResponse<CustomerDetail>>(
     SALES_ENDPOINTS.CUSTOMER_DETAIL(customerId),
   );
@@ -123,6 +129,17 @@ export const getCustomerDetail = async (customerId: number): Promise<CustomerDet
 export const postCustomer = async (customer: CustomerData): Promise<ServerResponse> => {
   const res = await axios.post<ApiResponse<ServerResponse>>(
     SALES_ENDPOINTS.CUSTOMERS_LIST,
+    customer,
+  );
+  return res.data.data;
+};
+
+export const putCustomer = async (
+  customerId: string,
+  customer: CustomerEditData,
+): Promise<CustomerResponse> => {
+  const res = await axios.put<ApiResponse<CustomerResponse>>(
+    SALES_ENDPOINTS.EDIT_CUSTOMER(customerId),
     customer,
   );
   return res.data.data;

@@ -23,7 +23,7 @@ const InvoiceList = () => {
   const searchParams = useSearchParams();
   const currentTab = searchParams.get('tab') || 'sales';
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [selectedInvoiceId, setSelectedInvoiceId] = useState<number>(0);
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState<string>('');
 
   const [statusFilter, setStatusFilter] = useState<InvoiceStatus>('ALL');
   const [currentPage, setCurrentPage] = useState(1);
@@ -84,15 +84,15 @@ const InvoiceList = () => {
   });
 
   // ----------------------------------------------------------
-  const handleViewDetail = (id: number) => {
+  const handleViewDetail = (id: string) => {
     setShowDetailModal(true);
     setSelectedInvoiceId(id);
   };
-  const handleSelectVoucher = (voucherId: number, checked: boolean) => {
+  const handleSelectVoucher = (voucherId: string, checked: boolean) => {
     if (checked) {
       setSelectedInvoiceId(voucherId);
     } else {
-      setSelectedInvoiceId(0);
+      setSelectedInvoiceId('');
     }
   };
 
@@ -188,18 +188,16 @@ const InvoiceList = () => {
                     />
                   </td>
                   <td className="py-3 px-4 text-sm font-medium text-gray-900">
-                    {invoice.invoiceCode}
+                    {invoice.invoiceNumber}
                   </td>
-                  <td className="py-3 px-4 text-sm text-gray-900">
-                    {invoice.connection.connectionName}
-                  </td>
+                  <td className="py-3 px-4 text-sm text-gray-900">{invoice.supply.supplierName}</td>
                   <td className="py-3 px-4 text-sm font-medium text-gray-900 text-right">
                     ₩{invoice.totalAmount.toLocaleString()}
                   </td>
                   <td className="py-3 px-4 text-sm text-gray-500">{invoice.issueDate}</td>
                   <td className="py-3 px-4 text-sm text-gray-500">{invoice.dueDate}</td>
                   <td className="py-3 px-4">
-                    <StatusLabel $statusCode={invoice.status} />
+                    <StatusLabel $statusCode={invoice.statusCode} />
                   </td>
                   <td className="py-3 px-4 text-sm text-blue-600 hover:text-blue-500 cursor-pointer">
                     {invoice.reference.referenceCode}

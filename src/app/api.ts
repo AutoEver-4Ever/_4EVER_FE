@@ -21,14 +21,15 @@ export interface ApiResponseNoData {
 export const SALES_ENDPOINTS = {
   STATS: `${SALES_BASE_PATH}/statistics`,
   QUOTES_LIST: `${SALES_BASE_PATH}/quotations`,
-  QUOTE_DETAIL: (id: number) => `${SALES_BASE_PATH}/quotations/${id}`,
+  QUOTE_DETAIL: (id: string) => `${SALES_BASE_PATH}/quotations/${id}`,
   QUOTE_CONFIRM: `${SALES_BASE_PATH}/quotations/confirm`,
   INVENTORY_CHECK: `${SALES_BASE_PATH}/quotations/inventory/check`,
-  QUOTE_DELIVERY_PROCESS: (id: number) => `${SALES_BASE_PATH}/quotations/${id}/approve-order`,
+  QUOTE_DELIVERY_PROCESS: (id: string) => `${SALES_BASE_PATH}/quotations/${id}/approve-order`,
   ORDERS_LIST: `${SALES_BASE_PATH}/orders`,
-  ORDER_DETAIL: (id: number) => `${SALES_BASE_PATH}/orders/${id}`,
+  ORDER_DETAIL: (id: string) => `${SALES_BASE_PATH}/orders/${id}`,
   CUSTOMERS_LIST: `${SALES_BASE_PATH}/customers`,
-  CUSTOMER_DETAIL: (id: number) => `${SALES_BASE_PATH}/customers/${id}`,
+  CUSTOMER_DETAIL: (id: string) => `${SALES_BASE_PATH}/customers/${id}`,
+  EDIT_CUSTOMER: (id: string) => `${SALES_BASE_PATH}/customers/${id}`,
   ANALYTICS: `${SALES_BASE_PATH}/analytics/sales`,
 } as const;
 
@@ -37,13 +38,13 @@ export const SALES_ENDPOINTS = {
 export const FINANCE_ENDPOINTS = {
   STATISTICS: `${FINANCE_BASE_PATH}/statictics`,
   PURCHASE_INVOICES_LIST: `${FINANCE_BASE_PATH}/invoice/ap`,
-  PURCHASE_INVOICE_DETAIL: (invoiceId: number) => `${FINANCE_BASE_PATH}/invoice/ap/${invoiceId}`,
+  PURCHASE_INVOICE_DETAIL: (invoiceId: string) => `${FINANCE_BASE_PATH}/invoice/ap/${invoiceId}`,
   SALES_INVOICES_LIST: `${FINANCE_BASE_PATH}/invoice/ar`,
-  SALES_INVOICE_DETAIL: (invoiceId: number) => `${FINANCE_BASE_PATH}/invoice/ar/${invoiceId}`,
+  SALES_INVOICE_DETAIL: (invoiceId: string) => `${FINANCE_BASE_PATH}/invoice/ar/${invoiceId}`,
 
-  PURCHASE_INVOICE_REQUEST: (invoiceId: number) =>
+  PURCHASE_INVOICE_REQUEST: (invoiceId: string) =>
     `${FINANCE_BASE_PATH}/invoice/ap/receivable/request?invoiceId=${invoiceId}`,
-  SALES_INVOICE_COMPLETE: (invoiceId: number) =>
+  SALES_INVOICE_COMPLETE: (invoiceId: string) =>
     `${FINANCE_BASE_PATH}/invoice/ar/${invoiceId}/receivable/complete`,
 } as const;
 
