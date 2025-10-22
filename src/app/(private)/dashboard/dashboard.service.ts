@@ -1,5 +1,5 @@
 import { StatCardType } from '@/types/StatType';
-import { DashboardStatResponse } from './types/DashboardStatsType';
+import { DashboardStatRes } from './types/DashboardStatsType';
 import { createStatCard } from '@/lib/CreateStatCard';
 
 // total_sales: number;
@@ -8,7 +8,7 @@ import { createStatCard } from '@/lib/CreateStatCard';
 //   employee_count: number;
 
 export const mapDashboardStatsToCards = (
-  data: DashboardStatResponse,
+  data: DashboardStatRes,
 ): Record<string, StatCardType[]> => {
   return Object.entries(data).reduce(
     (acc, [period, stats]) => {

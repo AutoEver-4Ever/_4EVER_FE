@@ -4,7 +4,7 @@ import Providers from '@/app/providers';
 import { getQueryClient } from '@/lib/queryClient';
 import { dehydrate } from '@tanstack/react-query';
 import StatSection from '@/app/components/common/StatSection';
-import { getDashboardStats } from '@/app/(private)/dashboard/dashboard.api';
+import { getDashboardStats, getWorkflowStatus } from '@/app/(private)/dashboard/dashboard.api';
 import { mapDashboardStatsToCards } from './dashboard.service';
 
 export default async function DashboardPage() {
@@ -15,6 +15,13 @@ export default async function DashboardPage() {
     queryFn: getDashboardStats,
   });
   const dashboardStats = await getDashboardStats();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['workflowStatus'],
+    queryFn: () => getWorkflowStatus('SD_USER'), // 예시로 'SD_USER' 역할 사용
+  });
+
+  const workflowData = await getWorkflowStatus('SD_USER');
 
   const dehydratedState = dehydrate(queryClient);
   const dashboardStatsData = mapDashboardStatsToCards(dashboardStats);
@@ -37,7 +44,7 @@ export default async function DashboardPage() {
 
             {/* 워크플로우 현황 */}
             <div className="lg:col-span-2">
-              <WorkflowStatus />
+              <WorkflowStatus $workflowData={workflowData} />
             </div>
           </div>
         </main>

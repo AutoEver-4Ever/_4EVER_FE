@@ -7,4 +7,4 @@ interface DashboardStat {
   total_employee: Stat;
 }
 
-export type DashboardStatResponse = StatResponse<DashboardStat>;
+export type DashboardStatRes = StatResponse<DashboardStat>;
