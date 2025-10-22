@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { BomItem, ComponentRow, ComponentType } from '@/app/(private)/production/types/BomType';
 import Button from '@/app/components/common/Button';
 import IconButton from '@/app/components/common/IconButton';
+import { KeyValueItem } from '@/app/types/CommonType';
+import DropdownInputListModal from '@/app/components/common/DropdownInputListModal';
 
 interface BomFormModalProps {
   editingBom: BomItem | null;
@@ -13,7 +15,9 @@ interface BomFormModalProps {
 
 export default function BomFormModal({ editingBom, onClose, onSubmit }: BomFormModalProps) {
   const [product, setProduct] = useState(editingBom?.productName || '');
-  const [version, setVersion] = useState(editingBom?.version || '');
+  const [unit, setUnit] = useState(editingBom?.version || '');
+  const [data, setData] = useState<KeyValueItem<number>[]>([]);
+
   const [componentRows, setComponentRows] = useState<ComponentRow[]>(
     editingBom?.components || [
       {
@@ -26,7 +30,6 @@ export default function BomFormModal({ editingBom, onClose, onSubmit }: BomFormM
         level: 1,
         material: '',
         supplier: '',
-        process: '',
       },
     ],
   );
@@ -58,8 +61,6 @@ export default function BomFormModal({ editingBom, onClose, onSubmit }: BomFormM
       unit: 'EA',
     },
   };
-
-  const processOptions = ['a', 'b', 'c', 'd', 'e'];
 
   const addComponentRow = () => {
     const newRow: ComponentRow = {
@@ -115,7 +116,7 @@ export default function BomFormModal({ editingBom, onClose, onSubmit }: BomFormM
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
-      version,
+      unit,
       components: componentRows,
     });
   };
@@ -145,17 +146,16 @@ export default function BomFormModal({ editingBom, onClose, onSubmit }: BomFormM
                 placeholder="v1.0"
                 required
               />
-              <h4 className="text-md font-semibold text-gray-900 mb-4">버전 정보</h4>
+              <h4 className="text-md font-semibold text-gray-900 mb-4">단위</h4>
               <input
                 type="text"
-                value={version}
-                onChange={(e) => setVersion(e.target.value)}
+                value={unit}
+                onChange={(e) => setUnit(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                 placeholder="v1.0"
                 required
               />
             </div>
-
             {/* ✅ 구성품 리스트 */}
             <div>
               <div className="flex justify-between items-center mb-4">
@@ -268,32 +268,11 @@ export default function BomFormModal({ editingBom, onClose, onSubmit }: BomFormM
                           />
                         </td>
 
-                        {/* 공정 순서 - 다중 선택 */}
                         <td className="px-3 py-2">
-                          <select
-                            multiple
-                            value={
-                              Array.isArray(row.process)
-                                ? row.process
-                                : row.process
-                                  ? [row.process]
-                                  : []
-                            }
-                            onChange={(e) =>
-                              updateComponentRow(
-                                row.id,
-                                'process',
-                                Array.from(e.target.selectedOptions, (opt) => opt.value).join(','),
-                              )
-                            }
-                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 h-20"
-                          >
-                            {processOptions.map((p) => (
-                              <option key={p} value={p}>
-                                {p.toUpperCase()}
-                              </option>
-                            ))}
-                          </select>
+                          <DropdownInputListModal
+                            initialItems={data}
+                            onSubmit={(updated) => setData(updated)}
+                          />
                         </td>
 
                         {/* 삭제 버튼 */}
@@ -313,7 +292,6 @@ export default function BomFormModal({ editingBom, onClose, onSubmit }: BomFormM
                 </table>
               </div>
             </div>
-
             <div className="flex justify-end space-x-3 pt-4">
               <Button label={editingBom ? '수정' : '생성'} />
             </div>

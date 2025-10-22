@@ -14,7 +14,6 @@ export interface Component {
   level: ComponentLevel;
   material: string;
   supplier: string;
-  process: string;
 }
 
 export interface Process {
@@ -31,6 +30,7 @@ export interface BomItem {
   productCode: string;
   productName: string;
   version: string;
+  unit: string;
   status: BomStatus;
   createdDate: string;
   lastModified: string;
