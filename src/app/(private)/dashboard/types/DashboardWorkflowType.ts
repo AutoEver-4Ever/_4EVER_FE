@@ -3,12 +3,12 @@ export interface DashboardWorkflowRes {
   tabs: {
     tabCode: string;
     items: {
-      id: string;
-      title: string;
-      number: string;
+      itemId: string;
+      itemTitle: string;
+      itemNumber: string;
+      name: string;
       statusCode: string;
       date: string;
-      name: string;
     }[];
   }[];
 }
