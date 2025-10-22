@@ -5,9 +5,10 @@ export interface DashboardWorkflowRes {
     items: {
       id: string;
       title: string;
-      code: string;
+      number: string;
       statusCode: string;
       date: string;
+      name: string;
     }[];
   }[];
 }

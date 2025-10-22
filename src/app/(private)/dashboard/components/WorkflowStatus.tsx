@@ -74,8 +74,10 @@ const WorkflowStatus = ({ $workflowData }: DashboardProps) => {
                 <div className="flex items-center space-x-2">
                   <h3 className="text-sm font-medium text-gray-900">{workflow.title}</h3>
                 </div>
-                <p className="text-sm text-gray-600 mt-1">{workflow.code}</p>
-                <p className="text-xs text-gray-500 mt-1">{workflow.date}</p>
+                <p className="text-sm text-gray-600 mt-1">{workflow.number}</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {workflow.name ? workflow.name : '알수없음'} • {workflow.date}
+                </p>
               </div>
             </div>
             <div className={`px-3 py-1 rounded-full text-xs font-medium ${workflow.statusCode}`}>
