@@ -45,7 +45,8 @@ export interface QuoteQueryParams {
   startDate?: string;
   endDate?: string;
   status?: string;
-  search?: string;
+  type?: string;
+  keyword?: string;
   sort?: string;
   page?: number;
   size?: number;

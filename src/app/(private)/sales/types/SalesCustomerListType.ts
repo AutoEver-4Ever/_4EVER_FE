@@ -20,4 +20,5 @@ export interface CustomerQueryParams {
   keyword?: string;
   page?: number;
   size?: number;
+  type?: string;
 }

@@ -32,6 +32,7 @@ export interface OrderQueryParams {
   start: string;
   end: string;
   keyword: string;
+  type: string;
   status: string;
   page: number;
   size: number;

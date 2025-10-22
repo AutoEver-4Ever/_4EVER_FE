@@ -22,7 +22,7 @@ import StatusLabel from '@/app/components/common/StatusLabel';
 
 const SalesQuoteList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchType, setSearchType] = useState('quotationNumber');
   const [statusFilter, setStatusFilter] = useState<QuoteStatus>('ALL');
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -41,9 +41,10 @@ const SalesQuoteList = () => {
       startDate: startDate || '',
       endDate: endDate || '',
       status: statusFilter || 'ALL',
-      search: debouncedSearchTerm || '',
+      type: searchType || '',
+      keyword: debouncedSearchTerm || '',
     }),
-    [startDate, endDate, currentPage, statusFilter, debouncedSearchTerm],
+    [startDate, endDate, currentPage, statusFilter, searchType, debouncedSearchTerm],
   );
 
   const {
@@ -71,6 +72,10 @@ const SalesQuoteList = () => {
   const handleViewReview = () => {
     setShowReviewModal(true);
   };
+
+  useEffect(() => {
+    console.log(debouncedSearchTerm);
+  }, [searchTerm]);
 
   return (
     <div className="space-y-6 mt-6">
@@ -102,10 +107,8 @@ const SalesQuoteList = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center space-x-4">
             <select
-              value={searchKeyword}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                setSearchKeyword(e.target.value)
-              }
+              value={searchType}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchType(e.target.value)}
               className="bg-white px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
             >
               {QOUTE_SEARCH_KEYWORD_OPTIONS.map(({ key, value }) => (

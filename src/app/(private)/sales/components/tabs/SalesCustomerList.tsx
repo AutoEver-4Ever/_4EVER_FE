@@ -23,8 +23,8 @@ import StatusLabel from '@/app/components/common/StatusLabel';
 
 const CustomerList = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchType, setSearchType] = useState('customerName');
   const [statusFilter, setStatusFilter] = useState<CustomerStatus>('ALL');
-  const [searchKeyword, setSearchKeyword] = useState('');
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState<string>('');
   const [showCustomerModal, setShowCustomerModal] = useState(false);
@@ -40,9 +40,10 @@ const CustomerList = () => {
       page: currentPage - 1,
       size: 10,
       status: statusFilter || 'ALL',
+      type: searchType || '',
       keyword: debouncedSearchTerm || '',
     }),
-    [currentPage, statusFilter, debouncedSearchTerm],
+    [currentPage, statusFilter, debouncedSearchTerm, searchType],
   );
   const {
     data: customerRes,
@@ -88,8 +89,8 @@ const CustomerList = () => {
         {/* 필터 및 검색 */}
         <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
           <select
-            value={searchKeyword}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchKeyword(e.target.value)}
+            value={searchType}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchType(e.target.value)}
             className="bg-white px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
           >
             {CUSTOMER_SEARCH_KEYWORD_OPTIONS.map(({ key, value }) => (

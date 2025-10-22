@@ -5,23 +5,23 @@ import { CustomerStatus } from '@/app/(private)/sales/types/SalesCustomerListTyp
 
 // 견적 검색 키워드 옵션
 export const QOUTE_SEARCH_KEYWORD_OPTIONS: KeyValueItem<string>[] = [
-  { key: 'QUOTE_NUMBER', value: '견적번호' },
-  { key: 'CUSTOMER_NAME', value: '고객명' },
-  { key: 'CONTACT_PERSON', value: '담당자' },
+  { key: 'quotationNumber', value: '견적번호' },
+  { key: 'customerName', value: '고객명' },
+  { key: 'managerName', value: '담당자' },
 ] as const;
 
 // 견적 검색 키워드 옵션
 export const ORDER_SEARCH_KEYWORD_OPTIONS: KeyValueItem<string>[] = [
-  { key: 'ORDER_NUMBER', value: '주문번호' },
-  { key: 'CUSTOMER_NAME', value: '고객명' },
-  { key: 'CONTACT_PERSON', value: '담당자' },
+  { key: 'salesOrderNumber', value: '주문번호' },
+  { key: 'customerName', value: '고객명' },
+  { key: 'managerName', value: '담당자' },
 ] as const;
 
 // 고객 검색 키워드 옵션
 export const CUSTOMER_SEARCH_KEYWORD_OPTIONS: KeyValueItem<string>[] = [
-  { key: 'CUSTOMER_NAME', value: '고객명' },
-  { key: 'CONTACT_PERSON', value: '담당자' },
-  { key: 'CUSTOMER_CODE', value: '고객코드' },
+  { key: 'customerName', value: '고객명' },
+  { key: 'managerName', value: '담당자' },
+  { key: 'customerNumber', value: '고객코드' },
 ] as const;
 
 // 견적 상태 필터링

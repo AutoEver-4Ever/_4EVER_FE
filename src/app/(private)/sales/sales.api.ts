@@ -31,7 +31,8 @@ export const getQuoteList = async (
     ...(params?.startDate && { startDate: params.startDate }),
     ...(params?.endDate && { endDate: params.endDate }),
     ...(params?.status && { status: params.status }),
-    ...(params?.search && { search: params.search }),
+    ...(params?.type && { type: params.type }),
+    ...(params?.keyword && { keyword: params.keyword }),
     ...(params?.sort && { sort: params.sort }),
     ...(params?.page && { page: String(params.page) }),
     ...(params?.size && { size: String(params.size) }),
@@ -57,6 +58,7 @@ export const getOrderList = async (
     ...(params?.start && { start: params.start }),
     ...(params?.end && { end: params.end }),
     ...(params?.status && { status: params.status }),
+    ...(params?.type && { type: params.type }),
     ...(params?.keyword && { keyword: params.keyword }),
     ...(params?.page && { page: String(params.page) }),
     ...(params?.size && { size: String(params.size) }),
@@ -105,6 +107,7 @@ export const getCustomerList = async (
   const query = new URLSearchParams({
     ...(params?.status && { status: params.status }),
     ...(params?.keyword && { keyword: params.keyword }),
+    ...(params?.type && { type: params.type }),
     ...(params?.page && { page: String(params.page) }),
     ...(params?.size && { size: String(params.size) }),
   }).toString();

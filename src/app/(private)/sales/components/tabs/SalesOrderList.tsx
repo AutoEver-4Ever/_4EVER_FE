@@ -19,8 +19,9 @@ const SalesOrderList = () => {
   const [showOrderDetailModal, setShowOrderDetailModal] = useState(false);
   const [selectedSalesOrderId, setSelectedSalesOrderId] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchType, setSearchType] = useState('salesOrderNumber');
+
   const [statusFilter, setStatusFilter] = useState<OrderStatus>('ALL');
-  const [searchKeyword, setSearchKeyword] = useState('');
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -34,9 +35,10 @@ const SalesOrderList = () => {
       page: currentPage - 1,
       size: 10,
       keyword: debouncedSearchTerm || '',
+      type: searchType || '',
       status: statusFilter || 'ALL',
     }),
-    [startDate, endDate, currentPage, statusFilter, debouncedSearchTerm],
+    [startDate, endDate, currentPage, statusFilter, debouncedSearchTerm, searchType],
   );
   const {
     data: orderRes,
@@ -86,8 +88,8 @@ const SalesOrderList = () => {
             />
           </div>
           <select
-            value={searchKeyword}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchKeyword(e.target.value)}
+            value={searchType}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchType(e.target.value)}
             className="bg-white px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
           >
             {ORDER_SEARCH_KEYWORD_OPTIONS.map(({ key, value }) => (
