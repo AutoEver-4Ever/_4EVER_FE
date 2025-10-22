@@ -12,7 +12,8 @@ export default function Button({
   className,
   ...props
 }: ButtonProps) {
-  const base = 'rounded-lg font-semibold focus:outline-none transition cursor-pointer';
+  const base =
+    'rounded-lg font-semibold focus:outline-none transition cursor-pointer whitespace-nowrap';
 
   const variants = {
     primary: 'bg-blue-500 text-white hover:opacity-85',

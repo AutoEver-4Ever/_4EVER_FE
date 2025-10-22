@@ -1,9 +1,10 @@
 import { Tab } from '@/app/types/NavigationType';
 import QuotationTab from '@/app/(private)/production/components/tabs/QuotationTab';
-import MpsTab from '@/app/(private)/production/components/tabs/MpsTab';
 import MrpTab from '@/app/(private)/production/components/tabs/MrpTab';
-import MesTab from '@/app/(private)/production/components/tabs/MesTab';
 import BomTab from '@/app/(private)/production/components/tabs/BomTab';
+import { KeyValueItem } from '@/app/types/CommonType';
+import MpsTab from '@/app/(private)/production/components/tabs/MpsTab';
+import MesTab from '@/app/(private)/production/components/tabs/MesTab';
 
 // 생산 관리 탭 전환
 export const PRODUCTION_TABS: Tab[] = [
@@ -40,21 +41,21 @@ export const PRODUCTION_TABS: Tab[] = [
 ];
 
 // 가용 재고 상태 필터링
+export type AvailableStockStatus = 'ALL' | 'UNKNOWN' | 'INSUFFICIENT' | 'SUFFICIENT';
 export const AVAILABLE_STOCK_STATUS: KeyValueItem<AvailableStockStatus>[] = [
   { key: 'ALL', value: '전체' },
   { key: 'UNKNOWN', value: '미확인' }, // 재고 상태 확인되지 않음
   { key: 'INSUFFICIENT', value: '부족' }, // 재고 부족
   { key: 'SUFFICIENT', value: '충분' }, // 재고 충분
 ];
-export type AvailableStockStatus = 'ALL' | 'UNKNOWN' | 'INSUFFICIENT' | 'SUFFICIENT';
 
 // 견적 상태 필터링
+export type QuotationStatus = 'ALL' | 'NEW' | 'CONFIRMED';
 export const QUOTATIONS_STATUS: KeyValueItem<QuotationStatus>[] = [
   { key: 'ALL', value: '전체' },
   { key: 'NEW', value: '신규' },
   { key: 'CONFIRMED', value: '확정' },
 ];
-export type QuotationStatus = 'ALL' | 'NEW' | 'CONFIRMED';
 
 // 제품 목록
 export const PRODUCTS: KeyValueItem[] = [
@@ -66,127 +67,20 @@ export const PRODUCTS: KeyValueItem[] = [
   { key: 'ROOF_PANEL', value: 'Roof Panel' },
 ];
 
-import { TableHeader } from '@/app/(private)/purchase/types/TableHeader';
-import PurchaseRequestListTab from '@/app/(private)/purchase/components/tabs/PurchaseRequestListTab';
-import PurchaseOrderListTab from '@/app/(private)/purchase/components/tabs/PurchaseOrderListTab';
-import SupplierListTab from '@/app/(private)/purchase/components/tabs/SupplierListTab';
-import { KeyValueItem } from '@/app/types/CommonType';
-
-export type Period = 'week' | 'month' | 'quarter' | 'year';
-export type SupplierCategory = 'ALL' | 'MATERIAL' | 'PARTS' | 'ETC';
-export type SupplierStatus = 'ALL' | 'ACTIVE' | 'INACTIVE';
-export type PurchaseOrderStatus = 'ALL' | 'APPROVED' | 'PENDING' | 'REJECTED' | 'DELIVERED';
-export type PurchaseReqStatus = 'ALL' | 'APPROVED' | 'PENDING' | 'REJECTED';
-
-// 구매 기간 필터링
-export const STAT_PERIODS: KeyValueItem<Period>[] = [
-  { key: 'week', value: '이번 주' },
-  { key: 'month', value: '이번 달' },
-  { key: 'quarter', value: '이번 분기' },
-  { key: 'year', value: '연도별' },
-];
-
-// 구매 상태 필터링
-export const PURCHASE_REQ_STATUS: KeyValueItem<PurchaseReqStatus>[] = [
+// MES 상태 필터
+export type MesStatusCode = 'ALL' | 'WAITING' | 'IN_PROGRESS';
+export const MES_STATUS_OPTIONS: KeyValueItem<MesStatusCode>[] = [
   { key: 'ALL', value: '전체' },
-  { key: 'APPROVED', value: '승인' },
-  { key: 'PENDING', value: '대기' },
-  { key: 'REJECTED', value: '반려' },
+  { key: 'WAITING', value: '대기' },
+  { key: 'IN_PROGRESS', value: '진행중' },
 ];
 
-// 발주 상태 필터링
-export const PURCHASE_ORDER_STATUS: KeyValueItem<PurchaseOrderStatus>[] = [
+// MES 견적 필터
+export const MES_QUOTE_OPTIONS: KeyValueItem[] = [
   { key: 'ALL', value: '전체' },
-  { key: 'APPROVED', value: '승인' },
-  { key: 'PENDING', value: '대기' },
-  { key: 'REJECTED', value: '반려' },
-  { key: 'DELIVERED', value: '배송중' },
+  { key: 'Q-2024-001', value: 'Q-2024-001' },
+  { key: 'Q-2024-002', value: 'Q-2024-002' },
+  { key: 'Q-2024-003', value: 'Q-2024-003' },
+  { key: 'Q-2024-004', value: 'Q-2024-004' },
+  { key: 'Q-2024-005', value: 'Q-2024-005' },
 ];
-
-// 공급 카테고리 필터링
-export const SUPPLIER_CATEGORY_ITEMS: KeyValueItem<SupplierCategory>[] = [
-  { key: 'ALL', value: '전체' },
-  { key: 'MATERIAL', value: '원자재' },
-  { key: 'PARTS', value: '부품' },
-  { key: 'ETC', value: '기타' },
-];
-
-// 공급업체 상태 필터링
-export const SUPPLIER_STATUS_ITEMS: KeyValueItem<SupplierStatus>[] = [
-  { key: 'ALL', value: '전체' },
-  { key: 'ACTIVE', value: '활성' },
-  { key: 'INACTIVE', value: '비활성' },
-];
-
-// 구매 관리 탭 전환
-export const PURCHASE_TABS: Tab[] = [
-  {
-    id: 'requests',
-    name: '구매 요청',
-    icon: 'ri-file-add-line',
-    component: PurchaseRequestListTab,
-  },
-  {
-    id: 'orders',
-    name: '발주서',
-    icon: 'ri-shopping-bag-3-line',
-    component: PurchaseOrderListTab,
-  },
-  {
-    id: 'suppliers',
-    name: '공급업체 관리',
-    icon: 'ri-building-line',
-    component: SupplierListTab,
-  },
-];
-
-// 공급사
-export const SUPPLIERS = [
-  '대한철강',
-  '알루텍',
-  '스테인리스코리아',
-  '용접재료상사',
-  '패스너코리아',
-  '케미칼솔루션',
-  '구리산업',
-] as const;
-
-// 구매 요청 목록 테이블 헤더
-export const PURCHASE_LIST_TABLE_HEADERS = [
-  '요청번호',
-  '요청자',
-  '요청일',
-  '납기일',
-  '총 금액',
-  '상태',
-  '작업',
-] as const;
-
-// 구매 요청 모달 입력 테이블 헤더
-export const PURCHASE_REQUEST_TABLE_HEADERS = [
-  '품목명',
-  '수량',
-  '단위',
-  '예상 단가',
-  '예상 총액',
-  '희망 공급업체',
-  '희망 납기일',
-  '사용 목적',
-  '비고',
-  '',
-] as const;
-
-// 구매 상세 정보 모달 테이블 헤더
-export const PURCHASE_ITEM_TABLE_HEADERS = ['품목명', '수량', '단위', '단가', '금액'] as const;
-
-// 발주서 상세 정보 주문 품목 테이블 헤더
-export const ORDER_ITEM_TABLE_HEADERS: readonly TableHeader[] = [
-  { label: '품목명' },
-  { label: '규격/사양' },
-  { label: '수량' },
-  { label: '단위' },
-  { label: '단가' },
-  { label: '금액' },
-  { label: '비고' },
-  { label: '작업' },
-] as const;

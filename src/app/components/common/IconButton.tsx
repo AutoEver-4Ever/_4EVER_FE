@@ -14,7 +14,7 @@ export default function IconButton({
   ...props
 }: ButtonProps) {
   const base =
-    'inline-flex items-center justify-center rounded-lg font-semibold focus:outline-none transition cursor-pointer';
+    'inline-flex items-center justify-center rounded-lg font-semibold focus:outline-none transition cursor-pointer whitespace-nowrap';
 
   const variants = {
     primary: 'bg-blue-500 text-white hover:opacity-85',

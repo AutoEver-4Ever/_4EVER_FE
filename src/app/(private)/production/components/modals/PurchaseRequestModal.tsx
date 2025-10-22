@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PlannedOrder } from '@/app/(private)/production/types/MrpType';
+import Button from '@/app/components/common/Button';
 
 interface PurchaseRequestModalProps {
   orders: PlannedOrder[];
@@ -52,7 +53,7 @@ export default function PurchaseRequestModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-hidden">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
@@ -165,18 +166,8 @@ export default function PurchaseRequestModal({
         </div>
 
         <div className="p-6 border-t border-gray-200 flex justify-end space-x-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 cursor-pointer whitespace-nowrap"
-          >
-            취소
-          </button>
-          <button
-            onClick={() => onConfirm(editableOrders)}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 cursor-pointer whitespace-nowrap"
-          >
-            구매 요청 확정
-          </button>
+          <Button label="취소" variant="whiteOutline" onClick={onClose} />
+          <Button label="구매 요청 확정" onClick={() => onConfirm(editableOrders)} />
         </div>
       </div>
     </div>

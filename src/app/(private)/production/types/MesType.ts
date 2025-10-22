@@ -21,6 +21,3 @@ export interface ProductionOrder {
   quote: string;
   processes: Process[];
 }
-
-export type StatusFilter = '전체' | '대기' | '진행중';
-export type ProcessCode = '전체' | 'OP10' | 'OP20' | 'OP30' | 'OP40' | 'OP50' | 'OP60';

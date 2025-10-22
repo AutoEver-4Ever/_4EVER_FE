@@ -1,30 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  ProductionOrder,
-  StatusFilter,
-  ProcessCode,
-} from '@/app/(private)/production/types/MesType';
+import { ProductionOrder } from '@/app/(private)/production/types/MesType';
 import ProcessDetailModal from '@/app/(private)/production/components/modals/ProcessDetailModal';
+import Dropdown from '@/app/components/common/Dropdown';
+import {
+  MES_STATUS_OPTIONS,
+  MES_QUOTE_OPTIONS,
+  MesStatusCode,
+} from '@/app/(private)/production/constants';
 
 export default function MesTab() {
   const [showProcessModal, setShowProcessModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<ProductionOrder | null>(null);
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('전체');
-  const [quoteFilter, setQuoteFilter] = useState<string>('전체');
-  const [processFilter, setProcessFilter] = useState<ProcessCode>('전체');
-
-  const statusOptions: StatusFilter[] = ['전체', '대기', '진행중'];
-  const quoteOptions = [
-    '전체',
-    'Q-2024-001',
-    'Q-2024-002',
-    'Q-2024-003',
-    'Q-2024-004',
-    'Q-2024-005',
-  ];
-  const processOptions: ProcessCode[] = ['전체', 'OP10', 'OP20', 'OP30', 'OP40', 'OP50', 'OP60'];
+  const [selectedMesStatus, setSelectedMesStatus] = useState<MesStatusCode>('ALL');
+  const [selectedMesQuote, setSelectedMesQuote] = useState<string>('ALL');
 
   const productionOrders: ProductionOrder[] = [
     {
@@ -128,15 +118,13 @@ export default function MesTab() {
 
   const filteredOrders = productionOrders.filter((order) => {
     const statusMatch =
-      statusFilter === '전체' ||
-      (statusFilter === '대기' && order.status === 'pending') ||
-      (statusFilter === '진행중' && order.status === 'in_progress');
+      selectedMesStatus === 'ALL' ||
+      (selectedMesStatus === 'WAITING' && order.status === 'pending') ||
+      (selectedMesStatus === 'IN_PROGRESS' && order.status === 'in_progress');
 
-    const quoteMatch = quoteFilter === '전체' || order.quote === quoteFilter;
+    const quoteMatch = selectedMesQuote === 'ALL' || order.quote === selectedMesQuote;
 
-    const processMatch = processFilter === '전체' || order.currentProcess === processFilter;
-
-    return statusMatch && quoteMatch && processMatch;
+    return statusMatch && quoteMatch;
   });
 
   return (
@@ -149,35 +137,21 @@ export default function MesTab() {
 
       {/* 필터 영역 */}
       <div className="p-6 border-b border-gray-200">
-        <div className="flex gap-4 items-end">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">상태</label>
-            <select
-              className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm pr-8"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-            >
-              {statusOptions.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">견적</label>
-            <select
-              className="w-40 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm pr-8"
-              value={quoteFilter}
-              onChange={(e) => setQuoteFilter(e.target.value)}
-            >
-              {quoteOptions.map((quote) => (
-                <option key={quote} value={quote}>
-                  {quote}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="flex gap-4 justify-end">
+          <Dropdown
+            items={MES_STATUS_OPTIONS}
+            value={selectedMesStatus}
+            onChange={(status: MesStatusCode) => {
+              setSelectedMesStatus(status);
+            }}
+          />
+          <Dropdown
+            items={MES_QUOTE_OPTIONS}
+            value={selectedMesQuote}
+            onChange={(quote: string) => {
+              setSelectedMesQuote(quote);
+            }}
+          />
         </div>
       </div>
 
