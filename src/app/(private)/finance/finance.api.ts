@@ -27,21 +27,21 @@ export const getPurchaseInvoicesList = async (
   return { data: res.data.data.content, pageData: res.data.data.page };
 };
 
-export const getPurchaseInvoiceDetail = async (invoiceId: number): Promise<InvoicetDetailRes> => {
+export const getPurchaseInvoiceDetail = async (invoiceId: string): Promise<InvoicetDetailRes> => {
   const res = await axios.get<ApiResponse<InvoicetDetailRes>>(
     FINANCE_ENDPOINTS.PURCHASE_INVOICE_DETAIL(invoiceId),
   );
   return res.data.data;
 };
 
-export const postApInvoice = async (invoiceId: number): Promise<ApiResponseNoData> => {
+export const postApInvoice = async (invoiceId: string): Promise<ApiResponseNoData> => {
   const res = await axios.post<ApiResponseNoData>(
     FINANCE_ENDPOINTS.PURCHASE_INVOICE_REQUEST(invoiceId),
   );
   return res.data;
 };
 
-export const postArInvoice = async (invoiceId: number): Promise<ApiResponseNoData> => {
+export const postArInvoice = async (invoiceId: string): Promise<ApiResponseNoData> => {
   const res = await axios.post<ApiResponseNoData>(
     FINANCE_ENDPOINTS.SALES_INVOICE_COMPLETE(invoiceId),
   );
@@ -64,7 +64,7 @@ export const getSalesInvoicesList = async (
   return { data: res.data.data.content, pageData: res.data.data.page };
 };
 
-export const getSalesInvoiceDetail = async (invoiceId: number): Promise<InvoicetDetailRes> => {
+export const getSalesInvoiceDetail = async (invoiceId: string): Promise<InvoicetDetailRes> => {
   const res = await axios.get<ApiResponse<InvoicetDetailRes>>(
     FINANCE_ENDPOINTS.SALES_INVOICE_DETAIL(invoiceId),
   );

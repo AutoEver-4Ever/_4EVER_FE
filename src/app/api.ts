@@ -38,13 +38,13 @@ export const SALES_ENDPOINTS = {
 export const FINANCE_ENDPOINTS = {
   STATISTICS: `${FINANCE_BASE_PATH}/statictics`,
   PURCHASE_INVOICES_LIST: `${FINANCE_BASE_PATH}/invoice/ap`,
-  PURCHASE_INVOICE_DETAIL: (invoiceId: number) => `${FINANCE_BASE_PATH}/invoice/ap/${invoiceId}`,
+  PURCHASE_INVOICE_DETAIL: (invoiceId: string) => `${FINANCE_BASE_PATH}/invoice/ap/${invoiceId}`,
   SALES_INVOICES_LIST: `${FINANCE_BASE_PATH}/invoice/ar`,
-  SALES_INVOICE_DETAIL: (invoiceId: number) => `${FINANCE_BASE_PATH}/invoice/ar/${invoiceId}`,
+  SALES_INVOICE_DETAIL: (invoiceId: string) => `${FINANCE_BASE_PATH}/invoice/ar/${invoiceId}`,
 
-  PURCHASE_INVOICE_REQUEST: (invoiceId: number) =>
+  PURCHASE_INVOICE_REQUEST: (invoiceId: string) =>
     `${FINANCE_BASE_PATH}/invoice/ap/receivable/request?invoiceId=${invoiceId}`,
-  SALES_INVOICE_COMPLETE: (invoiceId: number) =>
+  SALES_INVOICE_COMPLETE: (invoiceId: string) =>
     `${FINANCE_BASE_PATH}/invoice/ar/${invoiceId}/receivable/complete`,
 } as const;
 

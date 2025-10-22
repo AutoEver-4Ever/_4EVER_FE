@@ -19,7 +19,7 @@ const InvoiceDetailModal = ({
   $setSelectedInvoiceId,
 }: InvoiceDetailModalProps) => {
   const onClose = () => {
-    $setSelectedInvoiceId(0);
+    $setSelectedInvoiceId('');
     $setShowDetailModal(false);
   };
   const searchParams = useSearchParams();
@@ -77,7 +77,7 @@ const InvoiceDetailModal = ({
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">전표번호</label>
                   <div className="text-lg font-semibold text-gray-900">
-                    {invoiceRes?.invoiceCode}
+                    {invoiceRes?.invoiceNumber}
                   </div>
                 </div>
                 <div>
@@ -98,7 +98,7 @@ const InvoiceDetailModal = ({
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">참조번호</label>
-                  <div className="text-gray-900">{invoiceRes?.referenceCode}</div>
+                  <div className="text-gray-900">{invoiceRes?.referenceNumber}</div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -148,7 +148,7 @@ const InvoiceDetailModal = ({
                           {item?.quantity}
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-900 text-center">
-                          {item?.uomName}
+                          {item?.unitOfMaterialName}
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-900 text-right">
                           ₩{item.unitPrice?.toLocaleString()}
