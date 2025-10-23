@@ -26,11 +26,6 @@ export interface SimulationQuoteResult {
   materials: MaterialShortage[];
 }
 
-export interface SimulationResult {
-  selectedQuotes: string[];
-  mpsResult: SimulationQuoteResult[];
-}
-
 export interface MpsWeeklyData {
   demand: number;
   requiredStock: number;
