@@ -5,6 +5,8 @@ import BomTab from '@/app/(private)/production/components/tabs/BomTab';
 import { KeyValueItem } from '@/app/types/CommonType';
 import MpsTab from '@/app/(private)/production/components/tabs/MpsTab';
 import MesTab from '@/app/(private)/production/components/tabs/MesTab';
+import RequirementsTab from './components/tabs/RequirementsTab';
+import OrdersTab from './components/tabs/OrdersTab';
 
 // 생산 관리 탭 전환
 export const PRODUCTION_TABS: Tab[] = [
@@ -37,6 +39,21 @@ export const PRODUCTION_TABS: Tab[] = [
     name: 'BOM',
     icon: 'ri-file-list-3-line',
     component: BomTab,
+  },
+];
+
+export const MRP_TABS: Tab[] = [
+  {
+    id: 'requirements',
+    name: '순소요',
+    icon: 'ri-file-list-3-line',
+    component: RequirementsTab,
+  },
+  {
+    id: 'orders',
+    name: '계획 주문',
+    icon: 'ri-shopping-cart-line',
+    component: OrdersTab,
   },
 ];
 

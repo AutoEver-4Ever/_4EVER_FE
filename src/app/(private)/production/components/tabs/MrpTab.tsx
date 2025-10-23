@@ -6,7 +6,8 @@ import PurchaseRequestModal from '@/app/(private)/production/components/modals/P
 import { NetRequirement, PlannedOrder } from '@/app/(private)/production/types/MrpType';
 import Dropdown from '@/app/components/common/Dropdown';
 import { KeyValueItem } from '@/app/types/CommonType';
-import { PRODUCTS } from '@/app/(private)/production/constants';
+import { MRP_TABS } from '@/app/(private)/production/constants';
+import SubNavigation from '@/app/components/common/SubNavigation';
 
 type SubTab = 'requirements' | 'orders';
 
@@ -248,9 +249,8 @@ export default function MrpTab() {
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900">자재소요계획 (MRP)</h3>
       </div>
-
       {/* 서브 탭 */}
-      <div className="border-b border-gray-200">
+      {/* <div className="border-b border-gray-200">
         <nav className="flex space-x-8">
           {subTabs.map((tab) => (
             <button
@@ -267,12 +267,11 @@ export default function MrpTab() {
             </button>
           ))}
         </nav>
-      </div>
-
+      </div> */}
+      <SubNavigation tabs={MRP_TABS} paramName="subTab" />
       {/* 순소요 탭 */}
-      {activeSubTab === 'requirements' && (
+      {/* {activeSubTab === 'requirements' && (
         <div className="space-y-4">
-          {/* 필터 영역 */}
 
           <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
             <div className="flex justify-between items-center p-4 bg-gray-50 border-b border-gray-200">
@@ -399,9 +398,8 @@ export default function MrpTab() {
             </div>
           </div>
         </div>
-      )}
-
-      {/* 계획 주문 탭 */}
+      )}*/}
+      {/* 계획 주문 탭
       {activeSubTab === 'orders' && (
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
           <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
@@ -486,16 +484,15 @@ export default function MrpTab() {
             </table>
           </div>
         </div>
-      )}
-
-      {/* 자재 구매 요청 모달 */}
+      )} */}
+      {/* 자재 구매 요청 모달
       {showPurchaseRequestModal && (
         <PurchaseRequestModal
           orders={selectedOrdersData}
           onClose={() => setShowPurchaseRequestModal(false)}
           onConfirm={handleConfirmPurchaseRequest}
         />
-      )}
+      )} */}
     </div>
   );
 }

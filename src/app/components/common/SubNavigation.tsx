@@ -1,18 +1,23 @@
 'use client';
-
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Tab } from '@/app/types/NavigationType';
 
-export default function TabNavigation({ tabs }: { tabs: Tab[] }) {
+interface SubNavigationProps {
+  tabs: Tab[];
+  paramName?: string; // 사용할 쿼리 파라미터 이름 (기본값: 'subTab')
+}
+
+export default function SubNavigation({ tabs, paramName = 'subTab' }: SubNavigationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const pathName = usePathname(); // 현재 경로 가져오기 (ex: "/purchase")
+  const pathName = usePathname();
 
-  const currentTab = searchParams.get('tab') || tabs[0]?.id;
+  // 지정된 파라미터 이름으로 현재 탭 확인
+  const currentTab = searchParams.get(paramName) || tabs[0]?.id;
 
-  const handelTabChange = (tabId: string) => {
-    const params = new URLSearchParams();
-    params.set('tab', tabId);
+  const handleTabChange = (tabId: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set(paramName, tabId);
     const newUrl = `${pathName}?${params}`;
     router.replace(newUrl);
   };
@@ -27,7 +32,7 @@ export default function TabNavigation({ tabs }: { tabs: Tab[] }) {
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => handelTabChange(tab.id)}
+            onClick={() => handleTabChange(tab.id)}
             className={`group inline-flex items-center pt-4 pb-2.5 px-1 border-b-2 font-medium text-sm cursor-pointer whitespace-nowrap ${
               currentTab === tab.id
                 ? 'border-blue-500 text-blue-500'
@@ -40,7 +45,7 @@ export default function TabNavigation({ tabs }: { tabs: Tab[] }) {
         ))}
       </nav>
       {/* 렌더링 되는 컴포넌트 */}
-      <div className="mt-4"> {ActiveComponent && <ActiveComponent />}</div>
+      <div className="mt-4">{ActiveComponent && <ActiveComponent />}</div>
     </div>
   );
 }
