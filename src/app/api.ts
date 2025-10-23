@@ -3,6 +3,7 @@ export const API_BASE_URL = 'https://api.everp.co.kr/api';
 export const SALES_BASE_PATH = `${API_BASE_URL}/business/sd`;
 export const FINANCE_BASE_PATH = `${API_BASE_URL}/business/fcm`;
 export const DASHBOARD_BASE_PATH = `${API_BASE_URL}/dashboard`;
+export const INVENTORY_BASE_PATH = `${API_BASE_URL}/scm-pp`;
 
 // 공통 응답 타입
 export interface ApiResponse<T> {
@@ -52,4 +53,9 @@ export const FINANCE_ENDPOINTS = {
 export const DASHBOARD_ENDPOINTS = {
   STATS: `${DASHBOARD_BASE_PATH}/statistics`,
   WORKFLOW_STATUS: (role: string) => `${DASHBOARD_BASE_PATH}/workflows?role=${role}`,
+} as const;
+
+// ----------------------- INVENTORY -----------------------
+export const INVENTORY_ENDPOINTS = {
+  STATS: `${INVENTORY_BASE_PATH}/iv/statistic`,
 } as const;
