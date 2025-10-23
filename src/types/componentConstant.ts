@@ -7,8 +7,7 @@ import SalesQuoteList from '@/app/(private)/sales/components/tabs/SalesQuoteList
 import SalesOrderList from '@/app/(private)/sales/components/tabs/SalesOrderList';
 import SalesCustomerList from '@/app/(private)/sales/components/tabs/SalesCustomerList';
 import SalesChart from '@/app/(private)/sales/components/tabs/SalesChart';
-import ShippingManagementList from '@/app/(private)/inventory/components/tabs/ShippingManagementList';
-import ReceivingManagementList from '@/app/(private)/inventory/components/tabs/ReceivingManagementList';
+import ManagementList from '@/app/(private)/inventory/components/tabs/ManagementList';
 import InventoryList from '@/app/(private)/inventory/components/tabs/InventoryList';
 
 // 재무 관리 탭 전환
@@ -55,11 +54,11 @@ export const SALES_TABS: Tab[] = [
 // 재고 관리 탭 전환
 export const INVENTORY_TABS: Tab[] = [
   { id: 'inventory', name: '재고 목록', icon: 'ri-list-check-3', component: InventoryList },
-  { id: 'shipping', name: '출고 관리', icon: 'ri-truck-line', component: ShippingManagementList },
+  { id: 'shipping', name: '출고 관리', icon: 'ri-truck-line', component: ManagementList },
   {
     id: 'receiving',
     name: '입고 관리',
     icon: 'ri-inbox-archive-line',
-    component: ReceivingManagementList,
+    component: ManagementList,
   },
 ];
