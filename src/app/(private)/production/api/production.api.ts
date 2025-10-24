@@ -5,6 +5,8 @@ import axios from 'axios';
 import { QuotationSimulationResponse } from '@/app/(private)/production/types/QuotationSimulationApiType';
 import { QuotationPreviewResponse } from '@/app/(private)/production/types/QuotationPreviewApiType';
 import { MpsListParams, MpsListResponse } from '@/app/(private)/production/types/MpsApiType';
+import { FetchMesListParams, MesListResponse } from '../types/MesListApiType';
+import { MesDetailResponse } from '../types/MesDetailApiType';
 
 // 구매 관리 지표
 export const fetchProductionStats = async (): Promise<ProductionStatResponse | null> => {
@@ -31,7 +33,7 @@ export const fetchQuotationSimulationResult = async (
 };
 
 // 제안 납기 계획 프리뷰 조회
-export const fetchQuotationPreviewResult = async (
+export const fetchQuotationPreview = async (
   quotationId: string,
 ): Promise<QuotationPreviewResponse> => {
   const res = await axios.get<ApiResponse<QuotationPreviewResponse>>(
@@ -41,7 +43,7 @@ export const fetchQuotationPreviewResult = async (
 };
 
 // 제품별 Master Production Schedule(MPS) 정보를 조회
-export const fetchMpsListResult = async (params: MpsListParams): Promise<MpsListResponse> => {
+export const fetchMpsList = async (params: MpsListParams): Promise<MpsListResponse> => {
   const { itemId, startdate, enddate } = params;
 
   const res = await axios.get<ApiResponse<MpsListResponse>>(`${PRODUCTION_ENDPOINTS.MPS_PLANS}`, {
@@ -51,5 +53,22 @@ export const fetchMpsListResult = async (params: MpsListParams): Promise<MpsList
       ...(enddate && { enddate }),
     },
   });
+  return res.data.data;
+};
+
+// MES(Manufacturing Execution System) 작업 목록 조회
+export const fetchMesList = async (params: FetchMesListParams): Promise<MesListResponse> => {
+  const res = await axios.get<ApiResponse<MesListResponse>>(
+    `${PRODUCTION_ENDPOINTS.MES_WORK_ORDERS}`,
+    { params },
+  );
+  return res.data.data;
+};
+
+// MES 작업 상세 정보 조회
+export const fetchMesDetail = async (mesId: string) => {
+  const res = await axios.get<ApiResponse<MesDetailResponse>>(
+    `${PRODUCTION_ENDPOINTS.MES_WORK_ORDER_DETAIL(mesId)}`,
+  );
   return res.data.data;
 };

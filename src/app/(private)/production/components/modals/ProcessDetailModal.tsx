@@ -1,19 +1,33 @@
-import { ProductionOrder } from '@/app/(private)/production/types/MesType';
+import { MesDetailResponse } from '@/app/(private)/production/types/MesDetailApiType';
+import { fetchMesDetail } from '../../api/production.api';
+import { useQuery } from '@tanstack/react-query';
 
 interface ProcessDetailModalProps {
-  order: ProductionOrder;
+  mesId: string;
   onClose: () => void;
 }
 
-export default function ProcessDetailModal({ order, onClose }: ProcessDetailModalProps) {
-  const getStatusBadge = (status: string) => {
-    const statusConfig = {
-      pending: { label: '대기', class: 'bg-yellow-100 text-yellow-800' },
-      in_progress: { label: '진행중', class: 'bg-blue-100 text-blue-800' },
-      completed: { label: '완료', class: 'bg-green-100 text-green-800' },
-      on_hold: { label: '보류', class: 'bg-red-100 text-red-800' },
+export default function ProcessDetailModal({ mesId, onClose }: ProcessDetailModalProps) {
+  const {
+    data: mesDetail,
+    isLoading,
+    isError,
+  } = useQuery<MesDetailResponse>({
+    queryKey: ['mesDetail', mesId],
+    queryFn: () => fetchMesDetail(mesId),
+  });
+
+  const getStatusBadge = (statusCode: string) => {
+    const statusConfig: Record<string, { label: string; class: string }> = {
+      PLANNED: { label: '대기', class: 'bg-yellow-100 text-yellow-800' },
+      IN_PROGRESS: { label: '진행중', class: 'bg-blue-100 text-blue-800' },
+      COMPLETED: { label: '완료', class: 'bg-green-100 text-green-800' },
+      ON_HOLD: { label: '보류', class: 'bg-red-100 text-red-800' },
     };
-    const config = statusConfig[status as keyof typeof statusConfig];
+    const config = statusConfig[statusCode] || {
+      label: statusCode,
+      class: 'bg-gray-100 text-gray-800',
+    };
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.class}`}>
         {config.label}
@@ -21,19 +35,23 @@ export default function ProcessDetailModal({ order, onClose }: ProcessDetailModa
     );
   };
 
-  const getProcessStatusIcon = (status: string) => {
-    const icons = {
-      completed: 'ri-checkbox-circle-fill text-green-600',
-      in_progress: 'ri-play-circle-fill text-blue-600',
-      pending: 'ri-time-line text-gray-400',
+  const getProcessStatusIcon = (statusCode: string) => {
+    const icons: Record<string, string> = {
+      COMPLETED: 'ri-checkbox-circle-fill text-green-600',
+      IN_PROGRESS: 'ri-play-circle-fill text-blue-600',
+      PLANNED: 'ri-time-line text-gray-400',
     };
-    return icons[status as keyof typeof icons];
+    return icons[statusCode] || 'ri-time-line text-gray-400';
   };
 
-  const calculateDuration = (startTime: string | null, endTime: string | null): string => {
-    if (!startTime || !endTime) return '-';
-    // 실제로는 시간 계산 로직 필요
-    return '3.5시간';
+  const formatDuration = (hours: number): string => {
+    if (hours === 0) return '-';
+    if (hours < 1) {
+      return `${Math.round(hours * 60)}분`;
+    }
+    const wholeHours = Math.floor(hours);
+    const minutes = Math.round((hours - wholeHours) * 60);
+    return minutes > 0 ? `${wholeHours}시간 ${minutes}분` : `${wholeHours}시간`;
   };
 
   return (
@@ -46,72 +64,105 @@ export default function ProcessDetailModal({ order, onClose }: ProcessDetailModa
           </button>
         </div>
 
-        <div className="space-y-6">
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h4 className="text-lg font-semibold text-gray-900 mb-3">작업지시 정보</h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <div className="text-xs text-gray-500">작업지시번호</div>
-                <div className="text-sm font-medium text-gray-900">{order.id}</div>
-              </div>
-              <div>
-                <div className="text-xs text-gray-500">제품명</div>
-                <div className="text-sm font-medium text-gray-900">{order.productName}</div>
-              </div>
-              <div>
-                <div className="text-xs text-gray-500">수량</div>
-                <div className="text-sm font-medium text-gray-900">{order.quantity} EA</div>
-              </div>
-              <div>
-                <div className="text-xs text-gray-500">진행률</div>
-                <div className="text-sm font-medium text-blue-600">{order.progress}%</div>
-              </div>
-            </div>
+        {isLoading ? (
+          <div className="text-center py-12">
+            <i className="ri-loader-4-line animate-spin text-3xl text-gray-400"></i>
+            <p className="mt-3 text-gray-500">로딩 중...</p>
           </div>
-
-          <div>
-            <h4 className="text-lg font-semibold text-gray-900 mb-3">공정별 상세 현황</h4>
-            <div className="space-y-3">
-              {order.processes.map((process, index) => (
-                <div key={process.code} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <i className={`${getProcessStatusIcon(process.status)} text-lg`}></i>
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">
-                          {process.code} - {process.name}
-                        </div>
-                        <div className="text-xs text-gray-500">공정 {index + 1}</div>
-                      </div>
-                    </div>
-                    {getStatusBadge(process.status)}
-                  </div>
-
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
-                    <div>
-                      <div className="text-xs text-gray-500">시작시간</div>
-                      <div className="text-sm text-gray-900">{process.startTime || '-'}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-gray-500">종료시간</div>
-                      <div className="text-sm text-gray-900">{process.endTime || '-'}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-gray-500">소요시간</div>
-                      <div className="text-sm text-gray-900">
-                        {calculateDuration(process.startTime, process.endTime)}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-gray-500">담당자</div>
-                      <div className="text-sm text-gray-900">김작업</div>
-                    </div>
+        ) : isError || !mesDetail ? (
+          <div className="text-center py-12">
+            <i className="ri-error-warning-line text-3xl text-red-400"></i>
+            <p className="mt-3 text-red-500">데이터를 불러오는데 실패했습니다.</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="text-lg font-semibold text-gray-900 mb-3">작업지시 정보</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                  <div className="text-xs text-gray-500">작업지시번호</div>
+                  <div className="text-sm font-medium text-gray-900">{mesDetail.mesNumber}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">제품명</div>
+                  <div className="text-sm font-medium text-gray-900">{mesDetail.productName}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">수량</div>
+                  <div className="text-sm font-medium text-gray-900">
+                    {mesDetail.quantity} {mesDetail.uomName}
                   </div>
                 </div>
-              ))}
+                <div>
+                  <div className="text-xs text-gray-500">진행률</div>
+                  <div className="text-sm font-medium text-blue-600">
+                    {mesDetail.progressPercent}%
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                  <div className="text-xs text-gray-500">시작일</div>
+                  <div className="text-sm font-medium text-gray-900">
+                    {mesDetail.plan.startDate}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">완료 예정일</div>
+                  <div className="text-sm font-medium text-gray-900">{mesDetail.plan.dueDate}</div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-lg font-semibold text-gray-900 mb-3">공정별 상세 현황</h4>
+              <div className="space-y-3">
+                {mesDetail.operations.map((operation) => (
+                  <div
+                    key={operation.operationNumber}
+                    className="border border-gray-200 rounded-lg p-4"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <i className={`${getProcessStatusIcon(operation.statusCode)} text-lg`}></i>
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {operation.operationNumber} - {operation.operationName}
+                          </div>
+                          <div className="text-xs text-gray-500">공정 {operation.sequence}</div>
+                        </div>
+                      </div>
+                      {getStatusBadge(operation.statusCode)}
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
+                      <div>
+                        <div className="text-xs text-gray-500">시작시간</div>
+                        <div className="text-sm text-gray-900">{operation.startedAt || '-'}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500">종료시간</div>
+                        <div className="text-sm text-gray-900">{operation.finishedAt || '-'}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500">소요시간</div>
+                        <div className="text-sm text-gray-900">
+                          {formatDuration(operation.durationHours)}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500">담당자</div>
+                        <div className="text-sm text-gray-900">
+                          {operation.manager?.name || '-'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="flex justify-end mt-6">
           <button

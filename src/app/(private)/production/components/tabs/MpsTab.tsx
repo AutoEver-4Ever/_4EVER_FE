@@ -2,14 +2,12 @@
 
 import DateRangePicker from '@/app/components/common/DateRangePicker';
 import Dropdown from '@/app/components/common/Dropdown';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { PRODUCTS } from '@/app/(private)/production/constants';
 import { ProductType } from '@/app/(private)/production/types/MpsType';
 
-// React Query 관련 임포트
 import { useQuery } from '@tanstack/react-query';
-// API 함수 및 관련 타입 임포트 (실제 경로에 맞게 수정 필요)
-import { fetchMpsListResult } from '@/app/(private)/production/api/production.api';
+import { fetchMpsList } from '@/app/(private)/production/api/production.api';
 import { MpsListResponse } from '@/app/(private)/production/types/MpsApiType';
 
 export default function MpsTab() {
@@ -18,11 +16,14 @@ export default function MpsTab() {
   const [endDate, setEndDate] = useState('');
 
   // React Query를 사용하여 MPS 데이터 조회
-  const queryParams = {
-    itemId: selectedProduct !== 'ALL' ? selectedProduct : undefined,
-    startdate: startDate,
-    enddate: endDate,
-  };
+  const queryParams = useMemo(
+    () => ({
+      itemId: selectedProduct !== 'ALL' ? selectedProduct : undefined,
+      startdate: startDate,
+      enddate: endDate,
+    }),
+    [selectedProduct, startDate, endDate],
+  );
 
   const {
     data: currentData,
@@ -31,7 +32,7 @@ export default function MpsTab() {
     refetch,
   } = useQuery<MpsListResponse>({
     queryKey: ['mpsList', queryParams],
-    queryFn: () => fetchMpsListResult(queryParams),
+    queryFn: () => fetchMpsList(queryParams),
     enabled: selectedProduct !== 'ALL',
   });
 
