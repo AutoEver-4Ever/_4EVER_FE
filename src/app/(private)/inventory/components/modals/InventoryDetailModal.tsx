@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getInventoryDetail } from '../../inventory.api';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
 import StatusLabel from '@/app/components/common/StatusLabel';
-import { getMovementColor, getMovementIcon } from '../../inventory.utils';
+import { FormatDate, getMovementColor, getMovementIcon } from '../../inventory.utils';
 
 const InventoryDetailModal = ({
   $selectedItemId,
@@ -73,15 +73,6 @@ const InventoryDetailModal = ({
     setShowSafetyStockModal(true);
   };
 
-  const formatDateTime = (iso: string) => {
-    const d = new Date(iso);
-    const [y, m, day] = [d.getFullYear(), d.getMonth() + 1, d.getDate()].map((v, i) =>
-      i === 1 || i === 2 ? String(v).padStart(2, '0') : v,
-    );
-    const h = d.getHours();
-    const period = h >= 12 ? '오후' : '오전';
-    return `${y}-${m}-${day} ${period} ${h % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')}`;
-  };
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
@@ -229,8 +220,7 @@ const InventoryDetailModal = ({
                         )}
 
                         <div className="text-xs text-gray-500">
-                          {movement.movementDate.replace('T', ' ').slice(0, 16)} ·{' '}
-                          {movement.managerName}
+                          {FormatDate(movement.movementDate)}· {movement.managerName}
                         </div>
                         <div className="text-xs text-blue-600">
                           {movement.referenceNumber} · {movement.note}

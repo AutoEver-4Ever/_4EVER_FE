@@ -5,6 +5,7 @@ import { InventoryQueryParams, InventoryResponse } from './types/InventoryListTy
 import { Page } from '@/types/Page';
 import { InventoryDetailResponse } from './types/InventoryDetailType';
 import { LowStockItemResponse } from './types/LowStockItems';
+import { StockMovementResponse } from './types/StockMovement';
 
 export const getInventoryStats = async (): Promise<InventoryStatResponse> => {
   const res = await axios.get<ApiResponse<InventoryStatResponse>>(INVENTORY_ENDPOINTS.STATS);
@@ -41,5 +42,13 @@ export const getLowStockItems = async (): Promise<LowStockItemResponse[]> => {
   const res = await axios.get<ApiResponse<{ content: LowStockItemResponse[] }>>(
     INVENTORY_ENDPOINTS.LOW_STOCK,
   );
+  return res.data.data.content;
+};
+
+export const getCurrentStockMovement = async (): Promise<StockMovementResponse[]> => {
+  const res = await axios.get<ApiResponse<{ content: StockMovementResponse[] }>>(
+    INVENTORY_ENDPOINTS.RECENT_STOCK_MOVEMENT,
+  );
+
   return res.data.data.content;
 };

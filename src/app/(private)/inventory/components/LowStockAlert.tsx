@@ -6,36 +6,11 @@ import { useQuery } from '@tanstack/react-query';
 import { getLowStockItems } from '../inventory.api';
 
 export default function LowStockAlert() {
-  const lowStockItems = [
-    {
-      id: 1,
-      code: 'ST-001',
-      name: '강판 (두께 5mm)',
-      currentStock: 50,
-      minStock: 100,
-      unit: 'EA',
-      status: 'critical',
-    },
-    {
-      id: 2,
-      code: 'ST-015',
-      name: '알루미늄 프로파일',
-      currentStock: 25,
-      minStock: 50,
-      unit: 'M',
-      status: 'warning',
-    },
-    {
-      id: 3,
-      code: 'ST-008',
-      name: '스테인리스 파이프',
-      currentStock: 8,
-      minStock: 20,
-      unit: 'EA',
-      status: 'critical',
-    },
-  ];
-
+  const {
+    data: lowStockRes,
+    isLoading,
+    isError,
+  } = useQuery<LowStockItemResponse[]>({
     queryKey: ['lowStockItems'],
     queryFn: getLowStockItems,
   });

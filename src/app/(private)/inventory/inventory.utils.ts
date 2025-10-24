@@ -16,11 +16,6 @@ export const getMovementColor = (type: string) => {
   return colors[type as keyof typeof colors];
 };
 
-// export const getMovementLabel = (type: string) => {
-//   const labels = {
-//     in: '입고',
-//     out: '출고',
-//     transfer: '이동',
-//   };
-//   return labels[type as keyof typeof labels];
-// };
+export const FormatDate = (date: string) => {
+  return date.replace('T', ' ').slice(0, 16);
+};

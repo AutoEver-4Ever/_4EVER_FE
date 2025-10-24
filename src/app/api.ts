@@ -61,4 +61,5 @@ export const INVENTORY_ENDPOINTS = {
   INVENTORY_LIST: `${INVENTORY_BASE_PATH}/inventory-items`,
   INVENTORY_DETAIL: (itemId: string) => `${INVENTORY_BASE_PATH}/iv/items/${itemId}`,
   LOW_STOCK: `${INVENTORY_BASE_PATH}/iv/shortage/preview`,
+  RECENT_STOCK_MOVEMENT: `${INVENTORY_BASE_PATH}/iv/stock-transfers`,
 } as const;
