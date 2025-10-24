@@ -47,7 +47,7 @@ export default function Dropdown<T extends string = string>({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`pl-4 pr-1.5 py-1.5 text-sm rounded-lg font-medium focus:outline-none transition cursor-pointer
+        className={`pl-4 pr-1.5 py-1.5 text-sm rounded-lg font-medium focus:outline-none transition cursor-pointer whitespace-nowrap
                     ${
                       selectedItem?.key === 'ALL'
                         ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'

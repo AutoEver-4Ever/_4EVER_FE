@@ -4,7 +4,7 @@
 
 import { useQueries } from '@tanstack/react-query';
 import { QuotationSimulationResponse } from '@/app/(private)/production/types/QuotationSimulationApiType';
-import { QuotationPreviewResult } from '@/app/(private)/production/api/production.api';
+import { fetchQuotationPreviewResult } from '@/app/(private)/production/api/production.api';
 import { QuotationPreviewResponse } from '@/app/(private)/production/types/QuotationPreviewApiType'; // 타입 임포트
 import { useState, useEffect } from 'react';
 import Button from '@/app/components/common/Button';
@@ -28,7 +28,7 @@ export default function SimulationResultModal({
   const previewQueries = useQueries({
     queries: simulationResults.map((result) => ({
       queryKey: ['quotationPreview', result.quotationId],
-      queryFn: () => QuotationPreviewResult(result.quotationId),
+      queryFn: () => fetchQuotationPreviewResult(result.quotationId),
       // 모달 내에서만 쿼리 실행 제어
       enabled: isPreviewTriggered,
       staleTime: 0,
