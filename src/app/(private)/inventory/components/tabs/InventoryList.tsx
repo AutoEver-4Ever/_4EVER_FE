@@ -1,6 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { INVENTORY_TABLE_HEADERS } from '../../inventory.constants';
+import Pagination from '@/app/components/common/Pagination';
+import { useDebounce } from 'use-debounce';
+import { useQuery } from '@tanstack/react-query';
+import { InventoryQueryParams, InventoryResponse } from '../../types/InventoryListType';
+import { getInventoryList } from '../../inventory.api';
+import { Page } from '@/types/Page';
+import StatusLabel from '@/app/components/common/StatusLabel';
 
 const InventoryList = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -11,208 +19,13 @@ const InventoryList = () => {
   const [showExportDropdown, setShowExportDropdown] = useState(false);
   const [showAllItems, setShowAllItems] = useState(false);
   const [showSafetyStockModal, setShowSafetyStockModal] = useState(false);
-
-  const inventoryItems = [
-    {
-      id: 'INV001',
-      name: '스테인리스 스틸 파이프',
-      code: 'SS-PIPE-001',
-      category: '원자재',
-      currentStock: 150,
-      safetyStock: 50,
-      unit: 'EA',
-      unitPrice: 25000,
-      totalValue: 3750000,
-      location: 'A-01-01',
-      warehouse: '제1창고',
-      warehouseCode: 'WH-A',
-      lastUpdated: '2024-01-15',
-      status: 'normal',
-      supplier: '스테인리스코리아',
-      description: '고품질 스테인리스 스틸 파이프, 내식성 우수',
-      specifications: '직경 50mm, 두께 3mm, 길이 6m',
-    },
-    {
-      id: 'INV002',
-      name: '볼트 M8x20',
-      code: 'BOLT-M8-20',
-      category: '부품',
-      currentStock: 110,
-      safetyStock: 100,
-      unit: 'EA',
-      unitPrice: 500,
-      totalValue: 55000,
-      location: 'B-02-15',
-      warehouse: '제3창고',
-      warehouseCode: 'WH-C',
-      lastUpdated: '2024-01-14',
-      status: 'warning',
-      supplier: '패스너코리아',
-      description: '고강도 볼트, 아연도금 처리',
-      specifications: 'M8 x 20mm, 강도등급 8.8',
-    },
-    {
-      id: 'INV003',
-      name: '산업용 모터 5HP',
-      code: 'MOTOR-5HP-001',
-      category: '부품',
-      currentStock: 5,
-      safetyStock: 10,
-      unit: 'EA',
-      unitPrice: 850000,
-      totalValue: 4250000,
-      location: 'C-01-05',
-      warehouse: '제2창고',
-      warehouseCode: 'WH-B',
-      lastUpdated: '2024-01-15',
-      status: 'critical',
-      supplier: '모터테크',
-      description: '고효율 산업용 모터, 3상 380V',
-      specifications: '5HP, 1800RPM, IP55 등급',
-    },
-    {
-      id: 'INV004',
-      name: '용접봉 3.2mm',
-      code: 'WELD-ROD-32',
-      category: '원자재',
-      currentStock: 5,
-      safetyStock: 20,
-      unit: 'KG',
-      unitPrice: 8000,
-      totalValue: 40000,
-      location: 'D-03-08',
-      warehouse: '제1창고',
-      warehouseCode: 'WH-A',
-      lastUpdated: '2024-01-13',
-      status: 'critical',
-      supplier: '용접재료상사',
-      description: '일반구조용 피복아크 용접봉',
-      specifications: '3.2mm x 350mm, AWS E6013',
-    },
-    {
-      id: 'INV005',
-      name: '알루미늄 프로파일',
-      code: 'AL-PROF-001',
-      category: '원자재',
-      currentStock: 200,
-      safetyStock: 80,
-      unit: 'M',
-      unitPrice: 15000,
-      totalValue: 3000000,
-      location: 'A-02-10',
-      warehouse: '제1창고',
-      warehouseCode: 'WH-A',
-      lastUpdated: '2024-01-15',
-      status: 'normal',
-      supplier: '알루텍',
-      description: '산업용 알루미늄 프로파일, 경량 고강도',
-      specifications: '40x40mm, T-슬롯 타입',
-    },
-    {
-      id: 'INV006',
-      name: '베어링 6205',
-      code: 'BEAR-6205',
-      category: '부품',
-      currentStock: 45,
-      safetyStock: 30,
-      unit: 'EA',
-      unitPrice: 12000,
-      totalValue: 540000,
-      location: 'B-01-20',
-      warehouse: '제3창고',
-      warehouseCode: 'WH-C',
-      lastUpdated: '2024-01-14',
-      status: 'normal',
-      supplier: '베어링코리아',
-      description: '고정밀 볼베어링, 밀폐형',
-      specifications: '내경 25mm, 외경 52mm, 폭 15mm',
-    },
-  ];
-
-  // 재고 이동 기록 데이터
-  const stockMovements = [
-    {
-      id: 'MOV001',
-      itemId: 'INV001',
-      type: 'in',
-      quantity: 50,
-      fromWarehouse: null,
-      toWarehouse: '제1창고',
-      fromLocation: null,
-      toLocation: 'A-01-01',
-      date: '2024-01-15',
-      time: '14:30',
-      reason: '구매입고',
-      user: '김구매',
-      reference: 'PO-2024-001',
-      notes: '정기 구매입고',
-    },
-    {
-      id: 'MOV002',
-      itemId: 'INV001',
-      type: 'transfer',
-      quantity: 20,
-      fromWarehouse: '제1창고',
-      toWarehouse: '제2창고',
-      fromLocation: 'A-01-01',
-      toLocation: 'C-02-05',
-      date: '2024-01-12',
-      time: '11:20',
-      reason: '창고간 이동',
-      user: '이관리',
-      reference: 'TR-2024-001',
-      notes: '생산 라인 공급을 위한 이동',
-    },
-    {
-      id: 'MOV003',
-      itemId: 'INV001',
-      type: 'out',
-      quantity: 30,
-      fromWarehouse: '제1창고',
-      toWarehouse: null,
-      fromLocation: 'A-01-01',
-      toLocation: null,
-      date: '2024-01-10',
-      time: '09:15',
-      reason: '생산출고',
-      user: '박생산',
-      reference: 'WO-2024-005',
-      notes: '제품 생산을 위한 출고',
-    },
-  ];
-
-  const warehouses = [
-    { id: 'WH-A', name: '제1창고', type: '원자재' },
-    { id: 'WH-B', name: '제2창고', type: '완제품' },
-    { id: 'WH-C', name: '제3창고', type: '부품' },
-    { id: 'WH-D', name: '냉동창고', type: '특수보관' },
-    { id: 'WH-E', name: '임시창고', type: '임시보관' },
-  ];
-
-  const displayedItems = showAllItems ? inventoryItems : inventoryItems.slice(0, 6);
-
-  // 안전재고에 따른 상태 계산
-  const getStockStatus = (currentStock: number, safetyStock: number) => {
-    const ratio = currentStock / safetyStock;
-    if (ratio < 1.1) return 'critical';
-    if (ratio <= 1.3) return 'warning';
-    return 'normal';
-  };
-
-  const getStatusBadge = (currentStock: number, safetyStock: number) => {
-    const status = getStockStatus(currentStock, safetyStock);
-    const statusConfig = {
-      normal: { label: '정상', class: 'bg-green-100 text-green-800' },
-      warning: { label: '주의', class: 'bg-yellow-100 text-yellow-800' },
-      critical: { label: '긴급', class: 'bg-red-100 text-red-800' },
-    };
-    const config = statusConfig[status as keyof typeof statusConfig];
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.class}`}>
-        {config.label}
-      </span>
-    );
-  };
+  const [category, setCategory] = useState('');
+  const [warehouse, setWarehouse] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [itemName, setItemName] = useState('');
+  const [debouncedCategory] = useDebounce(category, 200);
+  const [debouncedWarehouse] = useDebounce(warehouse, 200);
+  const [debouncedItemName] = useDebounce(itemName, 200);
 
   const handleItemDetail = (item: any) => {
     setSelectedItem(item);
@@ -235,81 +48,36 @@ const InventoryList = () => {
     );
   };
 
-  const handleExportExcel = () => {
-    const csvContent = [
-      [
-        '품목',
-        '품목코드',
-        '카테고리',
-        '현재재고',
-        '안전재고',
-        '단가',
-        '총가치',
-        '창고위치',
-        '상태',
-      ],
-      ...inventoryItems.map((item) => [
-        item.name,
-        item.code,
-        item.category,
-        item.currentStock,
-        item.safetyStock,
-        item.unitPrice,
-        item.totalValue,
-        `${item.warehouse}/${item.location}`,
-        getStockStatus(item.currentStock, item.safetyStock) === 'normal'
-          ? '정상'
-          : getStockStatus(item.currentStock, item.safetyStock) === 'warning'
-            ? '주의'
-            : '긴급',
-      ]),
-    ]
-      .map((row) => row.join(','))
-      .join('\n');
+  const [currentPage, setCurrentPage] = useState(1);
 
-    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `재고목록_${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    setShowExportDropdown(false);
-  };
+  const queryParams = useMemo(
+    () => ({
+      page: currentPage - 1,
+      size: 10,
+      category: debouncedCategory || '',
+      warehouse: debouncedWarehouse || '',
+      status: statusFilter || 'ALL',
+      itemName: debouncedItemName || '',
+    }),
+    [currentPage, statusFilter, debouncedCategory, debouncedWarehouse, debouncedItemName],
+  );
 
-  const handleExportPDF = () => {
-    alert('PDF 내보내기 기능은 준비 중입니다.');
-    setShowExportDropdown(false);
-  };
+  const {
+    data: InventoryRes,
+    isLoading,
+    isError,
+  } = useQuery<{
+    data: InventoryResponse[];
+    pageData: Page;
+  }>({
+    queryKey: ['inventoryList', queryParams],
+    queryFn: ({ queryKey }) => getInventoryList(queryKey[1] as InventoryQueryParams),
+    staleTime: 1000,
+  });
 
-  const getMovementIcon = (type: string) => {
-    const icons = {
-      in: 'ri-arrow-down-line',
-      out: 'ri-arrow-up-line',
-      transfer: 'ri-arrow-left-right-line',
-    };
-    return icons[type as keyof typeof icons];
-  };
-
-  const getMovementColor = (type: string) => {
-    const colors = {
-      in: 'text-green-600 bg-green-100',
-      out: 'text-red-600 bg-red-100',
-      transfer: 'text-blue-600 bg-blue-100',
-    };
-    return colors[type as keyof typeof colors];
-  };
-
-  const getMovementLabel = (type: string) => {
-    const labels = {
-      in: '입고',
-      out: '출고',
-      transfer: '이동',
-    };
-    return labels[type as keyof typeof labels];
-  };
+  const inventories = InventoryRes?.data || [];
+  const pageInfo = InventoryRes?.pageData;
+  const totalPages = pageInfo?.totalPages ?? 1;
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 mt-6">
@@ -318,49 +86,7 @@ const InventoryList = () => {
           <div className="flex items-center justify-between w-full">
             <h2 className="text-lg font-semibold text-gray-900">재고 목록</h2>
             <div className="flex items-center gap-4">
-              <button
-                onClick={() => setShowAllItems(!showAllItems)}
-                className="text-sm text-blue-600 hover:text-blue-500 cursor-pointer"
-              >
-                {showAllItems ? '간단히 보기' : '전체 보기'} →
-              </button>
-              <div className="flex gap-2">
-                <div className="relative">
-                  <button
-                    onClick={() => setShowExportDropdown(!showExportDropdown)}
-                    className="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer flex items-center"
-                  >
-                    <i className="ri-download-line mr-1"></i>
-                    내보내기
-                    <i className="ri-arrow-down-s-line ml-1"></i>
-                  </button>
-
-                  {showExportDropdown && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                      <div className="py-1">
-                        <button
-                          onClick={handleExportExcel}
-                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
-                        >
-                          <i className="ri-file-excel-2-line mr-3 text-green-600"></i>
-                          Excel로 내보내기
-                        </button>
-                        <button
-                          onClick={handleExportPDF}
-                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
-                        >
-                          <i className="ri-file-pdf-line mr-3 text-red-600"></i>
-                          PDF로 내보내기
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <button className="px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
-                  <i className="ri-refresh-line mr-1"></i>
-                  새로고침
-                </button>
-              </div>
+              <div className="flex gap-2"></div>
             </div>
           </div>
         </div>
@@ -374,94 +100,71 @@ const InventoryList = () => {
                 <input
                   type="checkbox"
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSelectedItems(displayedItems.map((item) => item.id));
-                    } else {
-                      setSelectedItems([]);
-                    }
-                  }}
+                  // onChange={}
                 />
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                품목
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                카테고리
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                현재재고
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                안전재고
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                단가
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                총 가치
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                창고 위치
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                상태
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                작업
-              </th>
+              {INVENTORY_TABLE_HEADERS.map((header) => (
+                <th
+                  key={header}
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {displayedItems.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50">
+            {inventories.map((inventory) => (
+              <tr key={inventory.itemId} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <input
                     type="checkbox"
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    checked={selectedItems.includes(item.id)}
-                    onChange={() => toggleSelectItem(item.id)}
+                    // checked={selectedItems.includes(item.id)}
+                    // onChange={() => toggleSelectItem(item.id)}
                   />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div>
-                    <div className="text-sm font-medium text-gray-900">{item.name}</div>
-                    <div className="text-sm text-gray-500">{item.code}</div>
+                    <div className="text-sm font-medium text-gray-900">{inventory.itemName}</div>
+                    <div className="text-sm text-gray-500">{inventory.itemNumber}</div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
-                    {item.category}
+                    {inventory.category}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">
-                    {item.currentStock.toLocaleString()} {item.unit}
+                    {inventory.currentStock.toLocaleString()} {inventory.uomName}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-500">
-                    {item.safetyStock.toLocaleString()} {item.unit}
+                    {inventory.safetyStock.toLocaleString()} {inventory.uomName}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">₩{item.unitPrice.toLocaleString()}</div>
+                  <div className="text-sm text-gray-900">
+                    ₩{inventory.unitPrice.toLocaleString()}
+                  </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">
-                    ₩{item.totalValue.toLocaleString()}
+                    ₩{inventory.totalAmount.toLocaleString()}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{item.warehouse}</div>
-                  <div className="text-sm text-gray-500">{item.location}</div>
+                  <div className="text-sm text-gray-900">{inventory.warehouseName}</div>
+                  <div className="text-sm text-gray-500">{inventory.warehouseType}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {getStatusBadge(item.currentStock, item.safetyStock)}
+                  <StatusLabel $statusCode={inventory.statusCode} />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button
-                    onClick={() => handleItemDetail(item)}
+                    onClick={() => handleItemDetail(inventory.itemId)}
                     className="text-blue-600 hover:text-blue-900 cursor-pointer"
                   >
                     상세보기
@@ -472,16 +175,14 @@ const InventoryList = () => {
           </tbody>
         </table>
       </div>
-
-      {!showAllItems && inventoryItems.length > 6 && (
-        <div className="p-4 border-t border-gray-200 text-center">
-          <button
-            onClick={() => setShowAllItems(true)}
-            className="text-sm text-blue-600 hover:text-blue-500 cursor-pointer font-medium"
-          >
-            {inventoryItems.length - 6}개 항목 더 보기
-          </button>
-        </div>
+      {/* 페이지네이션 */}
+      {isError || isLoading ? null : (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalElements={pageInfo?.totalElements}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       )}
 
       {/* 안전재고 수정 모달 */}
@@ -578,11 +279,11 @@ const InventoryList = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">이동할 창고</label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm pr-8">
                   <option value="">창고를 선택하세요</option>
-                  {warehouses.map((warehouse) => (
+                  {/* {warehouses.map((warehouse) => (
                     <option key={warehouse.id} value={warehouse.id}>
                       {warehouse.name} ({warehouse.type})
                     </option>
-                  ))}
+                  ))} */}
                 </select>
               </div>
 
@@ -676,7 +377,7 @@ const InventoryList = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm text-gray-600">상태:</span>
-                      {getStatusBadge(selectedItem.currentStock, selectedItem.safetyStock)}
+                      {/* <StatusLabel $statusCode={inventory.statusCode} /> */}
                     </div>
                   </div>
                 </div>
@@ -744,7 +445,7 @@ const InventoryList = () => {
                   </div>
                   <div className="p-4">
                     <div className="space-y-4">
-                      {stockMovements
+                      {/* {stockMovements
                         .filter((movement) => movement.itemId === selectedItem.id)
                         .map((movement) => (
                           <div
@@ -799,7 +500,7 @@ const InventoryList = () => {
                               )}
                             </div>
                           </div>
-                        ))}
+                        ))} */}
                     </div>
                   </div>
                 </div>

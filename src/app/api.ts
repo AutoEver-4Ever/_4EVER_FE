@@ -58,4 +58,5 @@ export const DASHBOARD_ENDPOINTS = {
 // ----------------------- INVENTORY -----------------------
 export const INVENTORY_ENDPOINTS = {
   STATS: `${INVENTORY_BASE_PATH}/iv/statistic`,
+  INVENTORY_LIST: `${INVENTORY_BASE_PATH}/inventory-items`,
 } as const;
