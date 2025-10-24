@@ -1,5 +1,5 @@
 import { ProductionStatResponse } from '@/app/(private)/production/types/ProductionStatsType';
-import { ApiResponse } from '@/app/types/api';
+import { ApiResponse, ApiResponseNoData } from '@/app/types/api';
 import { PRODUCTION_ENDPOINTS } from '@/app/(private)/production/api/production.endpoints';
 import axios from 'axios';
 import { QuotationSimulationResponse } from '@/app/(private)/production/types/QuotationSimulationApiType';
@@ -7,6 +7,8 @@ import { QuotationPreviewResponse } from '@/app/(private)/production/types/Quota
 import { MpsListParams, MpsListResponse } from '@/app/(private)/production/types/MpsApiType';
 import { FetchMesListParams, MesListResponse } from '../types/MesListApiType';
 import { MesDetailResponse } from '../types/MesDetailApiType';
+import { BomListResponse } from '../types/BomListApiType';
+import { BomDetailResponse } from '../types/BomDetailApiType';
 
 // 구매 관리 지표
 export const fetchProductionStats = async (): Promise<ProductionStatResponse | null> => {
@@ -71,4 +73,24 @@ export const fetchMesDetail = async (mesId: string) => {
     `${PRODUCTION_ENDPOINTS.MES_WORK_ORDER_DETAIL(mesId)}`,
   );
   return res.data.data;
+};
+
+// BOM 목록 조회
+export const fetchBomList = async (): Promise<BomListResponse> => {
+  const res = await axios.get<ApiResponse<BomListResponse>>(`${PRODUCTION_ENDPOINTS.BOMS}`);
+  return res.data.data;
+};
+
+// BOM 상세 조회
+export const fetchBomDetail = async (bomId: string): Promise<BomDetailResponse> => {
+  const res = await axios.get<ApiResponse<BomDetailResponse>>(
+    `${PRODUCTION_ENDPOINTS.BOM_DETAIL(bomId)}`,
+  );
+  return res.data.data;
+};
+
+// BOM 삭제
+export const deletBomItem = async (bomId: string): Promise<ApiResponseNoData> => {
+  const res = await axios.delete<ApiResponseNoData>(`${PRODUCTION_ENDPOINTS.BOM_DETAIL(bomId)}`);
+  return res.data;
 };

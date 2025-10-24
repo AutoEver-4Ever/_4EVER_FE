@@ -4,7 +4,7 @@ import DateRangePicker from '@/app/components/common/DateRangePicker';
 import Dropdown from '@/app/components/common/Dropdown';
 import { useMemo, useState } from 'react';
 import { PRODUCTS } from '@/app/(private)/production/constants';
-import { ProductType } from '@/app/(private)/production/types/MpsType';
+import { ProductType } from '@/app/(private)/production/constants';
 
 import { useQuery } from '@tanstack/react-query';
 import { fetchMpsList } from '@/app/(private)/production/api/production.api';

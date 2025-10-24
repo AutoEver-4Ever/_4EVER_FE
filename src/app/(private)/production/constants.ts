@@ -101,3 +101,11 @@ export const MES_STATUS_OPTIONS: KeyValueItem<MesStatusCode>[] = [
   { key: 'WAITING', value: '대기' },
   { key: 'IN_PROGRESS', value: '진행중' },
 ];
+
+export type ProductType =
+  | 'ALL'
+  | 'DOOR_PANEL'
+  | 'HOOD_PANEL'
+  | 'FENDER_PANEL'
+  | 'TRUNK_LID'
+  | 'ROOF_PANEL';

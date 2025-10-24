@@ -7,16 +7,20 @@ import IconButton from '@/app/components/common/IconButton';
 import { KeyValueItem } from '@/app/types/CommonType';
 import DropdownInputListModal from '@/app/components/common/DropdownInputListModal';
 
-interface BomFormModalProps {
+interface BomInputFormModalProps {
   editingBom: BomItem | null;
   onClose: () => void;
   onSubmit: (data: Partial<BomItem>) => void;
 }
 
-export default function BomFormModal({ editingBom, onClose, onSubmit }: BomFormModalProps) {
+export default function BomInputFormModal({
+  editingBom,
+  onClose,
+  onSubmit,
+}: BomInputFormModalProps) {
   const [product, setProduct] = useState(editingBom?.productName || '');
   const [unit, setUnit] = useState(editingBom?.version || '');
-  const [data, setData] = useState<KeyValueItem<number>[]>([]);
+  const [data, setData] = useState<KeyValueItem<string>[]>([]);
 
   const [componentRows, setComponentRows] = useState<ComponentRow[]>(
     editingBom?.components || [

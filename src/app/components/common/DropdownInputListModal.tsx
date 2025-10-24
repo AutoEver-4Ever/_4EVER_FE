@@ -7,12 +7,12 @@ import InputList from '@/app/components/common/InputList';
 import { KeyValueItem } from '@/app/types/CommonType';
 import { autoUpdate, flip, FloatingPortal, offset, shift, useFloating } from '@floating-ui/react';
 
-interface DropdownInputListModalProps<T extends string | number = number> {
+interface DropdownInputListModalProps<T extends string> {
   initialItems?: KeyValueItem<T>[];
   onSubmit: (items: KeyValueItem<T>[]) => void;
 }
 
-export default function DropdownInputListModal<T extends string | number = number>({
+export default function DropdownInputListModal<T extends string>({
   initialItems = [],
   onSubmit,
 }: DropdownInputListModalProps<T>) {
