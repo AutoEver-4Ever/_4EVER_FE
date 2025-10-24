@@ -17,6 +17,7 @@ export default function StockMovement() {
   } = useQuery<StockMovementResponse[]>({
     queryKey: ['stockMovement'],
     queryFn: getCurrentStockMovement,
+    staleTime: 1000,
   });
 
   return (

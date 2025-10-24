@@ -13,6 +13,7 @@ export default function LowStockAlert() {
   } = useQuery<LowStockItemResponse[]>({
     queryKey: ['lowStockItems'],
     queryFn: getLowStockItems,
+    staleTime: 1000,
   });
 
   return (

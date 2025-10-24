@@ -5,7 +5,12 @@ import { getQueryClient } from '@/lib/queryClient';
 import { INVENTORY_TABS } from '@/types/componentConstant';
 import { dehydrate } from '@tanstack/react-query';
 import { Suspense } from 'react';
-import { getInventoryList, getInventoryStats } from '@/app/(private)/inventory/inventory.api';
+import {
+  getCurrentStockMovement,
+  getInventoryList,
+  getInventoryStats,
+  getLowStockItems,
+} from '@/app/(private)/inventory/inventory.api';
 import { mapInventoryStatsToCards } from './inventory.service';
 import { InventoryQueryParams } from './types/InventoryListType';
 
@@ -23,6 +28,16 @@ export default async function InventoryPage() {
       { page: 0, size: 10, category: '', warehouse: '', status: 'ALL', itemName: '' },
     ],
     queryFn: ({ queryKey }) => getInventoryList(queryKey[1] as InventoryQueryParams),
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ['stockMovement'],
+    queryFn: getCurrentStockMovement,
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ['lowStockItems'],
+    queryFn: getLowStockItems,
   });
 
   const dehydratedState = dehydrate(queryClient);
