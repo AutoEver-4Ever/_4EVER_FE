@@ -1,7 +1,9 @@
+import { Page, PageRequest } from '@/app/types/Page';
+
 // 시뮬레이션 정보
 export interface SimulationData {
   status: string;
-  availableQty: number;
+  availableQuantity: number;
   suggestedDueDate: string;
   generatedAt: string;
 }
@@ -15,8 +17,8 @@ export interface ShortageStock {
   shortQuantity: number;
 }
 
-// 견적 시뮬레이션 결과 최상위 응답 타입
-export interface QuotationSimulationResponse {
+// 응답 데이터
+export interface QuotationSimulationData {
   quotationId: string;
   quotationCode: string;
   customerCompanyId: string;
@@ -27,4 +29,15 @@ export interface QuotationSimulationResponse {
   requestDueDate: number;
   simulation: SimulationData;
   shortages: ShortageStock[];
+}
+
+// 견적 시뮬레이션 결과 최상위 응답 타입
+export interface QuotationSimulationResponse {
+  page: Page;
+  content: QuotationSimulationData[];
+}
+
+// 요청 params
+export interface FetchQuotationSimulationParams extends PageRequest {
+  quotationIds: string[];
 }

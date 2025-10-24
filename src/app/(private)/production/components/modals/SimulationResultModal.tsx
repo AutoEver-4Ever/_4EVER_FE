@@ -3,14 +3,14 @@
 'use client';
 
 import { useQueries } from '@tanstack/react-query';
-import { QuotationSimulationResponse } from '@/app/(private)/production/types/QuotationSimulationApiType';
+import { QuotationSimulationData } from '@/app/(private)/production/types/QuotationSimulationApiType';
 import { fetchQuotationPreview } from '@/app/(private)/production/api/production.api';
 import { QuotationPreviewResponse } from '@/app/(private)/production/types/QuotationPreviewApiType'; // 타입 임포트
 import { useState, useEffect } from 'react';
 import Button from '@/app/components/common/Button';
 
 interface SimulationResultModalProps {
-  simulationResults: QuotationSimulationResponse[];
+  simulationResults: QuotationSimulationData[];
   onClose: () => void;
   // MPS Preview 데이터를 부모에게 전달
   onConfirm: (previewData: QuotationPreviewResponse[]) => void;
@@ -118,7 +118,7 @@ export default function SimulationResultModal({
                       <div>
                         <span className="text-gray-600">가용 수량:</span>
                         <span className="ml-2 font-semibold text-blue-600">
-                          {result.simulation.availableQty.toLocaleString()}EA
+                          {result.simulation.availableQuantity.toLocaleString()}EA
                         </span>
                       </div>
                       <div>

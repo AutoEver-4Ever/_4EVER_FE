@@ -23,10 +23,10 @@ export const PRODUCTION_ENDPOINTS = {
   MRP_REQUEST_SUMMARY: `${PRODUCTION_BASE_PATH}/mrp/request-summary`, // MRP 자재 구매 요청 리스트
 
   // 견적
+  QUOTATIONS: `${PRODUCTION_BASE_PATH}/quotations`,
   QUOTATION_PREVIEW: (quotationId: string) =>
     `${PRODUCTION_BASE_PATH}/quotations/${quotationId}/preview`, // 제안납기 확정 프리뷰
-  QUOTATION_SIMULATE: (quotationId: string) =>
-    `${PRODUCTION_BASE_PATH}/quotations/${quotationId}/simulate`, // 견적에 대한 ATP + MPS + MRP 시뮬레이션 실행
+  QUOTATION_SIMULATE: `${PRODUCTION_BASE_PATH}/quotations/simulate`, // 견적에 대한 ATP + MPS + MRP 시뮬레이션 실행
 
   // PP 통계
   STATISTICS: `${PRODUCTION_BASE_PATH}/statistics`, // PP 통계 조회

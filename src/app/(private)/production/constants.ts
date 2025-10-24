@@ -5,8 +5,8 @@ import BomTab from '@/app/(private)/production/components/tabs/BomTab';
 import { KeyValueItem } from '@/app/types/CommonType';
 import MpsTab from '@/app/(private)/production/components/tabs/MpsTab';
 import MesTab from '@/app/(private)/production/components/tabs/MesTab';
-import RequirementsTab from './components/tabs/RequirementsTab';
 import OrdersTab from './components/tabs/OrdersTab';
+import PlannedOrdersTab from './components/tabs/PlannedOrdersTab';
 
 // 생산 관리 탭 전환
 export const PRODUCTION_TABS: Tab[] = [
@@ -47,24 +47,30 @@ export const MRP_TABS: Tab[] = [
     id: 'requirements',
     name: '순소요',
     icon: 'ri-file-list-3-line',
-    component: RequirementsTab,
+    component: OrdersTab,
   },
   {
     id: 'orders',
     name: '계획 주문',
     icon: 'ri-shopping-cart-line',
-    component: OrdersTab,
+    component: PlannedOrdersTab,
   },
 ];
 
 // 가용 재고 상태 필터링
-export type AvailableStockStatus = 'ALL' | 'SUFFICIENT' | 'INSUFFICIENT' | 'UNKNOWN';
+export type AvailableStockStatus = 'ALL' | 'CHECKED' | 'UNCHECKED';
 export const AVAILABLE_STOCK_STATUS: KeyValueItem<AvailableStockStatus>[] = [
   { key: 'ALL', value: '전체 가용재고' },
-  { key: 'SUFFICIENT', value: '충분' }, // 재고 충분
-  { key: 'UNKNOWN', value: '미확인' }, // 재고 상태 확인되지 않음
-  { key: 'INSUFFICIENT', value: '부족' }, // 재고 부족
+  { key: 'CHECKED', value: '확인' }, // 재고 충분
+  { key: 'UNCHECKED', value: '미확인' }, // 재고 상태 확인되지 않음
 ];
+// export type AvailableStockStatus = 'ALL' | 'SUFFICIENT' | 'INSUFFICIENT' | 'UNKNOWN';
+// export const AVAILABLE_STOCK_STATUS: KeyValueItem<AvailableStockStatus>[] = [
+//   { key: 'ALL', value: '전체 가용재고' },
+//   { key: 'SUFFICIENT', value: '충분' }, // 재고 충분
+//   { key: 'UNKNOWN', value: '미확인' }, // 재고 상태 확인되지 않음
+//   { key: 'INSUFFICIENT', value: '부족' }, // 재고 부족
+// ];
 
 // 견적 상태 필터링
 export type QuotationStatus = 'ALL' | 'NEW' | 'CONFIRMED';
@@ -109,3 +115,21 @@ export type ProductType =
   | 'FENDER_PANEL'
   | 'TRUNK_LID'
   | 'ROOF_PANEL';
+
+// MRP 순소요 상태 필터
+export type MrpOrderStatus = 'ALL' | 'SUFFICIENT' | 'INSUFFICIENT';
+export const MRP_ORDER_STATUS_OPTIONS: KeyValueItem<MrpOrderStatus>[] = [
+  { key: 'ALL', value: '전체 상태' },
+  { key: 'SUFFICIENT', value: '충분' },
+  { key: 'INSUFFICIENT', value: '부족' },
+];
+
+// MRP 계획 주문 상태 필터
+export type MrpPlannedOrderStatus = 'ALL' | 'PENDING' | 'PLANNED' | 'APPROVED' | 'REJECTED';
+export const MRP_PLANNED_ORDER_STATUS_OPTIONS: KeyValueItem<MrpPlannedOrderStatus>[] = [
+  { key: 'ALL', value: '전체 상태' },
+  { key: 'PENDING', value: '대기' },
+  { key: 'PLANNED', value: '계획' },
+  { key: 'APPROVED', value: '승인' },
+  { key: 'REJECTED', value: '반려' },
+];

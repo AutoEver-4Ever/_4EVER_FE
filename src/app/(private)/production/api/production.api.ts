@@ -2,13 +2,22 @@ import { ProductionStatResponse } from '@/app/(private)/production/types/Product
 import { ApiResponse, ApiResponseNoData } from '@/app/types/api';
 import { PRODUCTION_ENDPOINTS } from '@/app/(private)/production/api/production.endpoints';
 import axios from 'axios';
-import { QuotationSimulationResponse } from '@/app/(private)/production/types/QuotationSimulationApiType';
+import {
+  FetchQuotationSimulationParams,
+  QuotationSimulationResponse,
+} from '@/app/(private)/production/types/QuotationSimulationApiType';
 import { QuotationPreviewResponse } from '@/app/(private)/production/types/QuotationPreviewApiType';
 import { MpsListParams, MpsListResponse } from '@/app/(private)/production/types/MpsApiType';
 import { FetchMesListParams, MesListResponse } from '../types/MesListApiType';
 import { MesDetailResponse } from '../types/MesDetailApiType';
 import { BomListResponse } from '../types/BomListApiType';
 import { BomDetailResponse } from '../types/BomDetailApiType';
+import { FetchMrpOrdersListParams, MrpOrdersListResponse } from '../types/MrpOrdersListApiType';
+import {
+  FetchMrpPlannedOrdersListParams,
+  MrpPlannedOrdersListResponse,
+} from '../types/MrpPlannedOrdersListApiType';
+import { FetchQuotationParams, QuotationListResponse } from '../types/QuotationApiType';
 
 // 구매 관리 지표
 export const fetchProductionStats = async (): Promise<ProductionStatResponse | null> => {
@@ -24,12 +33,26 @@ export const fetchProductionStats = async (): Promise<ProductionStatResponse | n
   }
 };
 
+// 견적 목록 조회
+export const fetchQuotationList = async (
+  params: FetchQuotationParams,
+): Promise<QuotationListResponse> => {
+  const res = await axios.get(`${PRODUCTION_ENDPOINTS.QUOTATIONS}`, { params });
+  return res.data.data;
+};
+
 // 견적에 대한 ATP(Available to Promise), MPS, MRP 시뮬레이션 실행 결과
 export const fetchQuotationSimulationResult = async (
-  quotationId: string,
+  params: FetchQuotationSimulationParams,
 ): Promise<QuotationSimulationResponse> => {
-  const res = await axios.get<ApiResponse<QuotationSimulationResponse>>(
-    `${PRODUCTION_ENDPOINTS.QUOTATION_SIMULATE(quotationId)}`,
+  const { quotationIds, page, size } = params;
+  const query = new URLSearchParams({
+    page: String(page),
+    size: String(size),
+  });
+  const res = await axios.post<ApiResponse<QuotationSimulationResponse>>(
+    `${PRODUCTION_ENDPOINTS.QUOTATION_SIMULATE}?${query.toString()}`,
+    quotationIds,
   );
   return res.data.data;
 };
@@ -93,4 +116,26 @@ export const fetchBomDetail = async (bomId: string): Promise<BomDetailResponse> 
 export const deletBomItem = async (bomId: string): Promise<ApiResponseNoData> => {
   const res = await axios.delete<ApiResponseNoData>(`${PRODUCTION_ENDPOINTS.BOM_DETAIL(bomId)}`);
   return res.data;
+};
+
+// MRP 순소요 목록 조회
+export const fetchMrpOrdersList = async (
+  params: FetchMrpOrdersListParams,
+): Promise<MrpOrdersListResponse[]> => {
+  const res = await axios.get<ApiResponse<MrpOrdersListResponse[]>>(
+    `${PRODUCTION_ENDPOINTS.MRP_ORDERS}`,
+    { params },
+  );
+  return res.data.data;
+};
+
+// MRP 계획 주문 목록 조회
+export const fetchMrpPlannedOrdersList = async (
+  params: FetchMrpPlannedOrdersListParams,
+): Promise<MrpPlannedOrdersListResponse> => {
+  const res = await axios.get<ApiResponse<MrpPlannedOrdersListResponse>>(
+    `${PRODUCTION_ENDPOINTS.MRP_PLANNED_ORDERS_LIST}`,
+    { params },
+  );
+  return res.data.data;
 };
