@@ -3,6 +3,7 @@ import { InventoryStatResponse } from './types/InventoryStatsType';
 import axios from 'axios';
 import { InventoryQueryParams, InventoryResponse } from './types/InventoryListType';
 import { Page } from '@/types/Page';
+import { InventoryDetailResponse } from './types/InventoryDetailType';
 
 export const getInventoryStats = async (): Promise<InventoryStatResponse> => {
   const res = await axios.get<ApiResponse<InventoryStatResponse>>(INVENTORY_ENDPOINTS.STATS);
@@ -26,4 +27,11 @@ export const getInventoryList = async (
   );
 
   return { data: res.data.data.content, pageData: res.data.data.page };
+};
+
+export const getInventoryDetail = async (inventoryId: string): Promise<InventoryDetailResponse> => {
+  const res = await axios.get<ApiResponse<InventoryDetailResponse>>(
+    INVENTORY_ENDPOINTS.INVENTORY_DETAIL(inventoryId),
+  );
+  return res.data.data;
 };

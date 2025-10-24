@@ -40,6 +40,10 @@ export const STATUS_TEXT_MAP: Record<string, string> = {
 
   MATERIAL: '원자재',
   ITEM: '부품',
+
+  입고: '입고',
+  출고: '출고',
+  이동: '이동',
 };
 
 // 상태 색상 매핑
@@ -83,6 +87,10 @@ export const STATUS_COLOR_MAP: Record<string, string> = {
   UNPAID: 'bg-red-100 text-red-700 border-red-300',
 
   DEFAULT: 'bg-gray-100 text-gray-600 border-gray-300',
+
+  입고: 'bg-green-100 text-green-700 border-green-300',
+  출고: 'bg-red-100 text-red-700 border-red-300',
+  이동: 'bg-blue-100 text-blue-700 border-blue-300',
 };
 
 export const getStatusText = (status: string): string =>
