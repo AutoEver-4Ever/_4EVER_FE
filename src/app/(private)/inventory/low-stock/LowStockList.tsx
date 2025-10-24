@@ -1,6 +1,9 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { LowStockItemResponse } from '../types/LowStockItems';
+import { getLowStockItems } from '../inventory.api';
 
 export default function LowStockList() {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);

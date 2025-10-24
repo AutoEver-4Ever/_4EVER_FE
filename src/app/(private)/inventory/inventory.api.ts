@@ -4,6 +4,7 @@ import axios from 'axios';
 import { InventoryQueryParams, InventoryResponse } from './types/InventoryListType';
 import { Page } from '@/types/Page';
 import { InventoryDetailResponse } from './types/InventoryDetailType';
+import { LowStockItemResponse } from './types/LowStockItems';
 
 export const getInventoryStats = async (): Promise<InventoryStatResponse> => {
   const res = await axios.get<ApiResponse<InventoryStatResponse>>(INVENTORY_ENDPOINTS.STATS);
@@ -34,4 +35,11 @@ export const getInventoryDetail = async (inventoryId: string): Promise<Inventory
     INVENTORY_ENDPOINTS.INVENTORY_DETAIL(inventoryId),
   );
   return res.data.data;
+};
+
+export const getLowStockItems = async (): Promise<LowStockItemResponse[]> => {
+  const res = await axios.get<ApiResponse<{ content: LowStockItemResponse[] }>>(
+    INVENTORY_ENDPOINTS.LOW_STOCK,
+  );
+  return res.data.data.content;
 };

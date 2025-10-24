@@ -1,6 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { LowStockItemResponse } from '../types/LowStockItems';
+import { useQuery } from '@tanstack/react-query';
+import { getLowStockItems } from '../inventory.api';
 
 export default function LowStockAlert() {
   const lowStockItems = [
@@ -33,6 +36,10 @@ export default function LowStockAlert() {
     },
   ];
 
+    queryKey: ['lowStockItems'],
+    queryFn: getLowStockItems,
+  });
+
   return (
     <div className="bg-white rounded-lg border border-gray-200">
       <div className="p-4 border-b border-gray-200">
@@ -40,7 +47,7 @@ export default function LowStockAlert() {
           <div className="flex items-center space-x-2">
             <h3 className="text-lg font-semibold text-gray-900">재고 부족 알림</h3>
             <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full">
-              {lowStockItems.length}건
+              {lowStockRes?.length}건
             </span>
           </div>
           <Link href="/inventory/low-stock">
@@ -53,33 +60,33 @@ export default function LowStockAlert() {
       </div>
 
       <div className="p-4 space-y-3">
-        {lowStockItems.map((item) => (
+        {lowStockRes?.map((item) => (
           <div
-            key={item.id}
+            key={item.itemId}
             className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
           >
             <div className="flex-1">
               <div className="flex items-center space-x-2">
                 <span
                   className={`w-2 h-2 rounded-full ${
-                    item.status === 'critical' ? 'bg-red-500' : 'bg-yellow-500'
+                    item.statusCode === 'URGENT' ? 'bg-red-500' : 'bg-yellow-500'
                   }`}
                 ></span>
-                <span className="text-sm font-medium text-gray-900">{item.name}</span>
+                <span className="text-sm font-medium text-gray-900">{item.itemName}</span>
               </div>
               <div className="text-xs text-gray-500 mt-1">
                 현재: {item.currentStock}
-                {item.unit} / 최소: {item.minStock}
-                {item.unit}
+                {item.uomName} / 최소: {item.safetyStock}
+                {item.uomName}
               </div>
             </div>
             <div className="text-right">
               <div
                 className={`text-sm font-medium ${
-                  item.status === 'critical' ? 'text-red-600' : 'text-yellow-600'
+                  item.statusCode === 'URGENT' ? 'text-red-600' : 'text-yellow-600'
                 }`}
               >
-                {item.status === 'critical' ? '긴급' : '주의'}
+                {item.statusCode === 'URGENT' ? '긴급' : '주의'}
               </div>
             </div>
           </div>
