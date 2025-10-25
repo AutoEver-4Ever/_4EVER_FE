@@ -12,6 +12,7 @@ const ShippingManagementList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedSubTab, setSelectedSubTab] = useState('producing');
   const [showShipDetailModal, setShowShipDetailModal] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState('');
 
   const queryParams = useMemo(
     () => ({
@@ -48,7 +49,7 @@ const ShippingManagementList = () => {
 
   const shippingStatusTabs = [
     { id: 'producing', name: '생산중', count: ProductionRes?.pageData.totalElements },
-    { id: 'standBy', name: '출고 대기 완료', count: ReadyToShipRes?.pageData.totalElements },
+    { id: 'readyToShip', name: '출고 대기 완료', count: ReadyToShipRes?.pageData.totalElements },
   ];
 
   useEffect(() => {
@@ -117,6 +118,7 @@ const ShippingManagementList = () => {
                     <button
                       onClick={() => {
                         setShowShipDetailModal(true);
+                        setSelectedItemId(production.salesOrderId);
                       }}
                       className="text-blue-600 hover:text-blue-800 cursor-pointer"
                       title="상세보기"
@@ -141,6 +143,7 @@ const ShippingManagementList = () => {
         {showShipDetailModal && (
           <ShippingDetailModal
             $selectedSubTab={selectedSubTab}
+            $selectedItemId={selectedItemId}
             $setShowShipDetailModal={setShowShipDetailModal}
           />
         )}

@@ -1,16 +1,61 @@
 'use client';
 
-import { ShippingDetailModalProps } from '../../types/ShippingDetailType';
+import { useQuery } from '@tanstack/react-query';
+import { ShippingDetailModalProps, ShippingDetailResponse } from '../../types/ShippingDetailType';
+import { useEffect, useState } from 'react';
+import ModalStatusBox from '@/app/components/common/ModalStatusBox';
+import { getProductionDetail, getReadyToShipDetail } from '../../inventory.api';
 
 const ShippingDetailModal = ({
   $selectedSubTab,
+  $selectedItemId,
   $setShowShipDetailModal,
 }: ShippingDetailModalProps) => {
+  const getShippingDetailBySubTab = (subTab: string, id: string) => {
+    switch (subTab) {
+      case 'producing':
+        return getProductionDetail(id);
+      case 'readyToShip':
+        return getReadyToShipDetail(id);
+      default:
+        return getProductionDetail(id);
+    }
+  };
+
+  const {
+    data: shippingDetailRes,
+    isLoading,
+    isError,
+  } = useQuery<ShippingDetailResponse>({
+    queryKey: ['shippingDetail', $selectedItemId],
+    queryFn: () => getShippingDetailBySubTab($selectedSubTab, $selectedItemId),
+    enabled: !!$selectedItemId,
+  });
+
+  const [errorModal, setErrorModal] = useState(false);
+  useEffect(() => {
+    setErrorModal(isError);
+  }, [isError]);
+
+  if (isLoading)
+    return <ModalStatusBox $type="loading" $message="출고 상세 데이터를 불러오는 중입니다..." />;
+
+  if (errorModal)
+    return (
+      <ModalStatusBox
+        $type="error"
+        $message="출고 상세 데이터를 불러오는 중 오류가 발생했습니다."
+        $onClose={() => setErrorModal(false)}
+      />
+    );
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
-          {/* <h3 className="text-xl font-semibold">주문 상세 - {selectedOrder.id}</h3> */}
+          <h3 className="text-xl font-semibold">
+            주문 상세 - {shippingDetailRes?.salesOrderNumber}
+          </h3>
           <button
             onClick={() => $setShowShipDetailModal(false)}
             className="text-gray-400 hover:text-gray-600 cursor-pointer"
@@ -23,28 +68,30 @@ const ShippingDetailModal = ({
           <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
             <div>
               <span className="text-sm text-gray-600">고객:</span>
-              {/* <div className="font-medium text-gray-900">{selectedOrder.customer}</div> */}
+              <div className="font-medium text-gray-900">
+                {shippingDetailRes?.customerCompanyName}
+              </div>
             </div>
             <div>
               <span className="text-sm text-gray-600">납기일:</span>
-              {/* <div className="font-medium text-gray-900">{selectedOrder.dueDate}</div> */}
+              <div className="font-medium text-gray-900">{shippingDetailRes?.dueDate}</div>
             </div>
           </div>
 
           <div>
             <h4 className="text-lg font-semibold text-gray-900 mb-4">주문 품목</h4>
             <div className="space-y-2">
-              {/* {selectedOrder.items.map((item: any, index: number) => (
+              {shippingDetailRes?.orderItems.map((item: any, index: number) => (
                 <div
                   key={index}
                   className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
                 >
-                  <span className="font-medium text-gray-900">{item.name}</span>
+                  <span className="font-medium text-gray-900">{item.itemName}</span>
                   <span className="text-sm text-gray-600">
-                    {item.quantity} {item.unit}
+                    {item.quantity} {item.uomName}
                   </span>
                 </div>
-              ))} */}
+              ))}
             </div>
           </div>
 

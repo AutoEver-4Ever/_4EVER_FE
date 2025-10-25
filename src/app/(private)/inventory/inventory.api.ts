@@ -12,12 +12,13 @@ import {
   ReadyToShipListResponse,
 } from './types/InventoryShippingListType';
 import { ReceivedListResponse } from './types/InventoryReceivingListType';
-
+import { ShippingDetailResponse } from './types/ShippingDetailType';
+// ----------------------- 재고 통계 -----------------------
 export const getInventoryStats = async (): Promise<InventoryStatResponse> => {
   const res = await axios.get<ApiResponse<InventoryStatResponse>>(INVENTORY_ENDPOINTS.STATS);
   return res.data.data;
 };
-
+// ----------------------- 재고 관리 -----------------------
 export const getInventoryList = async (
   params?: InventoryQueryParams,
 ): Promise<{ data: InventoryResponse[]; pageData: Page }> => {
@@ -59,6 +60,7 @@ export const getCurrentStockMovement = async (): Promise<StockMovementResponse[]
   return res.data.data.content;
 };
 
+// ----------------------- 입고 관리 -----------------------
 export const getProductionList = async (
   params?: ManageMentCommonQueryParams,
 ): Promise<{
@@ -93,6 +95,21 @@ export const getReadyToShipList = async (
   return { data: res.data.data.content, pageData: res.data.data.page };
 };
 
+export const getProductionDetail = async (itemId: string): Promise<ShippingDetailResponse> => {
+  const res = await axios.get<ApiResponse<ShippingDetailResponse>>(
+    INVENTORY_ENDPOINTS.PRODUCTIONDETAIL(itemId),
+  );
+  return res.data.data;
+};
+
+export const getReadyToShipDetail = async (itemId: string): Promise<ShippingDetailResponse> => {
+  const res = await axios.get<ApiResponse<ShippingDetailResponse>>(
+    INVENTORY_ENDPOINTS.READY_TO_SHIP_DETAIL(itemId),
+  );
+  return res.data.data;
+};
+
+// ----------------------- 출고 관리 -----------------------
 export const getPendingList = async (
   params?: ManageMentCommonQueryParams,
 ): Promise<{

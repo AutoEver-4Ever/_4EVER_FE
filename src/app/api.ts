@@ -66,4 +66,7 @@ export const INVENTORY_ENDPOINTS = {
   READY_TO_SHIP_LIST: `${INVENTORY_BASE_PATH}/sales-orders/ready-to-ship`,
   PENDING_LIST: `${INVENTORY_BASE_PATH}/purchase-orders/pending`,
   RECEIVED_LIST: `${INVENTORY_BASE_PATH}/purchase-orders/received`,
+  PRODUCTIONDETAIL: (itemId: string) => `${INVENTORY_BASE_PATH}/sales-orders/production/${itemId}`,
+  READY_TO_SHIP_DETAIL: (itemId: string) =>
+    `${INVENTORY_BASE_PATH}/sales-orders/ready-to-ship/${itemId}`,
 } as const;
