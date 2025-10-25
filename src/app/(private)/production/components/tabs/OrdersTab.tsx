@@ -28,7 +28,7 @@ export default function OrdersTab() {
       page: currentPage - 1,
       size: pageSize,
     }),
-    [selectedProduct, selectedQuote, selectedStockStatus, currentPage, pageSize],
+    [selectedProduct, selectedQuote, selectedStockStatus, currentPage],
   );
 
   const {
@@ -103,6 +103,7 @@ export default function OrdersTab() {
               value={selectedProduct}
               onChange={(product: string) => {
                 setSelectedProduct(product);
+                setCurrentPage(1);
               }}
             />
             <Dropdown
@@ -110,6 +111,7 @@ export default function OrdersTab() {
               value={selectedQuote}
               onChange={(quote: string) => {
                 setSelectedQuote(quote);
+                setCurrentPage(1);
               }}
             />
             <Dropdown
@@ -117,6 +119,7 @@ export default function OrdersTab() {
               value={selectedStockStatus}
               onChange={(status: string) => {
                 setSelectedStockStatus(status);
+                setCurrentPage(1);
               }}
             />
             <Button
@@ -128,10 +131,10 @@ export default function OrdersTab() {
         </div>
 
         {isLoading ? (
-          <TableStatusBox $type="loading" $message="구매 요청 목록을 불러오는 중입니다..." />
+          <TableStatusBox $type="loading" $message="순소요 목록을 불러오는 중입니다..." />
         ) : isError ? (
           <TableStatusBox $type="error" $message="순소요 목록을 불러오는 중 오류가 발생했습니다." />
-        ) : !orders || orderItems.length === 0 ? (
+        ) : orderItems.length === 0 ? (
           <TableStatusBox $type="empty" $message="조회된 순소요 데이터가 없습니다" />
         ) : (
           <div className="overflow-x-auto">

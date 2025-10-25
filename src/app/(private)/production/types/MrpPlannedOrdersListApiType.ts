@@ -1,4 +1,4 @@
-import { Page } from '@/app/types/Page';
+import { Page, PageRequest } from '@/app/types/Page';
 
 // MRP 계획 주문 목록 타입
 export interface MrpPlannedOrderList {
@@ -18,6 +18,6 @@ export interface MrpPlannedOrdersListResponse {
   content: MrpPlannedOrderList[];
 }
 
-export interface FetchMrpPlannedOrdersListParams {
-  status?: string;
+export interface FetchMrpPlannedOrdersListParams extends PageRequest {
+  statusCode?: string;
 }

@@ -9,22 +9,29 @@ import {
   FetchMrpPlannedOrdersListParams,
   MrpPlannedOrdersListResponse,
 } from '../../types/MrpPlannedOrdersListApiType';
+import TableStatusBox from '@/app/components/common/TableStatusBox';
+import Pagination from '@/app/components/common/Pagination';
 
 export default function PlannedOrdersTab() {
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<MrpPlannedOrderStatus>('ALL');
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
   // 쿼리 파라미터 객체 생성
   const queryParams = useMemo<FetchMrpPlannedOrdersListParams>(
     () => ({
-      status: selectedStatus,
+      statusCode: selectedStatus,
+      page: currentPage - 1,
+      size: pageSize,
     }),
-    [selectedStatus],
+    [selectedStatus, currentPage],
   );
 
   // API 호출
   const {
-    data: plannedOrdersResponse,
+    data: plannedOrdersData,
     isLoading,
     isError,
   } = useQuery<MrpPlannedOrdersListResponse>({
@@ -35,7 +42,10 @@ export default function PlannedOrdersTab() {
   });
 
   // content 배열 추출
-  const plannedOrders = plannedOrdersResponse?.content || [];
+  const plannedOrders = plannedOrdersData?.content || [];
+  const pageInfo = plannedOrdersData?.page;
+
+  const totalPages = pageInfo?.totalPages ?? 1;
 
   const handleSelectAllOrders = () => {
     if (selectedOrders.length === plannedOrders.length) {
@@ -86,6 +96,7 @@ export default function PlannedOrdersTab() {
             value={selectedStatus}
             onChange={(status: MrpPlannedOrderStatus) => {
               setSelectedStatus(status);
+              setCurrentPage(1);
             }}
           />
           <Button
@@ -97,17 +108,14 @@ export default function PlannedOrdersTab() {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12">
-          <i className="ri-loader-4-line animate-spin text-3xl text-gray-400"></i>
-          <p className="mt-3 text-gray-500">로딩 중...</p>
-        </div>
+        <TableStatusBox $type="loading" $message="계획 주문 목록을 불러오는 중입니다..." />
       ) : isError ? (
-        <div className="text-center py-12">
-          <i className="ri-error-warning-line text-3xl text-red-400"></i>
-          <p className="mt-3 text-red-500">데이터를 불러오는데 실패했습니다.</p>
-        </div>
+        <TableStatusBox
+          $type="error"
+          $message="계획 주문 목록을 불러오는 중 오류가 발생했습니다."
+        />
       ) : plannedOrders.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">조회된 계획 주문이 없습니다.</div>
+        <TableStatusBox $type="empty" $message="조회된 계획 주문 데이터가 없습니다" />
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
@@ -160,7 +168,7 @@ export default function PlannedOrdersTab() {
                     {order.quantity.toLocaleString()}
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-900">{order.procurementStartDate}</td>
-                  <td className="px-4 py-3">{getOrderStatusBadge(order.statusCode)}</td>
+                  <td className="px-4 py-3">{order.statusCode}</td>
                   <td className="px-4 py-3">
                     <button
                       className="text-blue-600 hover:text-blue-800 cursor-pointer"
@@ -173,6 +181,15 @@ export default function PlannedOrdersTab() {
               ))}
             </tbody>
           </table>
+
+          {isError || isLoading ? null : (
+            <Pagination
+              currentPage={currentPage} // 0-based를 1-based로 변환
+              totalPages={totalPages}
+              totalElements={pageInfo?.totalElements}
+              onPageChange={(page) => setCurrentPage(page)} // 1-based를 0-based로 변환
+            />
+          )}
         </div>
       )}
     </div>
