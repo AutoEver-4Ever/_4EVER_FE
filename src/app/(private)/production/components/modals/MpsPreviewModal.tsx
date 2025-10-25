@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { QuotationPreviewResponse } from '@/app/(private)/production/types/QuotationPreviewApiType';
+import { QuotationPreviewData } from '@/app/(private)/production/types/QuotationPreviewApiType';
 import Pagination from '@/app/components/common/Pagination'; // Pagination 경로 맞춰서 import
 
 interface MpsPreviewModalProps {
-  previewResults: QuotationPreviewResponse[]; // 배열 형태
+  previewResults: QuotationPreviewData[]; // 배열 형태
   onClose: () => void;
   onConfirm: () => void;
 }

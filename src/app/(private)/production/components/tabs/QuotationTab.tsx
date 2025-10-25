@@ -44,7 +44,7 @@ export default function QuotationTab() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   // MPS 프리뷰 결과를 저장할 state
-  const [mpsPreviewData, setMpsPreviewData] = useState<QuotationPreviewResponse[]>([]);
+  const [mpsPreviewData, setMpsPreviewData] = useState<QuotationPreviewResponse>();
   // 시뮬레이션 응답 저장
   const [simulationResponse, setSimulationResponse] = useState<QuotationSimulationResponse | null>(
     null,
@@ -140,7 +140,7 @@ export default function QuotationTab() {
     // useQuery가 currentPage 변경을 감지하고 자동으로 데이터를 다시 불러옴
   };
 
-  const handleConfirmProposedDelivery = (previewData: QuotationPreviewResponse[]) => {
+  const handleConfirmProposedDelivery = (previewData: QuotationPreviewResponse) => {
     setShowSimulationModal(false);
     setMpsPreviewData(previewData);
     setShowMpsPreviewModal(true);
@@ -314,9 +314,9 @@ export default function QuotationTab() {
         />
       )}
       {/* MPS 생성 Preview 모달 */}
-      {showMpsPreviewModal && mpsPreviewData.length > 0 && (
+      {showMpsPreviewModal && mpsPreviewData?.content && (
         <MpsPreviewModal
-          previewResults={mpsPreviewData}
+          previewResults={mpsPreviewData.content}
           onClose={() => setShowMpsPreviewModal(false)}
           onConfirm={handleConfirmMps}
         />

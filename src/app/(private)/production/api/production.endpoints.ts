@@ -24,8 +24,7 @@ export const PRODUCTION_ENDPOINTS = {
 
   // 견적
   QUOTATIONS: `${PRODUCTION_BASE_PATH}/quotations`,
-  QUOTATION_PREVIEW: (quotationId: string) =>
-    `${PRODUCTION_BASE_PATH}/quotations/${quotationId}/preview`, // 제안납기 확정 프리뷰
+  QUOTATION_PREVIEW: `${PRODUCTION_BASE_PATH}/quotations/preview`, // 제안납기 확정 프리뷰
   QUOTATION_SIMULATE: `${PRODUCTION_BASE_PATH}/quotations/simulate`, // 견적에 대한 ATP + MPS + MRP 시뮬레이션 실행
 
   // PP 통계

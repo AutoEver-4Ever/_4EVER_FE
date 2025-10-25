@@ -6,7 +6,10 @@ import {
   FetchQuotationSimulationParams,
   QuotationSimulationResponse,
 } from '@/app/(private)/production/types/QuotationSimulationApiType';
-import { QuotationPreviewResponse } from '@/app/(private)/production/types/QuotationPreviewApiType';
+import {
+  FetchQuotationPreviewParams,
+  QuotationPreviewResponse,
+} from '@/app/(private)/production/types/QuotationPreviewApiType';
 import { MpsListParams, MpsListResponse } from '@/app/(private)/production/types/MpsApiType';
 import { FetchMesListParams, MesListResponse } from '../types/MesListApiType';
 import { MesDetailResponse } from '../types/MesDetailApiType';
@@ -59,10 +62,13 @@ export const fetchQuotationSimulationResult = async (
 
 // 제안 납기 계획 프리뷰 조회
 export const fetchQuotationPreview = async (
-  quotationId: string,
+  params: FetchQuotationPreviewParams,
 ): Promise<QuotationPreviewResponse> => {
-  const res = await axios.get<ApiResponse<QuotationPreviewResponse>>(
-    `${PRODUCTION_ENDPOINTS.QUOTATION_PREVIEW(quotationId)}`,
+  const { quotationIds } = params;
+
+  const res = await axios.post<ApiResponse<QuotationPreviewResponse>>(
+    `${PRODUCTION_ENDPOINTS.QUOTATION_PREVIEW}`,
+    quotationIds,
   );
   return res.data.data;
 };
