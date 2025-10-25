@@ -53,16 +53,17 @@ export default function QuotationTab() {
   // --- API 호출 및 상태 관리 ---
 
   // 1. 견적 리스트를 가져오는 useQuery
-  const quotationListQueryParams: FetchQuotationParams = useMemo(() => {
-    return {
-      startDate: startDate || undefined,
-      endDate: endDate || undefined,
+  const quotationListQueryParams: FetchQuotationParams = useMemo(
+    () => ({
       page: currentPage - 1, // API는 0-based
       size: pageSize,
       stockStatusCode: selectedStockStatus, // 가용재고 상태
       statusCode: selectedQuotationsStatus, // 견적 상태
-    };
-  }, [currentPage, pageSize, startDate, endDate, selectedStockStatus, selectedQuotationsStatus]);
+      startDate: startDate || undefined,
+      endDate: endDate || undefined,
+    }),
+    [currentPage, pageSize, startDate, endDate, selectedStockStatus, selectedQuotationsStatus],
+  );
 
   const {
     data: quotationListData,
@@ -71,6 +72,7 @@ export default function QuotationTab() {
   } = useQuery<QuotationListResponse>({
     queryKey: ['quotationList', quotationListQueryParams], // 쿼리 키에 파라미터를 넣어 파라미터 변경 시 재요청
     queryFn: () => fetchQuotationList(quotationListQueryParams),
+    staleTime: 1000,
   });
 
   // API에서 가져온 견적 데이터 리스트

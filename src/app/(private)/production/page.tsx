@@ -4,20 +4,43 @@ import TabNavigation from '@/app/components/common/TabNavigation';
 import { dehydrate } from '@tanstack/react-query';
 import { PRODUCTION_TABS } from '@/app/(private)/production/constants';
 import StatSection from '@/app/components/common/StatSection';
-import { fetchProductionStats } from '@/app/(private)/production/api/production.api';
+import {
+  fetchMpsProducts,
+  fetchProductionStats,
+  fetchQuotationList,
+} from '@/app/(private)/production/api/production.api';
 import ErrorMessage from '@/app/components/common/ErrorMessage';
 import { mapProductionStatsToCards } from '@/app/(private)/production/services/production.service';
 import Providers from '@/app/providers';
+import { FetchQuotationParams } from '@/app/(private)/production/types/QuotationApiType';
 
 export default async function ProductionPage() {
   const queryClient = getQueryClient();
 
-  // await queryClient.prefetchQuery({
-  //   queryKey: [
-  //     "p", {}
-  //   ],
-  //   queryFn: ({ queryKey }) => fetchQuotationList(queryKey[1] as )
-  // })
+  // 초기 쿼리 파라미터 설정
+  const initialQuotationParams: FetchQuotationParams = {
+    page: 0,
+    size: 10,
+    stockStatusCode: 'ALL',
+    statusCode: 'ALL',
+    startDate: undefined,
+    endDate: undefined,
+  };
+
+  await Promise.all([
+    // 견적 리스트 초기 데이터 prefetch
+    queryClient.prefetchQuery({
+      queryKey: ['quotationList', initialQuotationParams],
+      queryFn: () => fetchQuotationList(initialQuotationParams),
+    }),
+
+    // --- 드롭 다운 prefetch ---
+    // MPS 제품 드롭다운 prefetch
+    queryClient.prefetchQuery({
+      queryKey: ['mpsProductsDropdown'],
+      queryFn: fetchMpsProducts,
+    }),
+  ]);
 
   const dehydratedState = dehydrate(queryClient);
 

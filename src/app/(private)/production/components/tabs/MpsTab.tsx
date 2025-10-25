@@ -4,13 +4,10 @@ import DateRangePicker from '@/app/components/common/DateRangePicker';
 import Dropdown from '@/app/components/common/Dropdown';
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchMpsItemsList, fetchMpsList } from '@/app/(private)/production/api/production.api';
-import {
-  MpsDropdownResponse,
-  MpsListParams,
-  MpsListResponse,
-} from '@/app/(private)/production/types/MpsApiType';
+import { fetchMpsProducts, fetchMpsList } from '@/app/(private)/production/api/production.api';
+import { MpsListParams, MpsListResponse } from '@/app/(private)/production/types/MpsApiType';
 import { KeyValueItem } from '@/app/types/CommonType';
+import { MpsDropdownResponse } from '@/app/(private)/production/types/DropdownApiType';
 
 export default function MpsTab() {
   const [selectedProduct, setSelectedProduct] = useState<string>('');
@@ -32,8 +29,9 @@ export default function MpsTab() {
     isLoading: isDropdownLoading,
     isError: isDropdownError,
   } = useQuery<MpsDropdownResponse>({
-    queryKey: ['mpsItems'],
-    queryFn: fetchMpsItemsList,
+    queryKey: ['mpsProductsDropdown'],
+    queryFn: fetchMpsProducts,
+    staleTime: Infinity,
   });
 
   // key-value 형태로 변환

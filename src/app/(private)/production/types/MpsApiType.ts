@@ -32,11 +32,3 @@ export interface MpsListResponse {
 export interface MpsListParams extends DateRequest, PageRequest {
   productId: string;
 }
-
-// 제품 드롭다운 응답 api
-export interface MpsDropdownData {
-  productId: string;
-  productName: string;
-}
-
-export type MpsDropdownResponse = MpsDropdownData[];

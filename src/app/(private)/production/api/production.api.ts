@@ -10,11 +10,7 @@ import {
   FetchQuotationPreviewParams,
   QuotationPreviewResponse,
 } from '@/app/(private)/production/types/QuotationPreviewApiType';
-import {
-  MpsDropdownResponse,
-  MpsListParams,
-  MpsListResponse,
-} from '@/app/(private)/production/types/MpsApiType';
+import { MpsListParams, MpsListResponse } from '@/app/(private)/production/types/MpsApiType';
 import { FetchMesListParams, MesListResponse } from '../types/MesListApiType';
 import { MesDetailResponse } from '../types/MesDetailApiType';
 import { BomListResponse } from '../types/BomListApiType';
@@ -25,6 +21,7 @@ import {
   MrpPlannedOrdersListResponse,
 } from '../types/MrpPlannedOrdersListApiType';
 import { FetchQuotationParams, QuotationListResponse } from '../types/QuotationApiType';
+import { MpsDropdownResponse } from '../types/DropdownApiType';
 
 // 구매 관리 지표
 export const fetchProductionStats = async (): Promise<ProductionStatResponse | null> => {
@@ -39,6 +36,39 @@ export const fetchProductionStats = async (): Promise<ProductionStatResponse | n
     return null;
   }
 };
+
+// -- 드롭다운 조회 ---
+// mps 제품 드롭다운
+export const fetchMpsProducts = async (): Promise<MpsDropdownResponse> => {
+  const res = await axios.get<ApiResponse<MpsDropdownResponse>>(
+    `${PRODUCTION_ENDPOINTS.MPS_TOGGLE_PRODUCTS}`,
+  );
+  return res.data.data;
+};
+// export const fetchMrpPlannedOrderStatus = async (): Promise<MpsDropdownResponse> => {
+//   const res = await axios.get<ApiResponse<MpsDropdownResponse>>(
+//     `${PRODUCTION_ENDPOINTS.MRP_PLANNED_ORDER_STATUS_CODES}`,
+//   );
+//   return res.data.data;
+// };
+// export const fetchMrpProducts = async (): Promise<MpsDropdownResponse> => {
+//   const res = await axios.get<ApiResponse<MpsDropdownResponse>>(
+//     `${PRODUCTION_ENDPOINTS.MRP_TOGGLE_PRODUCTS}`,
+//   );
+//   return res.data.data;
+// };
+// export const fetchMrpQuotations = async (): Promise<MpsDropdownResponse> => {
+//   const res = await axios.get<ApiResponse<MpsDropdownResponse>>(
+//     `${PRODUCTION_ENDPOINTS.MRP_TOGGLE_QUOTATIONS}`,
+//   );
+//   return res.data.data;
+// };
+// export const fetchMrpStatus = async (): Promise<MpsDropdownResponse> => {
+//   const res = await axios.get<ApiResponse<MpsDropdownResponse>>(
+//     `${PRODUCTION_ENDPOINTS.MRP_TOGGLE_STATUS_CODES}`,
+//   );
+//   return res.data.data;
+// };
 
 // 견적 목록 조회
 export const fetchQuotationList = async (
@@ -73,14 +103,6 @@ export const fetchQuotationPreview = async (
   const res = await axios.post<ApiResponse<QuotationPreviewResponse>>(
     `${PRODUCTION_ENDPOINTS.QUOTATION_PREVIEW}`,
     quotationIds,
-  );
-  return res.data.data;
-};
-
-// mps 제품 드롭다운
-export const fetchMpsItemsList = async (): Promise<MpsDropdownResponse> => {
-  const res = await axios.get<ApiResponse<MpsDropdownResponse>>(
-    `${PRODUCTION_ENDPOINTS.MPS_ITEMS_DROPDOWN}`,
   );
   return res.data.data;
 };
