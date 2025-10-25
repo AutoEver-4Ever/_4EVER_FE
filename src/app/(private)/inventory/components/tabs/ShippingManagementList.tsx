@@ -7,9 +7,11 @@ import { getProductionList, getReadyToShipList } from '../../inventory.api';
 import { ManageMentCommonQueryParams } from '../../types/InventoryShippingListType';
 import StatusLabel from '@/app/components/common/StatusLabel';
 import Pagination from '@/app/components/common/Pagination';
+import ShippingDetailModal from '../modals/ShippingDetailModal';
 const ShippingManagementList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedSubTab, setSelectedSubTab] = useState('producing');
+  const [showShipDetailModal, setShowShipDetailModal] = useState(false);
 
   const queryParams = useMemo(
     () => ({
@@ -113,6 +115,9 @@ const ShippingManagementList = () => {
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-900">
                     <button
+                      onClick={() => {
+                        setShowShipDetailModal(true);
+                      }}
                       className="text-blue-600 hover:text-blue-800 cursor-pointer"
                       title="상세보기"
                     >
@@ -131,6 +136,12 @@ const ShippingManagementList = () => {
             totalPages={totalPages}
             totalElements={pageInfo?.totalElements}
             onPageChange={(page) => setCurrentPage(page)}
+          />
+        )}
+        {showShipDetailModal && (
+          <ShippingDetailModal
+            $selectedSubTab={selectedSubTab}
+            $setShowShipDetailModal={setShowShipDetailModal}
           />
         )}
       </div>

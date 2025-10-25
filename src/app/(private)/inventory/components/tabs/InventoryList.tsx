@@ -21,8 +21,6 @@ import StockMovement from '../StockMovement';
 import AddInventoryModal from '../modals/AddInventoryModal';
 
 const InventoryList = () => {
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [showStockModal, setShowStockModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [searchType, setSearchType] = useState('category');
   const [showDetailModal, setShowDetailModal] = useState(false);
