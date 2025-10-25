@@ -1,3 +1,5 @@
+import { KeyValueItem } from '@/types/CommonType';
+
 export const SHIPPING_TABLE_HEADERS = [
   '주문 번호',
   '고객 정보',
@@ -27,4 +29,17 @@ export const INVENTORY_TABLE_HEADERS = [
   '창고 위치',
   '상태',
   '작업',
+] as const;
+
+export const INVENTORY_SEARCH_KEYWORD_OPTIONS: KeyValueItem<string>[] = [
+  { key: 'category', value: '원자재, 부품' },
+  { key: 'warehouseName', value: '창고명' },
+  { key: 'itemName', value: '품목명' },
+] as const;
+
+export const INVENTORY_STATUS_OPTIONS: KeyValueItem<string>[] = [
+  { key: 'ALL', value: '전체' },
+  { key: 'NORMAL', value: '정상' },
+  { key: 'CAUTION', value: '주의' },
+  { key: 'URGENT', value: '긴급' },
 ] as const;

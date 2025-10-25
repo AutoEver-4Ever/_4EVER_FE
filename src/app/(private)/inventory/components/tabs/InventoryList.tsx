@@ -1,7 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { INVENTORY_TABLE_HEADERS } from '../../inventory.constants';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  INVENTORY_SEARCH_KEYWORD_OPTIONS,
+  INVENTORY_STATUS_OPTIONS,
+  INVENTORY_TABLE_HEADERS,
+} from '../../inventory.constants';
 import Pagination from '@/app/components/common/Pagination';
 import { useDebounce } from 'use-debounce';
 import { useQuery } from '@tanstack/react-query';
@@ -14,16 +18,19 @@ import InventoryMoveModal from '../modals/InventoryMoveModal';
 import InventorySafetyModal from '../modals/InventorySafetyModal';
 import LowStockAlert from '../LowStockAlert';
 import StockMovement from '../StockMovement';
+import AddInventoryModal from '../modals/AddInventoryModal';
 
 const InventoryList = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showStockModal, setShowStockModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [searchType, setSearchType] = useState('category');
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<string>('');
   const [category, setCategory] = useState('');
   const [warehouse, setWarehouse] = useState('');
-  const [statusFilter, setStatusFilter] = useState('ALL');
   const [itemName, setItemName] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
   const [debouncedCategory] = useDebounce(category, 200);
   const [debouncedWarehouse] = useDebounce(warehouse, 200);
   const [debouncedItemName] = useDebounce(itemName, 200);
@@ -33,7 +40,35 @@ const InventoryList = () => {
     setShowDetailModal(true);
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    switch (searchType) {
+      case 'category':
+        setCategory(value);
+        break;
+      case 'warehouseName':
+        setWarehouse(value);
+        break;
+      case 'itemName':
+        setItemName(value);
+        break;
+      default:
+        setCategory(value);
+    }
+  };
+
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    console.log(category);
+    console.log(warehouse);
+    console.log(itemName);
+  }, [category, warehouse, itemName]);
+
+  useEffect(() => {
+    console.log(searchType);
+  }, [searchType]);
 
   const queryParams = useMemo(
     () => ({
@@ -76,7 +111,56 @@ const InventoryList = () => {
             <div className="flex items-center justify-between w-full">
               <h2 className="text-lg font-semibold text-gray-900">재고 목록</h2>
               <div className="flex items-center gap-4">
-                <div className="flex gap-2"></div>
+                <div className="flex gap-2">
+                  <select
+                    value={statusFilter}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      setStatusFilter(e.target.value)
+                    }
+                    className="bg-white px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
+                  >
+                    {INVENTORY_STATUS_OPTIONS.map(({ key, value }) => (
+                      <option key={key} value={key}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={searchType}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      setSearchType(e.target.value)
+                    }
+                    className="bg-white px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-8"
+                  >
+                    {INVENTORY_SEARCH_KEYWORD_OPTIONS.map(({ key, value }) => (
+                      <option key={key} value={key}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="relative">
+                    <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input
+                      type="text"
+                      placeholder="검색어를 입력하세요..."
+                      value={
+                        searchType === 'category'
+                          ? category
+                          : searchType === 'warehouseName'
+                            ? warehouse
+                            : itemName
+                      }
+                      onChange={handleSearchChange}
+                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-80 bg-white"
+                    />
+                  </div>
+                  <button
+                    onClick={() => setShowAddModal(true)}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium cursor-pointer whitespace-nowrap"
+                  >
+                    <i className="ri-add-line mr-1"></i>원자재 추가
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -181,6 +265,8 @@ const InventoryList = () => {
             $setShowDetailModal={setShowDetailModal}
           />
         )}
+        {/* 원자재 추가 모달 */}
+        {showAddModal && <AddInventoryModal $setShowAddModal={setShowAddModal} />}
       </div>
     </div>
   );

@@ -2,7 +2,11 @@
 
 import { useState } from 'react';
 
-const AddInventoryModal = () => {
+interface AddInventoryModalProps {
+  $setShowAddModal: (show: boolean) => void;
+}
+
+const AddInventoryModal = ({ $setShowAddModal }: AddInventoryModalProps) => {
   const [formData, setFormData] = useState({
     materialType: '',
     supplier: '',
@@ -29,13 +33,21 @@ const AddInventoryModal = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     alert('원자재가 성공적으로 추가되었습니다.');
+    $setShowAddModal(false);
+  };
+
+  const handleClose = () => {
+    $setShowAddModal(false);
   };
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-semibold">원자재 추가</h3>
-          <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
+          <button
+            onClick={handleClose}
+            className="text-gray-400 hover:text-gray-600 cursor-pointer"
+          >
             <i className="ri-close-line text-xl"></i>
           </button>
         </div>
@@ -174,6 +186,7 @@ const AddInventoryModal = () => {
           <div className="flex gap-3 pt-4">
             <button
               type="button"
+              onClick={handleClose}
               className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium cursor-pointer"
             >
               취소
