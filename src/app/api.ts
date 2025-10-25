@@ -72,3 +72,9 @@ export const INVENTORY_ENDPOINTS = {
   MARKAS_READY_TO_SHIP_DETAIL: (itemId: string) =>
     `${INVENTORY_BASE_PATH}/sales-orders/${itemId}/status`,
 } as const;
+
+// ----------------------- LOWSTOCK -----------------------
+export const LOWSTOCK_ENDPOINTS = {
+  STATS: `${INVENTORY_BASE_PATH}/iv/shortage/count/critical/statistic`,
+  LOW_STOCK_LIST: `${INVENTORY_BASE_PATH}/iv/shortage`,
+};
