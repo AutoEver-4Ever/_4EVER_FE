@@ -12,7 +12,7 @@ import {
   ReadyToShipListResponse,
 } from './types/InventoryShippingListType';
 import { ReceivedListResponse } from './types/InventoryReceivingListType';
-import { ShippingDetailResponse } from './types/ShippingDetailType';
+import { markAsReadyToShipResponse, ShippingDetailResponse } from './types/ShippingDetailType';
 // ----------------------- 재고 통계 -----------------------
 export const getInventoryStats = async (): Promise<InventoryStatResponse> => {
   const res = await axios.get<ApiResponse<InventoryStatResponse>>(INVENTORY_ENDPOINTS.STATS);
@@ -105,6 +105,15 @@ export const getProductionDetail = async (itemId: string): Promise<ShippingDetai
 export const getReadyToShipDetail = async (itemId: string): Promise<ShippingDetailResponse> => {
   const res = await axios.get<ApiResponse<ShippingDetailResponse>>(
     INVENTORY_ENDPOINTS.READY_TO_SHIP_DETAIL(itemId),
+  );
+  return res.data.data;
+};
+
+export const patchMarkAsReadyToShip = async (
+  itemId: string,
+): Promise<markAsReadyToShipResponse> => {
+  const res = await axios.patch<ApiResponse<markAsReadyToShipResponse>>(
+    INVENTORY_ENDPOINTS.MARKAS_READY_TO_SHIP_DETAIL(itemId),
   );
   return res.data.data;
 };

@@ -1,10 +1,18 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { ShippingDetailModalProps, ShippingDetailResponse } from '../../types/ShippingDetailType';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  markAsReadyToShipResponse,
+  ShippingDetailModalProps,
+  ShippingDetailResponse,
+} from '../../types/ShippingDetailType';
 import { useEffect, useState } from 'react';
 import ModalStatusBox from '@/app/components/common/ModalStatusBox';
-import { getProductionDetail, getReadyToShipDetail } from '../../inventory.api';
+import {
+  getProductionDetail,
+  getReadyToShipDetail,
+  patchMarkAsReadyToShip,
+} from '../../inventory.api';
 
 const ShippingDetailModal = ({
   $selectedSubTab,
@@ -36,6 +44,22 @@ const ShippingDetailModal = ({
   useEffect(() => {
     setErrorModal(isError);
   }, [isError]);
+
+  const { mutate: markAsReadyToShip, isPending } = useMutation<
+    markAsReadyToShipResponse,
+    Error,
+    { id: string }
+  >({
+    mutationFn: ({ id }) => patchMarkAsReadyToShip(id),
+    onSuccess: (data) => {
+      //   console.log(data);
+      //   alert('출고 준비 완료로 상태가 변경되었습니다.');
+      $setShowShipDetailModal(false);
+    },
+    onError: (error) => {
+      alert(`고객 등록 중 오류가 발생했습니다. ${error}`);
+    },
+  });
 
   if (isLoading)
     return <ModalStatusBox $type="loading" $message="출고 상세 데이터를 불러오는 중입니다..." />;
@@ -105,8 +129,7 @@ const ShippingDetailModal = ({
               </button>
               <button
                 onClick={() => {
-                  alert('출고 준비 완료로 상태가 변경되었습니다.');
-                  $setShowShipDetailModal(false);
+                  markAsReadyToShip({ id: $selectedItemId });
                 }}
                 className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium cursor-pointer"
               >
