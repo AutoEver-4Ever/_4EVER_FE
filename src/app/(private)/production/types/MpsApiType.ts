@@ -1,3 +1,6 @@
+import { DateRequest } from '@/app/types/Date';
+import { Page, PageRequest } from '@/app/types/Page';
+
 // 주별 수요/생산 데이터
 export interface WeekData {
   period: string; // 예: "9월 1주차"
@@ -8,7 +11,7 @@ export interface WeekData {
 }
 
 // 제품별 생산/재고 시뮬레이션
-export interface MpsListResponse {
+export interface MpsListData {
   productId: string;
   productName: string;
   periodType: string | null;
@@ -19,15 +22,21 @@ export interface MpsListResponse {
   requiredInventory: (number | null)[];
   productionNeeded: (number | null)[];
   plannedProduction: (number | null)[];
-  totalPlannedProduction: number;
-  totalDemand: number;
-  productionWeeks: number;
-  averageWeeklyProduction: number;
-  // weeklyData?: WeekData[];
 }
 
-export interface MpsListParams {
-  itemId?: string;
-  startdate?: string;
-  enddate?: string;
+export interface MpsListResponse {
+  content: MpsListData;
+  page: Page;
 }
+
+export interface MpsListParams extends DateRequest, PageRequest {
+  productId: string;
+}
+
+// 제품 드롭다운 응답 api
+export interface MpsDropdownData {
+  productId: string;
+  productName: string;
+}
+
+export type MpsDropdownResponse = MpsDropdownData[];

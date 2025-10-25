@@ -10,7 +10,11 @@ import {
   FetchQuotationPreviewParams,
   QuotationPreviewResponse,
 } from '@/app/(private)/production/types/QuotationPreviewApiType';
-import { MpsListParams, MpsListResponse } from '@/app/(private)/production/types/MpsApiType';
+import {
+  MpsDropdownResponse,
+  MpsListParams,
+  MpsListResponse,
+} from '@/app/(private)/production/types/MpsApiType';
 import { FetchMesListParams, MesListResponse } from '../types/MesListApiType';
 import { MesDetailResponse } from '../types/MesDetailApiType';
 import { BomListResponse } from '../types/BomListApiType';
@@ -73,16 +77,18 @@ export const fetchQuotationPreview = async (
   return res.data.data;
 };
 
+// mps 제품 드롭다운
+export const fetchMpsItemsList = async (): Promise<MpsDropdownResponse> => {
+  const res = await axios.get<ApiResponse<MpsDropdownResponse>>(
+    `${PRODUCTION_ENDPOINTS.MPS_ITEMS_DROPDOWN}`,
+  );
+  return res.data.data;
+};
+
 // 제품별 Master Production Schedule(MPS) 정보를 조회
 export const fetchMpsList = async (params: MpsListParams): Promise<MpsListResponse> => {
-  const { itemId, startdate, enddate } = params;
-
   const res = await axios.get<ApiResponse<MpsListResponse>>(`${PRODUCTION_ENDPOINTS.MPS_PLANS}`, {
-    params: {
-      ...(itemId && { itemId }),
-      ...(startdate && { startdate }),
-      ...(enddate && { enddate }),
-    },
+    params,
   });
   return res.data.data;
 };

@@ -13,6 +13,7 @@ export const PRODUCTION_ENDPOINTS = {
   MES_WORK_ORDERS_SUMMARY: `${PRODUCTION_BASE_PATH}/mes/work-orders/summary`, // 생산관리 페이지 카드뷰 데이터 조회
 
   // MPS 계획
+  MPS_ITEMS_DROPDOWN: `${PRODUCTION_BASE_PATH}/mps/toggle/products`,
   MPS_PLANS: `${PRODUCTION_BASE_PATH}/mps/plans`, // 제품별 MPS 조회
 
   // MRP 순소요 목록
