@@ -16,12 +16,13 @@ import { MesDetailResponse } from '../types/MesDetailApiType';
 import { BomListResponse } from '../types/BomListApiType';
 import { BomDetailResponse } from '../types/BomDetailApiType';
 import { FetchMrpOrdersListParams, MrpOrdersListResponse } from '../types/MrpOrdersListApiType';
+import { FetchQuotationParams, QuotationListResponse } from '../types/QuotationApiType';
+import { MpsDropdownResponse } from '../types/DropdownApiType';
 import {
   FetchMrpPlannedOrdersListParams,
   MrpPlannedOrdersListResponse,
 } from '../types/MrpPlannedOrdersListApiType';
-import { FetchQuotationParams, QuotationListResponse } from '../types/QuotationApiType';
-import { MpsDropdownResponse } from '../types/DropdownApiType';
+import { MrpPlannedOrdersDetailResponse } from '../types/MrpPlannedOrdersDetailApiType';
 
 // 구매 관리 지표
 export const fetchProductionStats = async (): Promise<ProductionStatResponse | null> => {
@@ -170,6 +171,16 @@ export const fetchMrpPlannedOrdersList = async (
   const res = await axios.get<ApiResponse<MrpPlannedOrdersListResponse>>(
     `${PRODUCTION_ENDPOINTS.MRP_PLANNED_ORDERS_LIST}`,
     { params },
+  );
+  return res.data.data;
+};
+
+// MRP 계획 주문 상세 조회
+export const fetchMrpPlannedOrdersDetail = async (
+  mrpId: string,
+): Promise<MrpPlannedOrdersDetailResponse> => {
+  const res = await axios.get<ApiResponse<MrpPlannedOrdersDetailResponse>>(
+    `${PRODUCTION_ENDPOINTS.MRP_PLANNED_ORDER_DETAIL(mrpId)}`,
   );
   return res.data.data;
 };

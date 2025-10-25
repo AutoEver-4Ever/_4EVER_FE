@@ -237,10 +237,10 @@ export default function OrdersTab() {
 
         {isError || isLoading ? null : (
           <Pagination
-            currentPage={currentPage} // 0-based를 1-based로 변환
+            currentPage={currentPage}
             totalPages={totalPages}
             totalElements={pageInfo?.totalElements}
-            onPageChange={(page) => setCurrentPage(page)} // 1-based를 0-based로 변환
+            onPageChange={(page) => setCurrentPage(page)}
           />
         )}
       </div>

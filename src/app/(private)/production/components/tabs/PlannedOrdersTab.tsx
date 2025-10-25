@@ -11,11 +11,18 @@ import {
 } from '../../types/MrpPlannedOrdersListApiType';
 import TableStatusBox from '@/app/components/common/TableStatusBox';
 import Pagination from '@/app/components/common/Pagination';
+import MrpPlannedOrderDetailModal from '../modals/MrpPlannedOrderDetailModal';
 
 export default function PlannedOrdersTab() {
+  // 드롭다운 상태
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<MrpPlannedOrderStatus>('ALL');
 
+  // 모달 상태
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedMrpId, setSelectedMrpId] = useState<string | null>(null);
+
+  // 페이지네이션 상태
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
@@ -67,21 +74,14 @@ export default function PlannedOrdersTab() {
     // 실제 로직 구현
   };
 
-  const getOrderStatusBadge = (statusCode: string) => {
-    const statusConfig: Record<string, { bg: string; text: string; label: string }> = {
-      WAITING: { bg: 'bg-gray-100', text: 'text-gray-800', label: '대기' },
-      IN_PROGRESS: { bg: 'bg-blue-100', text: 'text-blue-800', label: '진행중' },
-      COMPLETED: { bg: 'bg-green-100', text: 'text-green-800', label: '완료' },
-      CANCELLED: { bg: 'bg-red-100', text: 'text-red-800', label: '취소' },
-    };
-    const config = statusConfig[statusCode] || statusConfig['WAITING'];
-    return (
-      <span
-        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bg} ${config.text}`}
-      >
-        {config.label}
-      </span>
-    );
+  const handleShowDetail = (mrpId: string) => {
+    setSelectedMrpId(mrpId);
+    setShowDetailModal(true);
+  };
+
+  const handleCloseDetail = () => {
+    setShowDetailModal(false);
+    setSelectedMrpId(null);
   };
 
   return (
@@ -173,6 +173,7 @@ export default function PlannedOrdersTab() {
                     <button
                       className="text-blue-600 hover:text-blue-800 cursor-pointer"
                       title="상세보기"
+                      onClick={() => handleShowDetail(order.mrpId)}
                     >
                       <i className="ri-eye-line"></i>
                     </button>
@@ -184,13 +185,18 @@ export default function PlannedOrdersTab() {
 
           {isError || isLoading ? null : (
             <Pagination
-              currentPage={currentPage} // 0-based를 1-based로 변환
+              currentPage={currentPage}
               totalPages={totalPages}
               totalElements={pageInfo?.totalElements}
-              onPageChange={(page) => setCurrentPage(page)} // 1-based를 0-based로 변환
+              onPageChange={(page) => setCurrentPage(page)}
             />
           )}
         </div>
+      )}
+
+      {/* Detail Modal Render */}
+      {showDetailModal && selectedMrpId && (
+        <MrpPlannedOrderDetailModal mrpId={selectedMrpId} onClose={handleCloseDetail} />
       )}
     </div>
   );
