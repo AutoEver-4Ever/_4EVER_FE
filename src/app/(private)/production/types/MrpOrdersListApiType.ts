@@ -1,5 +1,6 @@
-// MRP 순소요 목록 최상위 응답 타입
-export interface MrpOrdersListResponse {
+import { Page, PageRequest } from '@/app/types/Page';
+
+export interface MrpOrdersListData {
   itemId: string;
   itemName: string;
   requiredQuantity: number;
@@ -14,7 +15,14 @@ export interface MrpOrdersListResponse {
   supplierCompanyName: string;
 }
 
-export interface FetchMrpOrdersListParams {
-  quotationId?: string;
-  productId?: string;
+// MRP 순소요 목록 최상위 응답 타입
+export interface MrpOrdersListResponse {
+  content: MrpOrdersListData[];
+  page: Page;
+}
+
+export interface FetchMrpOrdersListParams extends PageRequest {
+  quotationId: string;
+  productId: string;
+  availableStatusCode: string;
 }

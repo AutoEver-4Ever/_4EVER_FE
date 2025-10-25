@@ -7,6 +7,8 @@ import { KeyValueItem } from '@/app/types/CommonType';
 import { useQuery } from '@tanstack/react-query';
 import { FetchMrpOrdersListParams, MrpOrdersListResponse } from '../../types/MrpOrdersListApiType';
 import { fetchMrpOrdersList } from '../../api/production.api';
+import TableStatusBox from '@/app/components/common/TableStatusBox';
+import Pagination from '@/app/components/common/Pagination';
 
 export default function OrdersTab() {
   const [selectedProduct, setSelectedProduct] = useState('ALL');
@@ -15,23 +17,34 @@ export default function OrdersTab() {
 
   const [selectedRequirements, setSelectedRequirements] = useState<string[]>([]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
   const queryParams = useMemo<FetchMrpOrdersListParams>(
     () => ({
       quotationId: selectedProduct,
       productId: selectedQuote,
+      availableStatusCode: selectedStockStatus,
+      page: currentPage - 1,
+      size: pageSize,
     }),
-    [selectedProduct, selectedQuote],
+    [selectedProduct, selectedQuote, selectedStockStatus, currentPage, pageSize],
   );
 
   const {
     data: orders,
     isLoading,
     isError,
-  } = useQuery<MrpOrdersListResponse[]>({
+  } = useQuery<MrpOrdersListResponse>({
     queryKey: ['ordersList', queryParams],
     queryFn: ({ queryKey }) => fetchMrpOrdersList(queryKey[1] as FetchMrpOrdersListParams),
     staleTime: 1000,
   });
+
+  const orderItems = orders?.content || [];
+  const pageInfo = orders?.page;
+
+  const totalPages = pageInfo?.totalPages ?? 1;
 
   // 견적 목록
   const quotes: KeyValueItem[] = [
@@ -45,10 +58,10 @@ export default function OrdersTab() {
 
   const handleSelectAllRequirements = () => {
     if (!orders) return;
-    if (selectedRequirements.length === orders.length) {
+    if (selectedRequirements.length === orderItems.length) {
       setSelectedRequirements([]);
     } else {
-      setSelectedRequirements(orders.map((item) => item.itemId));
+      setSelectedRequirements(orderItems.map((item) => item.itemId));
     }
   };
 
@@ -113,18 +126,13 @@ export default function OrdersTab() {
             />
           </div>
         </div>
+
         {isLoading ? (
-          <div className="text-center py-12">
-            <i className="ri-loader-4-line animate-spin text-3xl text-gray-400"></i>
-            <p className="mt-3 text-gray-500">로딩 중...</p>
-          </div>
+          <TableStatusBox $type="loading" $message="구매 요청 목록을 불러오는 중입니다..." />
         ) : isError ? (
-          <div className="text-center py-12">
-            <i className="ri-error-warning-line text-3xl text-red-400"></i>
-            <p className="mt-3 text-red-500">데이터를 불러오는데 실패했습니다.</p>
-          </div>
-        ) : !orders || orders.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">조회된 순소요 데이터가 없습니다.</div>
+          <TableStatusBox $type="error" $message="순소요 목록을 불러오는 중 오류가 발생했습니다." />
+        ) : !orders || orderItems.length === 0 ? (
+          <TableStatusBox $type="empty" $message="조회된 순소요 데이터가 없습니다" />
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -133,7 +141,7 @@ export default function OrdersTab() {
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     <input
                       type="checkbox"
-                      checked={selectedRequirements.length === orders.length}
+                      checked={selectedRequirements.length === orderItems.length}
                       onChange={handleSelectAllRequirements}
                       className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 cursor-pointer"
                     />
@@ -174,7 +182,7 @@ export default function OrdersTab() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {orders.map((item) => (
+                {orderItems.map((item) => (
                   <tr key={item.itemId} className="hover:bg-gray-50">
                     <td className="px-4 py-3">
                       <input
@@ -222,6 +230,15 @@ export default function OrdersTab() {
               </tbody>
             </table>
           </div>
+        )}
+
+        {isError || isLoading ? null : (
+          <Pagination
+            currentPage={currentPage} // 0-based를 1-based로 변환
+            totalPages={totalPages}
+            totalElements={pageInfo?.totalElements}
+            onPageChange={(page) => setCurrentPage(page)} // 1-based를 0-based로 변환
+          />
         )}
       </div>
     </div>

@@ -139,26 +139,30 @@ export default function BomInputFormModal({
 
         <div className="p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* ✅ 버전 정보 */}
-            <div>
-              <h4 className="text-md font-semibold text-gray-900 mb-4">제품명</h4>
-              <input
-                type="text"
-                value={product}
-                onChange={(e) => setProduct(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                placeholder="v1.0"
-                required
-              />
-              <h4 className="text-md font-semibold text-gray-900 mb-4">단위</h4>
-              <input
-                type="text"
-                value={unit}
-                onChange={(e) => setUnit(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                placeholder="v1.0"
-                required
-              />
+            <div className="flex justify-between gap-3">
+              <div>
+                <h4 className="text-md font-semibold text-gray-900 mb-4">제품명</h4>
+                <input
+                  type="text"
+                  value={product}
+                  onChange={(e) => setProduct(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  placeholder="휴대폰"
+                  required
+                />
+              </div>
+
+              <div>
+                <h4 className="text-md font-semibold text-gray-900 mb-4">단위</h4>
+                <input
+                  type="text"
+                  value={unit}
+                  onChange={(e) => setUnit(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  placeholder="v1.0"
+                  required
+                />
+              </div>
             </div>
             {/* ✅ 구성품 리스트 */}
             <div>

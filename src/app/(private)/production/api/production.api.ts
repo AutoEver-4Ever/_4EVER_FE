@@ -155,8 +155,8 @@ export const deletBomItem = async (bomId: string): Promise<ApiResponseNoData> =>
 // MRP 순소요 목록 조회
 export const fetchMrpOrdersList = async (
   params: FetchMrpOrdersListParams,
-): Promise<MrpOrdersListResponse[]> => {
-  const res = await axios.get<ApiResponse<MrpOrdersListResponse[]>>(
+): Promise<MrpOrdersListResponse> => {
+  const res = await axios.get<ApiResponse<MrpOrdersListResponse>>(
     `${PRODUCTION_ENDPOINTS.MRP_ORDERS}`,
     { params },
   );
