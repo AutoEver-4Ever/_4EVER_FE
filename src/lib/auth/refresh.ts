@@ -20,7 +20,7 @@ export async function trySilentRefresh() {
       client_id: 'everp-spa', // local
     });
 
-    const res = await axios.post('https://auth.everp.co.kr/oauth2/token', body.toString(), {
+    const res = await axios.post('http://localhost:8081/oauth2/token', body.toString(), {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: makeBasicAuthHeader('everp', 'super-secret'),

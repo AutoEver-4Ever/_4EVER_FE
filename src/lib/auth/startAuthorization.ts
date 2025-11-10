@@ -1,7 +1,7 @@
 import { generateRandomBase64Url, createCodeChallenge } from './pkce';
 
 export async function startAuthorization(returnTo?: string) {
-  const AUTH_URL = 'https://auth.everp.co.kr';
+  const AUTH_URL = 'http://localhost:8081'; // 로컬용
   const REDIRECT_URI = 'http://localhost:3000/callback'; // 로컬용
   // const REDIRECT_URI = 'https://everp.co.kr/callback'; // 배포용
 

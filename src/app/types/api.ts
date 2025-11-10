@@ -1,5 +1,5 @@
 // 공통 API Base URL
-export const API_BASE_URL = 'https://api.everp.co.kr/api';
+export const API_BASE_URL = 'http://localhost:8080/api';
 // export const API_BASE_URL = 'https://b5bd9b62ef90.ngrok-free.app/api';
 
 export const SALES_BASE_PATH = `${API_BASE_URL}/business/sd`;
@@ -107,8 +107,8 @@ export const WAREHOUSE_ENDPOINTS = {
 
 // ----------------------- USER -----------------------
 export const USER_ENDPOINTS = {
-  LOGIN: 'https://auth.everp.co.kr/oauth2/token',
-  LOGOUT: 'https://auth.everp.co.kr/logout',
+  LOGIN: 'http://localhost:8081/oauth2/token',
+  LOGOUT: 'http://localhost:8081/logout',
   USER_INFO: `${API_BASE_URL}/user/info`,
   USER_PROFILE_INFO: `${HRM_BASE_PATH}/employees/by-internel-user`,
 };
